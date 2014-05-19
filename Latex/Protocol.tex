@@ -1,0 +1,104 @@
+\documentclass{article}
+\usepackage{msc}
+\usepackage{fixltx2e}
+\usepackage[top=0.5in, bottom=1.5in, left=1in, right=1in]{geometry}
+\begin{document}
+\setlength{\marginparwidth}{20pt}
+
+\begin{msc}{Bilateral Authentication}
+\setlength{\instdist}{3\instdist}
+\setlength{\envinstdist}{1.7\envinstdist}
+\setlength{\levelheight}{1.5\levelheight}
+\declinst{alice}{Alice}{}
+\declinst{courier}{Courier}{}
+
+\msccomment{Precondition}{alice}
+\condition*{Two entities both know each other's public keys}{alice,courier}
+\nextlevel
+\action*{pick nonce$_A$}{alice}
+\nextlevel[2]
+\mess{Alice, E$_{pk_C}$(Alice, nonce$_A$)}{alice}{courier}
+\nextlevel
+\action*{check sender name}{courier}
+\nextlevel
+\action*{pick nonce$_C$}{courier}
+\nextlevel[2]
+\mess{E$_{pk_A}$(nonce$_A$\textbar Courier\textbar nonce$_C$)}{courier}{alice}
+\nextlevel
+\action*{check nonce$_A$, receiver name}{alice}
+\nextlevel
+\action*{pick session key k$_s$}{alice}
+\nextlevel[2]
+\mess{E$_{pk_C}$(nonce$_C$\textbar k$_s$)}{alice}{courier}
+\nextlevel
+\action*{check nonce$_C$}{courier}
+\nextlevel
+\msccomment[r]{Postcondition}{courier}
+\condition*{Bilaterally authenticated, sharing session key k$_s$}{alice,courier}
+\nextlevel
+\end{msc}
+
+
+
+\newpage
+\begin{msc}{Upload Scenario}
+\setlength{\instdist}{4\instdist}
+\setlength{\envinstdist}{1.7\envinstdist}
+\setlength{\levelheight}{1.5\levelheight}
+\declinst{alice}{Alice}{}
+\declinst{courier}{Courier}{}
+
+\condition{Both agree on a session key k$_s$}{alice,courier}
+\nextlevel
+\action*{pick symmetric key k$_{AB}$}{alice}
+\nextlevel[2]
+\mess{E$_{k_s}$(UPLOAD\textbar E$_{pk_B}$(META)\textbar SIGN$_A$(META)\textbar Alice\textbar Bob\textbar size\textbar counter), MAC$_{k_s}$(...)}{alice}{courier}
+\nextlevel
+\action*{check validity of names and size}{courier}
+\nextlevel[2]
+\mess{E$_{k_s}$(READY\textbar counter), MAC$_{k_s}$(...)}{courier}{alice}
+\nextlevel
+\mess{E$_{k_s}$(E$_{k_{AB}}$(message)\textbar MAC$_{k_{AB}}$(message)\textbar counter), MAC$_{k_s}$(...)}{alice}{courier}
+\nextlevel
+\mess{E$_{k_s}$(COMPLETE\textbar counter), MAC$_{k_s}$(...)}{courier}{alice}
+\nextlevel
+\condition{The message and k$_{AB}$ is transferred and stored completely to courier}{alice,courier}
+\nextlevel
+\end{msc}
+\newline\newline
+Where META = (k$_{AB}$\textbar timestamp)
+
+
+
+\newpage
+\begin{msc}{Download Scenario}
+\setlength{\instdist}{4\instdist}
+\setlength{\envinstdist}{1.7\envinstdist}
+\setlength{\levelheight}{1.5\levelheight}
+\declinst{bob}{Bob}{}
+\declinst{courier}{Courier}{}
+
+\condition{Both agree on a session key k$_s$}{bob,courier}
+\nextlevel[2]
+\mess{E$_{k_s}$(DOWNLOAD\textbar Alice\textbar Bob\textbar counter), MAC$_{k_s}$(...)}{bob}{courier}
+\nextlevel
+\action*{search for the message}{courier}
+\nextlevel[2]
+\mess{E$_{k_s}$(INFO\textbar E$_{pk_B}$(META)\textbar SIGN$_A$(META)\textbar size\textbar counter), MAC$_{k_s}$(...)}{courier}{bob}
+\nextlevel
+\action*{check validity of signature and size}{bob}
+\nextlevel[2]
+\mess{E$_{k_s}$(READY\textbar counter), MAC$_{k_s}$(...)}{bob}{courier}
+\nextlevel
+\mess{E$_{k_s}$(E$_{k_{AB}}$(message)\textbar MAC$_{k_{AB}}$(message)\textbar counter), MAC$_{k_s}$(...)}{courier}{bob}
+\nextlevel
+\action*{check the prefix of message}{bob}
+\nextlevel[2]
+\mess{E$_{k_s}$(COMPLETE\textbar counter), MAC$_{k_s}$(...)}{bob}{courier}
+\nextlevel
+\condition*{The message is downloaded completely to Bob}{bob,courier}
+\nextlevel
+\end{msc}
+\newline\newline
+Where META = (k$_{AB}$\textbar timestamp)
+\end{document}

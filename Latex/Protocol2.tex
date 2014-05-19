@@ -1,0 +1,298 @@
+\documentclass{article}
+\usepackage{msc}
+\usepackage{fixltx2e}
+\usepackage[top=0.5in, bottom=1.5in, left=1in, right=1in]{geometry}
+\begin{document}
+\setlength{\marginparwidth}{20pt}
+
+\section*{Global Assumptions}
+\begin{itemize}
+\item knowledge of any public key is known by any entity in the protocol
+\item the cost for courier transferred from one side to the other side is considered very high
+\end{itemize}
+\vspace{20pt}
+
+\section*{Scenario 1: Unilateral Authenticated}
+\subsection*{Submit Scenario1}
+\begin{msc}{Submit Scenario1}
+\setlength{\instdist}{3\instdist}
+\setlength{\envinstdist}{2\envinstdist}
+\setlength{\levelheight}{1.5\levelheight}
+\declinst{alice}{Alice}{}
+\declinst{courier}{Courier}{}
+
+
+\mess{Courier\textbar size}{courier}{alice}
+\nextlevel
+\action*{pick symmetric key k$_{AB}$}{alice}
+\nextlevel
+\action*{meta$_B$ = E$_{pk_B}$(k$_{AB}$\textbar Alice\textbar Bob\textbar timestamp)\textbar SIGN$_A$}{alice}
+\nextlevel
+\action*{msg$_B$ = E$_{k_{AB}}$(message)\textbar MAC$_{k_{AB}}$(message)}{alice}
+\nextlevel[2]
+\mess{Courier\textbar Alice\textbar Bob\textbar meta$_B$\textbar msg$_B$, SIGN$_A$}{alice}{courier}
+\nextlevel
+\action*{check validity of names and size}{courier}
+\nextlevel[2]
+\mess{HASH(received message)}{courier}{alice}
+\nextlevel
+\end{msc}
+
+
+\subsection*{Preconditions}
+\subsubsection*{Alice:}
+\begin{itemize}
+\item Alice holds a unique asymmetric key sk$_A$ which corresponds to its public key pk$_A$
+\end{itemize}
+
+\subsubsection*{Courier:}
+\begin{itemize}
+\item None
+\end{itemize}
+
+\subsection*{Postconditions}
+\subsubsection*{Alice:}
+\begin{itemize}
+\item Alice knows all the message is successfully sent to someone
+\item Alice doesn't know the identity of the receiver
+\item Alice doesn't know whether the message will be eventually deliver to Bob
+\end{itemize}
+
+\subsubsection*{Courier:}
+\begin{itemize}
+\item Courier knows the integrity of the message is preserved
+\item Courier knows the authenticity of origin of Alice's messages
+\end{itemize}
+\vspace{40pt}
+
+
+\subsection*{Transmit Scenario1}
+\begin{msc}{Transmit Scenario1}
+\setlength{\instdist}{3\instdist}
+\setlength{\envinstdist}{2\envinstdist}
+\setlength{\levelheight}{1.5\levelheight}
+\declinst{bob}{Bob}{}
+\declinst{courier}{Courier}{}
+
+\action*{data$_B$ = meta$_B$\textbar msg$_B$}{courier}
+\nextlevel[2]
+\mess{Courier\textbar E$_{pk_B}$(Bob\textbar Alice)\textbar data$_B$}{courier}{bob}
+\nextlevel
+\action*{check validity of the message}{bob}
+\nextlevel[2]
+\mess{HASH(previous message), SIGN$_B$}{bob}{courier}
+\end{msc}
+\\
+where: \\
+meta$_B$ = E$_{pk_B}$(k$_{AB}$\textbar Alice\textbar Bob\textbar timestamp)\textbar SIGN$_A$\\
+msg$_B$ = E$_{k_{AB}}$(message)\textbar MAC$_{k_{AB}}$(message)
+
+
+\subsection*{Preconditions}
+\subsubsection*{Bob:}
+\begin{itemize}
+\item Bob holds a unique asymmetric key sk$_B$ which corresponds to its public key pk$_B$
+\end{itemize}
+
+\subsubsection*{Courier:}
+\begin{itemize}
+\item Courier has messages for Bob
+\end{itemize}
+
+\subsection*{Postconditions}
+\subsubsection*{Bob:}
+\begin{itemize}
+\item Bob accepts the message
+\item Bob knows the authenticity of origin of meta$_B$ and msg$_B$
+\item Bob doesn't know the identity of the message sender
+\item Bob doesn't know whether he receives the right message that the sender intend to send
+\end{itemize}
+
+\subsubsection*{Courier:}
+\begin{itemize}
+\item if response is valid, Courier knows Bob has successfully received and accepted the message
+\item if response is not valid, Courier doesn't know if Bob receives the message
+\newline
+it doesn't necessarily mean Bob doesn't get the message. But Courier has to resend the message again until it gets the valid response
+\end{itemize}
+\vspace{40pt}
+
+
+\subsection*{Transmit Scenario1}
+\begin{msc}{Transmit Scenario1}
+\setlength{\instdist}{3\instdist}
+\setlength{\envinstdist}{2\envinstdist}
+\setlength{\levelheight}{1.5\levelheight}
+\declinst{courier1}{Courier1}{}
+\declinst{courier2}{Courier2}{}
+
+\action*{meta$_B$ = E$_{pk_B}$(k$_{AB}$\textbar Alice\textbar Bob\textbar timestamp)\textbar SIGN$_A$}{courier1}
+\nextlevel
+\action*{msg$_B$ = E$_{k_{AB}}$(message)\textbar MAC$_{k_{AB}}$(message)}{courier1}
+\nextlevel[2]
+\mess{Alice\textbar Bob\textbar meta$_B$\textbar msg$_B$, SIGN$_A$}{courier1}{courier2}
+\nextlevel
+\mess{HASH(previous message)}{courier2}{courier1}
+\end{msc}
+
+
+\subsection*{Preconditions}
+\subsubsection*{Courier1:}
+\begin{itemize}
+\item Courier1 holds the message from Alice to Bob
+\item Courier1 knows the name of Courier2 who is the next message carrier, so it approaches Courier2 actively
+\item Courier1 doesn't know Courier2's identity so any device can claim itself as Courier2
+\end{itemize}
+
+\subsubsection*{Courier2:}
+\begin{itemize}
+\item Courier2 doesn't know Courier1's identity so any device can claim itself as Courier1
+\end{itemize}
+
+\subsection*{Postconditions}
+\subsubsection*{Courier1:}
+\begin{itemize}
+\item Courier1 knows the message has been successfully sent to someone
+\item Courier1 doesn't know the identity of receiver
+\end{itemize}
+
+\subsubsection*{Courier2:}
+\begin{itemize}
+\item Courier2 knows the authenticity of origin of the message
+\item Courier2 knows the original sender is Alice and recipient is Bob
+\item Courier2 dosen't know the identity of the sender
+\item Courier2 doesn't know the validity of the message
+\end{itemize}
+\vspace{40pt}
+
+
+\newpage
+\section*{Scenario 2: Bilateral Authenticated}
+\subsection*{Upload Scenario2}
+\begin{msc}{Upload Scenario2}
+\setlength{\instdist}{4\instdist}
+\setlength{\envinstdist}{1.7\envinstdist}
+\setlength{\levelheight}{1.5\levelheight}
+\declinst{alice}{Alice}{}
+\declinst{courier}{Courier}{}
+
+\mess{(Courier\textbar size), SIGN$_C$}{courier}{alice}
+\nextlevel
+\action*{pick symmetric key k$_{AB}$}{alice}
+\nextlevel
+\action*{meta$_B$ = E$_{pk_B}$(k$_{AB}$\textbar timestamp)\textbar SIGN$_A$}{alice}
+\nextlevel
+\action*{msg$_B$ = E$_{k_{AB}}$(message)\textbar MAC$_{k_{AB}}$(message)}{alice}
+\nextlevel[2]
+\mess{E$_{pk_C}$(Alice\textbar Bob)\textbar meta$_B$\textbar msg$_B$, SIGN$_A$}{alice}{courier}
+\nextlevel
+\action*{check validity of names and size}{courier}
+\nextlevel[2]
+\mess{HASH(received message), SIGN$_C$}{courier}{alice}
+\nextlevel
+\end{msc}
+
+
+
+\subsection*{Preconditions}
+\subsubsection*{Alice:}
+\begin{itemize}
+\item Alice holds a unique asymmetric key sk$_A$ which corresponds to its public key pk$_A$
+\item the message recipient is specified (here Bob)
+\item Alice may/may not have messages to send
+\end{itemize}
+
+\subsubsection*{Courier:}
+\begin{itemize}
+\item Courier holds a unique asymmetric key sk$_C$ which corresponds to its public key pk$_C$
+\item Courier knows Alice is the potential message sender and approach her actively
+\item if Courier is empty, it should periodically check whether Alice has message to send
+\end{itemize}
+
+\subsection*{Postconditions}
+\subsubsection*{Alice:}
+\begin{itemize}
+\item if response is valid, Alice knows all the message has been successfully sent to Courier
+\item if response is not valid, Alice doesn't know whether message has been successfully sent
+\newline 
+it doesn't necessarily mean Courier didn't successfully receive the message, it might. But Alice has to keep current message for future potential resending
+\item Alice doesn't know whether the message will be eventually deliver to Bob
+\end{itemize}
+
+\subsubsection*{Courier:}
+\begin{itemize}
+\item Courier successfully receives all Alice's messages
+\item Courier knows the authenticity of origin of Alice's messages
+\item Courier doesn't know the content of meta$_B$ and msg$_B$
+\end{itemize}
+\vspace{40pt}
+
+
+\subsection*{Download Scenario2}
+Exatly same with Download Scenario1
+\vspace{40pt}
+
+
+\subsection*{Trasmit Scenario2}
+\begin{msc}{Transmit Scenario1}
+\setlength{\instdist}{3\instdist}
+\setlength{\envinstdist}{2\envinstdist}
+\setlength{\levelheight}{1.5\levelheight}
+\declinst{courier1}{Courier1}{}
+\declinst{courier2}{Courier2}{}
+
+\action*{meta$_B$ = E$_{pk_B}$(k$_{AB}$\textbar Alice\textbar Bob\textbar timestamp)\textbar SIGN$_A$}{courier1}
+\nextlevel
+\action*{msg$_B$ = E$_{k_{AB}}$(message)\textbar MAC$_{k_{AB}}$(message)}{courier1}
+\nextlevel[2]
+\mess{(E$_{pk_{C2}}$(Alice\textbar Bob)\textbar meta$_B$\textbar msg$_B$, SIGN$_A$), SIGN$_{pk_{C1}}$}{courier1}{courier2}
+\nextlevel
+\mess{HASH(previous message), SIGN$_{pk_{C2}}$}{courier2}{courier1}
+\end{msc}
+
+
+\subsection*{Preconditions}
+\subsubsection*{Courier1:}
+\begin{itemize}
+\item Courier1 holds a unique asymmetric key sk$_{pk_{C1}}$ which corresponds to its public key pk$_{pk_{C1}}$
+\item Courier1 knows it is Courier2 who is the next message carrier, so it approaches Courier2 actively
+\end{itemize}
+
+\subsubsection*{Courier2:}
+\begin{itemize}
+\item Courier2 holds a unique asymmetric key sk$_{pk_{C2}}$ which corresponds to its public key pk$_{pk_{C2}}$
+\end{itemize}
+
+\subsection*{Postconditions}
+\subsubsection*{Courier1:}
+\begin{itemize}
+\item if response is valid, Courier1 knows the message has been successfully sent to Courier2
+\item if response is not valid, Courier1 doesn't know whether Courier2 has successfully received the message
+\newline 
+It doesn't necessarily mean Courier2 didn't get message correctly, but Courier1 has to resend the message until it gets valid response
+\end{itemize}
+
+\subsubsection*{Courier2:}
+\begin{itemize}
+\item Courier2 knows the authenticity of origin of the message
+\item Courier2 knows the original sender is Alice and recipient is Bob
+\item Courier2 knows the message sender is Courier1 and the message integrity is preserved
+\end{itemize}
+\vspace{40pt}
+
+
+\section*{Scenario 3: No Authentication}
+Considering the fact that anyone can pretend to be Alice and send fake message to Courier, Courier will never know which message is come from real Alice. So the Courier has to wait infinitely long before start transporting or it will be very likely that it carries all invalid messages after transporting. The potential cost is unacceptable and this method is not considered.
+\vspace{40pt}
+
+\section*{Pros and Cons}
+\subsubsection*{Scenario 1:}
+\begin{itemize}
+\item simpler for communication and easier to implement
+\item inefficient for Alice\newline
+because she doesn't know which is the real responsible courier, she has to response for every request and send the message to infinite number of potential couriers
+\item most of the messages exchanged are unprotected including the recipient name
+\item in Transmit Scenario, Intruder can pretend to be Courier1 and send Courier2 fake messages. Although the message won't be accepted by Bob, it may prevent Courier2 from getting real message from Courier1. And the cost of that could be huge.
+\end{itemize}
+\subsubsection*{Scenario 2: Vice Versa}
+\end{document}
