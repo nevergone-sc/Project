@@ -40,11 +40,12 @@ public class Server {
 		ByteBuffer bb = ByteBuffer.allocate(1024);
 		x.read(bb);
 		bb.flip();
-		System.out.println(new String(bb.array()));
+		System.out.println("return dst: " + new String(bb.array()));
 		bb.clear();
-		bb.put("reply message!".getBytes());
+		String s = "Courier         " + "Alice           " + "Bob             " + "metaB     " + "msgB      " + "mackc     ";
+		bb.put(s.getBytes());
 		bb.flip();
 		x.write(bb);
-		x.close();		
+		x.close();
 	} 
 }

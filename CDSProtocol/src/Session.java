@@ -18,13 +18,17 @@ public class Session {
 		
 		while (true) {
 			lengthReceived = channel.read(receiveBuffer);
+			receiveBuffer.flip();
 			if (lengthReceived <= 0) break;
 			
 			lengthSent = delegate.process(receiveBuffer, sendBuffer);
+			sendBuffer.flip();
 			if (lengthSent <= 0) break;
 			
-			if (channel.write(sendBuffer) != lengthSent) {
-				System.out.println("Send fail");
+			int actSent = channel.write(sendBuffer);
+			System.out.println(lengthSent + " " + actSent);
+			if (actSent != lengthSent) {
+				System.out.println("Send fail: " + "length sent = " + lengthSent + " actual sent = " + actSent);
 				break;
 			}
 		}

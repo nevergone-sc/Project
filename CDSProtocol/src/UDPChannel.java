@@ -7,8 +7,9 @@ public class UDPChannel implements Channel{
 	private final int CLOSED = 0, OPEN = 1, CONNECTED = 2;
 	private int state;
 	private int channelPort;
-	private int dstPort;
+	private InetSocketAddress dstAddress;
 	private DatagramChannel channel;
+	private ByteBuffer preMessage = null;
 	
 	public UDPChannel() throws Exception {
 		channel = DatagramChannel.open();
@@ -23,18 +24,18 @@ public class UDPChannel implements Channel{
 		state = OPEN;
 	}
 	
-	public UDPChannel(InetSocketAddress dstAddress) throws Exception {
+	public UDPChannel(InetSocketAddress address) throws Exception {
 		channel = DatagramChannel.open();
 		channelPort = channel.socket().getPort();
-		channel.connect(dstAddress);
+		dstAddress = address;
 		state = CONNECTED;
 	}
 	
-	public UDPChannel(int port, InetSocketAddress dstAddress) throws Exception {
+	public UDPChannel(int port, InetSocketAddress address) throws Exception {
 		channelPort = port;
 		channel = DatagramChannel.open();
 		channel.socket().bind(new InetSocketAddress(channelPort));
-		channel.connect(dstAddress);
+		dstAddress = address;
 		state = CONNECTED;
 	}
 	
@@ -42,18 +43,9 @@ public class UDPChannel implements Channel{
 		if (state == OPEN) {
 			ByteBuffer bb = ByteBuffer.allocate(1024);
 			InetSocketAddress senderAddress = (InetSocketAddress) channel.receive(bb);
-			if (bb.getInt() == 0) {
-				UDPChannel returnChannel = new UDPChannel(senderAddress);
-				
-				bb.clear();
-				bb.putInt(1);
-				bb.flip();
-				
-				returnChannel.write(bb);				
-				return returnChannel;
-			} else {
-				return null;
-			}
+			UDPChannel returnChannel = new UDPChannel(senderAddress);
+			returnChannel.putPreMessage(bb);
+			return returnChannel;
 		} else {
 			return null;
 		}
@@ -61,27 +53,9 @@ public class UDPChannel implements Channel{
 	
 	public boolean connect(InetSocketAddress address) throws Exception {
 		if (state == OPEN) {
-			byte[] FIN = {0};
-			ByteBuffer bb = ByteBuffer.allocate(1024);
-			bb.put(FIN);
-			bb.flip();
-			channel.send(bb, address);
-			
-			System.out.println("message sent");
-			
-			bb.clear();
-			InetSocketAddress senderAddress = (InetSocketAddress) channel.receive(bb);
-			bb.flip();
-			
-			System.out.println("message received");
-			if (bb.getInt() == 1) {
-				channel.connect(senderAddress);
-				System.out.println(senderAddress.getPort());
-				state = CONNECTED;
-				return true;
-			} else {
-				return false;
-			}
+			dstAddress = address;
+			state = CONNECTED;
+			return true;
 		} else {
 			return false;
 		}
@@ -97,9 +71,22 @@ public class UDPChannel implements Channel{
 		}
 	}
 	
+	public void putPreMessage(ByteBuffer src) {
+		preMessage = src;
+	}
+	
 	public int read(ByteBuffer dst) throws Exception {
 		if (state == CONNECTED) {
-			return channel.read(dst);
+			if (preMessage == null) {
+				InetSocketAddress senderAddress = (InetSocketAddress) channel.receive(dst);
+				dstAddress = senderAddress;
+				return dst.remaining();
+			} else {
+				dst.put(preMessage.array().clone());
+				int length = preMessage.position();
+				preMessage = null;
+				return length;
+			}
 		} else {
 			return -1;
 		}
@@ -107,7 +94,7 @@ public class UDPChannel implements Channel{
 	
 	public int write(ByteBuffer src) throws Exception {
 		if (state == CONNECTED) {
-			return channel.write(src);
+			return channel.send(src, dstAddress);
 		} else {
 			return -1;
 		}

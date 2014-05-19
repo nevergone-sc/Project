@@ -36,7 +36,7 @@ public class Client {
 			bb.clear();
 			System.out.println(c.read(bb));
 			bb.flip();
-			byte[] rst = new byte[15];
+			byte[] rst = new byte[bb.remaining()];
 			bb.get(rst);
 			System.out.println(new String(rst));
 		}
