@@ -16,9 +16,26 @@ public class Test {
 		System.out.println(pka[1]);
 		System.out.println(pka[2]);
 		System.out.println(pka[9]);
+		
 		*/
+		Thread t1 = new Thread(new Runnable() {
+			public void run() {
+				Receiver r = new Receiver();
+				try {
+					r.start();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		t1.start();
+		
+		System.out.println("Reciever started");
 		
 		Sender c = new Sender();
 		c.start();
+		
+		
 	}
 }
