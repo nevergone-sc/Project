@@ -50,5 +50,11 @@ public class Session extends Thread {
 			
 		}
 		System.out.println("Session " + sessionID + " process finished");
+		try {
+			channel.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

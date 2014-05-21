@@ -20,7 +20,7 @@ public class Test {
 		*/
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
-				Receiver r = new Receiver();
+				Accepter r = new Alice();
 				try {
 					r.start();
 				} catch (Exception e) {
@@ -31,11 +31,11 @@ public class Test {
 		});
 		t1.start();
 		
-		System.out.println("Reciever started");
 		
-		Sender c = new Sender();
+		Initializer c = new CourierA();
 		c.start();
 		
-		
+		Initializer c2 = new CourierA();
+		c2.start();
 	}
 }
