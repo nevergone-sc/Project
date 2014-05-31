@@ -3,19 +3,22 @@ import java.net.InetSocketAddress;
 
 
 public class Accepter {
+	int listeningPort;
+	
 	public void start() throws Exception {
-		int myPort = 8888;
-		int sendPort = 8887;
-		
-		Channel mainChannel = new UDPChannel(myPort);
+		Channel mainChannel = new UDPChannel(listeningPort);
 		System.out.println("Accepter Ready");
 		while (true) {
-			Channel sideChannel = mainChannel.accept();
+			Channel subChannel = mainChannel.accept();
 			System.out.println("Accepter Accepts a Connection");
 			Delegate delegate = makeDelegate();
-			Session session = new Session(sideChannel, delegate, 0);
+			Session session = new Session(subChannel, delegate, 0);
 			session.start();
 		}
+	}
+	
+	public void setListeningPort(int port) {
+		listeningPort = port;
 	}
 	
 	protected Delegate makeDelegate() {

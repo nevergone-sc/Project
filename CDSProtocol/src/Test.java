@@ -1,23 +1,12 @@
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.security.KeyPair;
+import java.security.MessageDigest;
 
 
 public class Test {
 	public static void main(String args[]) throws Exception {  
 		/*
-		Delegate delegate = new Courier();
-		ByteBuffer bb = ByteBuffer.allocate(20);
-		ByteBuffer initMsg = delegate.getInitialMessage();
-		System.out.println(Delegate.extractString(initMsg, 0, 7));
-		System.out.println(initMsg.getInt());
-		byte[] pka = new byte[initMsg.remaining()];
-		initMsg.get(pka);
-		System.out.println(pka[0]);
-		System.out.println(pka[1]);
-		System.out.println(pka[2]);
-		System.out.println(pka[9]);
-		
-		*/
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
 				Accepter r = new Alice();
@@ -33,9 +22,33 @@ public class Test {
 		
 		
 		Initializer c = new CourierA();
+		c.setDstPort(8888);
 		c.start();
 		
 		Initializer c2 = new CourierA();
+		c2.setDstPort(8888);
 		c2.start();
+		*/
+		
+		Crypto c = new Crypto();
+		byte[] plaintext = "Here is your message!".getBytes();
+		KeyPair keyPair = c.generateAsymKey(1024);
+		
+		
+		byte[] ciphertext = c.encryptAsym(plaintext, keyPair.getPublic().getEncoded());
+		byte[] decrypted = c.decryptAsym(ciphertext, keyPair.getPrivate().getEncoded());
+		
+		MessageDigest mg = MessageDigest.getInstance("SHA-256");
+		mg.update((byte) 2);
+		mg.update((byte) 3);
+		byte[] hash = mg.digest();
+		System.out.println(new String(hash));
+		
+		byte[] input = {(byte) 2, (byte) 3};
+		System.out.println(c.verifyHashDigest(input, hash));
+		
+		byte[] a = {1};
+		byte[] b = {1};
+		System.out.println(a.equals(b));
 	}
 }

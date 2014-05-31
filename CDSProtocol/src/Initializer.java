@@ -3,17 +3,22 @@ import java.nio.ByteBuffer;
 
 
 public class Initializer {
+	private int dstPort = 8888;
+	
 	public void start() throws Exception {
-		int myPort = 8887;
-		int dstPort = 8888;
+		
 		InetAddress dstAddress = InetAddress.getByName("localhost"); 
 		
 		Delegate delegate = makeDelegate();
-		Channel channel = new UDPChannel(myPort, new InetSocketAddress(dstAddress, dstPort));
+		Channel channel = new UDPChannel(new InetSocketAddress(dstAddress, dstPort));
 		channel.write(delegate.getInitialMessage());
 		System.out.println("Initial Message Sent");
 		Session session = new Session(channel, delegate, 1);
 		session.start();
+	}
+	
+	public void setDstPort(int p) {
+		dstPort = p;
 	}
 	
 	protected Delegate makeDelegate() {
