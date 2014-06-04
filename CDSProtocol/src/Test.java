@@ -1,5 +1,6 @@
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.MessageDigest;
 
@@ -32,23 +33,15 @@ public class Test {
 		
 		Crypto c = new Crypto();
 		byte[] plaintext = "Here is your message!".getBytes();
+		byte[] key = c.generateSymmKey(256);
+		byte[] key2 = c.generateSymmKey(256);
 		KeyPair keyPair = c.generateAsymKey(1024);
 		
 		
 		byte[] ciphertext = c.encryptAsym(plaintext, keyPair.getPublic().getEncoded());
 		byte[] decrypted = c.decryptAsym(ciphertext, keyPair.getPrivate().getEncoded());
 		
-		MessageDigest mg = MessageDigest.getInstance("SHA-256");
-		mg.update((byte) 2);
-		mg.update((byte) 3);
-		byte[] hash = mg.digest();
-		System.out.println(new String(hash));
-		
-		byte[] input = {(byte) 2, (byte) 3};
-		System.out.println(c.verifyHashDigest(input, hash));
-		
-		byte[] a = {1};
-		byte[] b = {1};
-		System.out.println(a.equals(b));
+		byte[] digest = c.getMACDigest(plaintext, key2);
+		System.out.println(c.verifyMACDigest(plaintext, key2, digest));
 	}
 }

@@ -218,10 +218,72 @@ public class Crypto {
 		}
 		return false;
 	}
-	/*
-	public byte[] getMACDigest();
-	public boolean verifyMACDigest();
-	public byte[] getSIGN();
+	
+	public byte[] getMACDigest(byte[] input, byte[] key) {
+		SecretKeySpec macKey = new SecretKeySpec(key, "HmacSHA256");
+		
+		try {
+			Mac mac = Mac.getInstance("HmacSHA256");
+			mac.init(macKey);
+			return mac.doFinal(input);
+		
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public boolean verifyMACDigest(byte[] input, byte[] key, byte[] macDigest) {
+		SecretKeySpec macKey = new SecretKeySpec(key, "HmacSHA256");
+		
+		try {
+			Mac mac = Mac.getInstance("HmacSHA256");
+			mac.init(macKey);
+			byte[] digest = mac.doFinal(input);
+			
+			for (int i = 0; i < digest.length; i++) {
+				if (digest[i] != macDigest[i]) return false;
+			}
+		
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	public byte[] getSIGN(byte[] input, byte[] key) {
+		try {
+			// Wrap the key bytes into Key object	
+			KeyFactory kf = KeyFactory.getInstance("RSA");
+			PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(key));
+						
+			Signature sig = Signature.getInstance("SHA256withRSA");
+			sig.initSign(privateKey);
+			sig.sign();
+			
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SignatureException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public boolean verifySIGN();
-	*/
 }
