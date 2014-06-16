@@ -1,16 +1,20 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.MessageDigest;
+import java.security.Signature;
 
 
 public class Test {
 	public static void main(String args[]) throws Exception {  
-		/*
+
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
 				Accepter r = new Alice();
+				r.setListeningPort(8888);
 				try {
 					r.start();
 				} catch (Exception e) {
@@ -22,26 +26,37 @@ public class Test {
 		t1.start();
 		
 		
-		Initializer c = new CourierA();
-		c.setDstPort(8888);
-		c.start();
-		
-		Initializer c2 = new CourierA();
-		c2.setDstPort(8888);
-		c2.start();
+		Initializer i = new CourierA();
+		i.setDstPort(8888);
+		i.start();
+		/*
+		Initializer i2 = new CourierA();
+		i2.setDstPort(8888);
+		i2.start();
 		*/
 		
+		DataManager dm = new DataManager();
 		Crypto c = new Crypto();
-		byte[] plaintext = "Here is your message!".getBytes();
-		byte[] key = c.generateSymmKey(256);
-		byte[] key2 = c.generateSymmKey(256);
+		KeyPair kp = c.generateAsymKey(1024);
+		//dm.setPathPublicKey("ALICE", "PublicKey_Alice");
+		//dm.setPathPrivateKey("PrivateKey_Alice");
+		dm.setPathPublicKey("BOB", "PublicKey_Bob");
+		dm.setPathPrivateKey("PrivateKey_Bob");
+		//dm.putPublicKey(kp.getPublic().getEncoded(), "BOB");
+		//dm.putPrivateKey(kp.getPrivate().getEncoded());
+		
+
+
+		byte[] plaintext = "Here is youafasfasfsfafasfr mesfaskdjfjhaksdjflassage!!".getBytes();
+		byte[] plaintext2 = "Here is not your message!".getBytes();
+		byte[] key = c.generateSymmKey(128);
+		byte[] key2 = c.generateSymmKey(128);
 		KeyPair keyPair = c.generateAsymKey(1024);
+		byte[] publicKey = dm.getPublicKey("BOB");
+		byte[] privateKey = dm.getPrivateKey();
 		
-		
-		byte[] ciphertext = c.encryptAsym(plaintext, keyPair.getPublic().getEncoded());
-		byte[] decrypted = c.decryptAsym(ciphertext, keyPair.getPrivate().getEncoded());
-		
-		byte[] digest = c.getMACDigest(plaintext, key2);
-		System.out.println(c.verifyMACDigest(plaintext, key2, digest));
+		byte[] ciphertext = c.getSIGN(plaintext, privateKey);		
+		System.out.println(c.verifySIGN(plaintext, publicKey , ciphertext));
+
 	}
 }

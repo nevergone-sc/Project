@@ -8,6 +8,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 public class Crypto {
+	public static final int LENGTH_SIGN = 16;
+	public static final int LENGTH_MAC = 32;
+	public static final int LENGTH_HASH = 32;
 	final int LENGTH_IV = 16;
 	
 	public byte[] generateSymmKey(int size) {
@@ -267,7 +270,8 @@ public class Crypto {
 						
 			Signature sig = Signature.getInstance("SHA256withRSA");
 			sig.initSign(privateKey);
-			sig.sign();
+			sig.update(input);
+			return sig.sign();
 			
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
@@ -282,8 +286,33 @@ public class Crypto {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		return null;
 	}
 	
-	public boolean verifySIGN();
+	public boolean verifySIGN(byte[] input, byte[] key, byte[] signature) {
+		try {
+			// Wrap the key bytes into Key object
+			KeyFactory kf = KeyFactory.getInstance("RSA");
+			PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(key));
+			
+			Signature sig = Signature.getInstance("SHA256withRSA");
+			sig.initVerify(publicKey);
+			sig.update(input);
+			return sig.verify(signature);
+			
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SignatureException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

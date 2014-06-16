@@ -1,7 +1,9 @@
 import java.nio.ByteBuffer;
 
 public abstract class Delegate {
-	protected int LENGTH_ID = 16;
+	protected final int LENGTH_ID = 16;
+	protected final int LENGTH_SYMM_KEY = 128;
+	protected final int LENGTH_ASYM_KEY = 1024;
 	protected boolean isAlive = true;
 	
 	abstract public ByteBuffer getInitialMessage();
@@ -21,6 +23,11 @@ public abstract class Delegate {
 		byte[] returnArray = new byte[LENGTH_ID];
 		System.arraycopy(ID.getBytes(), 0, returnArray, 0, ID.length());
 		return returnArray;
+	}
+	
+	protected String dewrapID(byte[] bytes) {
+		String returnString = new String(bytes);
+		return returnString.trim();
 	}
 	
 	static protected void printByteArray(byte[] src) {
