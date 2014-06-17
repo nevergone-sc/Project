@@ -25,7 +25,6 @@ public class Test {
 		});
 		t1.start();
 		
-		
 		Initializer i = new CourierA();
 		i.setDstPort(8888);
 		i.start();
@@ -35,6 +34,7 @@ public class Test {
 		i2.start();
 		*/
 		
+		/*
 		DataManager dm = new DataManager();
 		Crypto c = new Crypto();
 		KeyPair kp = c.generateAsymKey(1024);
@@ -55,8 +55,8 @@ public class Test {
 		byte[] publicKey = dm.getPublicKey("BOB");
 		byte[] privateKey = dm.getPrivateKey();
 		
-		byte[] ciphertext = c.getSIGN(plaintext, privateKey);		
-		System.out.println(c.verifySIGN(plaintext, publicKey , ciphertext));
-
+		byte[] ciphertext = c.getMACDigest(plaintext, key);
+		System.out.println(ciphertext.length);
+		*/
 	}
 }

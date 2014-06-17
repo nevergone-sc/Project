@@ -2,7 +2,7 @@
 public class Alice extends Accepter {
 	protected Delegate makeDelegate() {
 		Crypto crypto = new Crypto();
-		DataManager dataManager = new DataManager();
+		DataManager dataManager = new DataManager(1000);
 		dataManager.setPathPublicKey("ALICE", "PublicKey_Alice");
 		dataManager.setPathPublicKey("BOB", "PublicKey_Bob");
 		dataManager.setPathData("ALICE", "Data_Alice");

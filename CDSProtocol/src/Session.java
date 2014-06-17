@@ -2,6 +2,8 @@ import java.nio.ByteBuffer;
 
 
 public class Session extends Thread {
+	private static final int MAX_BUFFER_SIZE = 1024;
+	
 	int sessionID;
 	Channel channel;
 	Delegate delegate;
@@ -13,8 +15,8 @@ public class Session extends Thread {
 	}
 	
 	public void run() {
-		ByteBuffer receiveBuffer = ByteBuffer.allocate(1024);
-		ByteBuffer sendBuffer = ByteBuffer.allocate(1024);
+		ByteBuffer receiveBuffer = ByteBuffer.allocate(MAX_BUFFER_SIZE);
+		ByteBuffer sendBuffer = ByteBuffer.allocate(MAX_BUFFER_SIZE);
 		int lengthSent = 0;
 		int lengthReceived = 0;
 		
@@ -31,7 +33,7 @@ public class Session extends Thread {
 			if (lengthReceived <= 0) break;
 			
 			lengthSent = delegate.process(receiveBuffer, sendBuffer);
-			if (lengthSent < 0) { System.out.println("process not valid"); break; }
+			if (lengthSent < 0) { System.out.println("process unsuccessful" + lengthSent + " " + sessionID); break; }
 			if (lengthSent == 0) {break;}
 			
 			int actSent = 0;

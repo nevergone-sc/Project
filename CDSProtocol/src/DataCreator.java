@@ -3,18 +3,16 @@ import java.nio.ByteBuffer;
 public class DataCreator extends Delegate {
 	static final boolean debug = true;
 	
-	private final int LENGTH_SIZE = 4;
-	private final int LENGTH_META = 10;
-	private final int LENGTH_MSG  = 10;
 	private final int DATA_SIZE = 100;
 	private String ID = "ALICE";
 	private String dstID = "BOB";
 	private byte[] pkB;
 	private byte[] skA;
-	private byte[] pka = {1,2,3,4,5};
 	private int state = 0;
 	private Crypto crypto;
 	private DataManager dataManager;
+	private ByteBuffer sentMessage = null;
+	
 	
 	public DataCreator(Crypto c, DataManager dm) {
 		crypto = c;
@@ -33,14 +31,14 @@ public class DataCreator extends Delegate {
 			int encryptedLength = src.getInt();
 			byte[] encryptedKc = new byte[encryptedLength];
 			src.get(encryptedKc);
-			byte[] skA = dataManager.getPrivateKey();
+			skA = dataManager.getPrivateKey();
 			byte[] kc = crypto.decryptAsym(encryptedKc, skA);
 			
 			if (debug) {
 				System.out.println("DataCreator-----------------------");
 				System.out.println("SenderID: " + senderID);
 				System.out.println("Max size: " + maxSize);
-				System.out.print("EncPKA: ");
+				System.out.print("kC: ");
 				printByteArray(kc);
 				System.out.println();
 			}
@@ -48,15 +46,17 @@ public class DataCreator extends Delegate {
 			if (!senderID.equals("COURIER")) return -1;
 			if (DATA_SIZE > maxSize) return -1;
 			
-			byte[] kab = crypto.generateSymmKey(LENGTH_SYMM_KEY);
+			byte[] kab = crypto.generateSymmKey(LENGTH_SYMM_KEY*8);
 			
 			long timestamp = System.currentTimeMillis();
-			ByteBuffer metaBValueBuffer = ByteBuffer.allocate(LENGTH_SYMM_KEY+2*LENGTH_ID+Long.SIZE+Crypto.LENGTH_SIGN);
+			ByteBuffer metaBValueBuffer = ByteBuffer.allocate(LENGTH_SYMM_KEY+2*LENGTH_ID+Long.SIZE/8);
 			metaBValueBuffer.put(kab);
 			metaBValueBuffer.put(wrapID(ID));
 			metaBValueBuffer.put(wrapID(dstID));
 			metaBValueBuffer.putLong(timestamp);
 			metaBValueBuffer.flip();
+
+			//System.out.println(metaBValueBuffer.array().length);
 			byte[] metaBValue = crypto.encryptAsym(metaBValueBuffer.array(), pkB);
 			byte[] metaBSign = crypto.getSIGN(metaBValue, skA);
 			
@@ -66,11 +66,11 @@ public class DataCreator extends Delegate {
 			
 			int metaLength = metaBValue.length + Crypto.LENGTH_SIGN;
 			int msgLength = msgBValue.length + Crypto.LENGTH_MAC;
-			int totalSendLength = 3*LENGTH_ID + metaLength + msgLength + 2*Integer.SIZE + Crypto.LENGTH_MAC;
+			int totalSendLength = 3*LENGTH_ID + metaLength + msgLength + 2*Integer.SIZE/8 + Crypto.LENGTH_MAC;
 			ByteBuffer sendBuffer = ByteBuffer.allocate(totalSendLength);
-			sendBuffer.put(senderID.getBytes());
-			sendBuffer.put(ID.getBytes());
-			sendBuffer.put(dstID.getBytes());
+			sendBuffer.put(wrapID(senderID));
+			sendBuffer.put(wrapID(ID));
+			sendBuffer.put(wrapID(dstID));
 			sendBuffer.putInt(metaLength);
 			sendBuffer.put(metaBValue);
 			sendBuffer.put(metaBSign);
@@ -82,17 +82,26 @@ public class DataCreator extends Delegate {
 			
 			sendBuffer.put(totalSendMAC);
 			sendBuffer.flip();
+			sentMessage = sendBuffer;
 			
 			dst.put(sendBuffer);
+			dst.flip();
 			
 			state = 1;
-			return dst.remaining();
+			return sendBuffer.capacity();
 			
 		case 1:
+			byte[] hashDigest = new byte[Crypto.LENGTH_HASH];
+			src.get(hashDigest);
+			boolean isHashValid = crypto.verifyHashDigest(sentMessage.array(), hashDigest);
+			
 			if (debug) {
 				System.out.println("DataCreator-----------------------");
-				System.out.println("hash: " + extractString(src, 0, Crypto.LENGTH_HASH));
+				System.out.println("hash: " + new String(hashDigest));
+				System.out.println("Verify Hash Digest: " + isHashValid);
 			}
+			
+			if (!isHashValid) return -1;
 			terminate();
 			return 0;
 			

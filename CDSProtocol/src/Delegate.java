@@ -2,8 +2,8 @@ import java.nio.ByteBuffer;
 
 public abstract class Delegate {
 	protected final int LENGTH_ID = 16;
-	protected final int LENGTH_SYMM_KEY = 128;
-	protected final int LENGTH_ASYM_KEY = 1024;
+	protected final int LENGTH_SYMM_KEY = 16;
+	protected final int LENGTH_ASYM_KEY = 128;
 	protected boolean isAlive = true;
 	
 	abstract public ByteBuffer getInitialMessage();

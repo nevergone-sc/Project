@@ -1,22 +1,19 @@
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 
 public class DataManager {
-	private final int MAX_STORAGE = 1000;
+	private final int MAX_STORAGE;
 	private HashMap<String, String> publicKeyPaths = new HashMap<String, String>();
 	private HashMap<String, String> dataPaths = new HashMap<String, String>();
 	private String pathPrivateKey = "PrivateKey_Alice";
 	
-	public DataManager() {
-		
+	public DataManager(int max) {
+		MAX_STORAGE = max;
 	}
 	
 	public byte[] getData(String id) {
@@ -101,5 +98,9 @@ public class DataManager {
 	
 	public void setPathData(String id, String path) {
 		dataPaths.put(id, path);
+	}
+	
+	public int maxStorage() {
+		return MAX_STORAGE;
 	}
 }

@@ -4,16 +4,10 @@ import java.nio.ByteBuffer;
 public class ReceiveCourier extends Delegate {
 	static final boolean debug = true;
 	
-	private final int LENGTH_SIZE = 4;
-	private final int LENGTH_ENC_KEY = 5;
-	private final int LENGTH_META = 5;
-	private final int LENGTH_MSG  = 5;
-	private final int LENGTH_MAC  = 5;
-	private final int MAX_STORAGE = 1000;
 	private String ID = "COURIER";
 	private int state = 0;
-	private Crypto crypto = new Crypto();
-	private DataManager dataManager = new DataManager();
+	private Crypto crypto;
+	private DataManager dataManager;
 	
 	byte[] kc = null;
 	String senderID = "ALICE";
@@ -31,9 +25,9 @@ public class ReceiveCourier extends Delegate {
 		kc = crypto.generateSymmKey(128);
 		byte[] encryptedKc = crypto.encryptAsym(kc, pkA);
 		int encryptedLength = encryptedKc.length;
-		ByteBuffer returnBuffer = ByteBuffer.allocate(LENGTH_ID+2*Integer.SIZE+encryptedLength);
+		ByteBuffer returnBuffer = ByteBuffer.allocate(LENGTH_ID+2*Integer.SIZE/8+encryptedLength);
 		returnBuffer.put(wrapID(ID));
-		returnBuffer.putInt(MAX_STORAGE);
+		returnBuffer.putInt(dataManager.maxStorage());
 		returnBuffer.putInt(encryptedLength);
 		returnBuffer.put(encryptedKc);
 		returnBuffer.flip();
@@ -62,23 +56,29 @@ public class ReceiveCourier extends Delegate {
 			
 			totalMAC = new byte[Crypto.LENGTH_MAC];
 			src.get(totalMAC);
+
+			int receivedLength = 3*LENGTH_ID + 2*Integer.SIZE/8 + metaLength + msgLength + Crypto.LENGTH_MAC;
 			
 			if (debug) {
 				System.out.println("ReceiveCourier---------------------");
 				System.out.println("Receiver: " + receivedID);
 				System.out.println("Sender: " + senderID);
 				System.out.println("Recipient: " + receiverID);
+				System.out.println("META length: " + metaLength);
+				System.out.println("Message length: " + msgLength);
 			}
 			
 			if (!validateMsg()) return -1;
 			
 			src.rewind();
+			byte[] totalReceived = new byte[receivedLength];
+			src.get(totalReceived);
 			dst.clear();
-			dst.put(crypto.getHashDigest(src.array()));
+			dst.put(crypto.getHashDigest(totalReceived));
 			dst.flip();
 			
 			terminate();
-			return dst.remaining();
+			return Crypto.LENGTH_HASH;
 		
 		default:
 			return -1;
