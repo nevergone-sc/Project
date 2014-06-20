@@ -9,21 +9,37 @@ import java.util.HashMap;
 public class DataManager {
 	private final int MAX_STORAGE;
 	private HashMap<String, String> publicKeyPaths = new HashMap<String, String>();
-	private HashMap<String, String> dataPaths = new HashMap<String, String>();
+	private HashMap<Pair<String, String>, String> dataPaths = new HashMap<Pair<String, String>, String>();
 	private String pathPrivateKey = "PrivateKey_Alice";
 	
 	public DataManager(int max) {
 		MAX_STORAGE = max;
 	}
 	
-	public byte[] getData(String id) {
-		String path = dataPaths.get(id);
+	public byte[] getData(String idFrom, String idTo) {
+		String path = dataPaths.get(new Pair<String, String>(idFrom, idTo));
+		if (path == null) return null;
 		return read(path);
 	}
 	
-	public void putData(byte[] src, String id) {
-		String path = dataPaths.get(id);
-		write(src, path);
+	public void putData(byte[] src, String idFrom, String idTo) {
+		Pair<String, String> idPair = new Pair<String, String>(idFrom, idTo);
+		String path = dataPaths.get(idPair);
+		if (path == null) {
+			// Create the file
+			String filename = "Data_" + idFrom + "_To_" + idTo;
+			File file = new File(filename);
+			try {
+				file.createNewFile();
+				write(src, filename);
+				dataPaths.put(idPair, filename);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			write(src, path);
+		}
 	}
 	
 	public byte[] getPublicKey(String id) {
@@ -96,11 +112,42 @@ public class DataManager {
 		pathPrivateKey = path;
 	}
 	
-	public void setPathData(String id, String path) {
-		dataPaths.put(id, path);
+	public void setPathData(String idFrom, String idTo, String path) {
+		dataPaths.put(new Pair<String, String>(idFrom, idTo), path);
+	}
+	
+	public void readPathsFromFile(String filepath) {
+		// TODO:
 	}
 	
 	public int maxStorage() {
 		return MAX_STORAGE;
+	}
+	
+	class Pair<L,R> {
+		  private final L left;
+		  private final R right;
+
+		  public Pair(L left, R right) {
+		    this.left = left;
+		    this.right = right;
+		  }
+
+		  public L getLeft() { return left; }
+		  public R getRight() { return right; }
+
+		  @Override
+		  public int hashCode() { return left.hashCode() ^ right.hashCode(); }
+
+		  @Override
+		  public boolean equals(Object o) {
+		    if (o == null) return false;
+		    if (!(o instanceof Pair)) return false;
+		    @SuppressWarnings("unchecked")
+			Pair<L, R> pairo = (Pair<L, R>) o;
+		    return this.left.equals(pairo.getLeft()) &&
+		           this.right.equals(pairo.getRight());
+		  }
+
 	}
 }

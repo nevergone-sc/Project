@@ -1,27 +1,27 @@
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-
-
-public class Accepter {
-	int listeningPort;
+public abstract class Accepter {
+	private int listeningPort;
+	private boolean isAlive = true;
 	
 	public void start() throws Exception {
 		Channel mainChannel = new UDPChannel(listeningPort);
 		System.out.println("Accepter Ready");
-		while (true) {
+		while (isAlive) {
 			Channel subChannel = mainChannel.accept();
 			System.out.println("Accepter Accepts a Connection");
 			Delegate delegate = makeDelegate();
 			Session session = new Session(subChannel, delegate, 0);
 			session.start();
 		}
+		mainChannel.close();
 	}
 	
 	public void setListeningPort(int port) {
 		listeningPort = port;
 	}
 	
-	protected Delegate makeDelegate() {
-		return new DataReceiver();
+	public synchronized void stop() {
+		isAlive = false;
 	}
+	
+	protected abstract Delegate makeDelegate();
 }

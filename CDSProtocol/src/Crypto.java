@@ -9,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
 	public static final int LENGTH_SIGN = 128;
+	public static final int LENGTH_ASYM_CIPHER = 128;
 	public static final int LENGTH_MAC = 32;
 	public static final int LENGTH_HASH = 32;
 	final int LENGTH_IV = 16;

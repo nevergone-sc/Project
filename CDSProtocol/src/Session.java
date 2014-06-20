@@ -33,7 +33,7 @@ public class Session extends Thread {
 			if (lengthReceived <= 0) break;
 			
 			lengthSent = delegate.process(receiveBuffer, sendBuffer);
-			if (lengthSent < 0) { System.out.println("process unsuccessful" + lengthSent + " " + sessionID); break; }
+			if (lengthSent < 0) { System.err.println("Session "+ sessionID + " process end unsuccessful"); break; }
 			if (lengthSent == 0) {break;}
 			
 			int actSent = 0;
@@ -46,7 +46,7 @@ public class Session extends Thread {
 				e.printStackTrace();
 			}
 			if (actSent != lengthSent) {
-				System.out.println("Send fail: " + "length sent = " + lengthSent + " actual sent = " + actSent);
+				System.err.println("Send fail: " + "length sent = " + lengthSent + " actual sent = " + actSent);
 				break;
 			}
 			

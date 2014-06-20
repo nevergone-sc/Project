@@ -10,7 +10,7 @@ import java.security.Signature;
 
 public class Test {
 	public static void main(String args[]) throws Exception {  
-
+		///*
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
 				Accepter r = new Alice();
@@ -28,11 +28,27 @@ public class Test {
 		Initializer i = new CourierA();
 		i.setDstPort(8888);
 		i.start();
-		/*
-		Initializer i2 = new CourierA();
-		i2.setDstPort(8888);
+		//*/
+		
+		///*
+		Thread t2 = new Thread(new Runnable() {
+			public void run() {
+				Accepter r = new Bob();
+				r.setListeningPort(9888);
+				try {
+					r.start();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		t2.start();
+		
+		Initializer i2 = new CourierB();
+		i2.setDstPort(9888);
 		i2.start();
-		*/
+		//*/
 		
 		/*
 		DataManager dm = new DataManager();

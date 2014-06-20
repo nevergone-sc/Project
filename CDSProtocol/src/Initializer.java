@@ -1,12 +1,9 @@
 import java.net.*;
-import java.nio.ByteBuffer;
 
-
-public class Initializer {
-	private int dstPort = 8888;
+public abstract class Initializer {
+	private int dstPort;
 	
-	public void start() throws Exception {
-		
+	public void start() throws Exception {		
 		InetAddress dstAddress = InetAddress.getByName("localhost"); 
 		
 		Delegate delegate = makeDelegate();
@@ -21,7 +18,5 @@ public class Initializer {
 		dstPort = p;
 	}
 	
-	protected Delegate makeDelegate() {
-		return new SendCourier();
-	}
+	protected abstract Delegate makeDelegate();
 }
