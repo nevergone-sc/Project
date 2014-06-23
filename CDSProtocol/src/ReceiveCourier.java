@@ -1,6 +1,5 @@
 import java.nio.ByteBuffer;
 
-
 public class ReceiveCourier extends Delegate {
 	static final boolean debug = true;
 	
@@ -9,6 +8,7 @@ public class ReceiveCourier extends Delegate {
 	private int state = 0;
 	private Crypto crypto;
 	private DataManager dataManager;
+	private UserInterface ui;
 	
 	private byte[] kc;
 	private byte[] senderSK;
@@ -19,6 +19,10 @@ public class ReceiveCourier extends Delegate {
 		crypto = c;
 		dataManager = dm;
 		senderSK = dataManager.getPublicKey(senderID);
+	}
+	
+	public void setUserInterface(UserInterface ui) {
+		this.ui = ui;
 	}
 	
 	public ByteBuffer getInitialMessage() {
@@ -56,7 +60,6 @@ public class ReceiveCourier extends Delegate {
 		int metaLength = src.getInt();
 		meta = new byte[metaLength];
 		src.get(meta);
-		System.out.println("metaLength: " + metaLength);
 		
 		int msgLength = src.getInt();
 		msg = new byte[msgLength];
@@ -68,12 +71,11 @@ public class ReceiveCourier extends Delegate {
 		int receivedLength = 3*LENGTH_ID + 2*Integer.SIZE/8 + metaLength + msgLength;
 		
 		if (debug) {
-			System.out.println("ReceiveCourier--------------------");
-			System.out.println("Receiver: " + receivedID);
-			System.out.println("Sender: " + senderID);
-			System.out.println("Recipient: " + receiverID);
-			System.out.println("META length: " + metaLength);
-			System.out.println("Message length: " + msgLength);
+			ui.print("Receiver=\t" + receivedID, ID);
+			ui.print("Sender=\t" + senderID, ID);
+			ui.print("Recipient=\t" + receiverID, ID);
+			ui.print("META length=\t" + metaLength, ID);
+			ui.print("MSG length=\t" + msgLength, ID);
 		}
 					
 		// Validate received data------------------------------------------------------------------------

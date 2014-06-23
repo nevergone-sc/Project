@@ -4,6 +4,11 @@ public class CourierA extends Initializer {
 		Crypto crypto = new Crypto();
 		DataManager dataManager = new DataManager(1000);
 		dataManager.setPathPublicKey("Alice", "PublicKey_Alice");
-		return new ReceiveCourier(crypto, dataManager);
+		
+		UserInterface ui = new ConsoleUserInterface();
+		
+		Delegate receiveCourier = new ReceiveCourier(crypto, dataManager);
+		receiveCourier.setUserInterface(ui);
+		return receiveCourier;
 	}
 }

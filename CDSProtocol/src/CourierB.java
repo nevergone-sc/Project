@@ -1,10 +1,13 @@
 
 public class CourierB extends Initializer{
-	protected Delegate makeDelegate() {
+	protected Delegate makeDelegate(UserInterface ui) {
 		Crypto c = new Crypto();
 		DataManager dm = new DataManager(1000);
 		dm.setPathPublicKey("Bob", "PublicKey_Bob");
 		dm.setPathData("Alice", "Bob", "Data_Alice_To_Bob");
-		return new SendCourier(c, dm);
+		
+		Delegate sendCourier = new SendCourier(c, dm);
+		sendCourier.setUserInterface(ui);
+		return sendCourier;
 	}
 }

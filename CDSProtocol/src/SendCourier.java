@@ -12,6 +12,7 @@ public class SendCourier extends Delegate {
 	private Crypto crypto;
 	private DataManager dataManager;
 	private ByteBuffer sentBuffer;
+	private UserInterface ui;
 	
 	byte[] kC;
 	
@@ -19,6 +20,10 @@ public class SendCourier extends Delegate {
 		crypto = c;
 		dataManager = dm;
 		receiverPK = dm.getPublicKey(receiverID);
+	}
+	
+	public void setUserInterface(UserInterface ui) {
+		this.ui = ui;
 	}
 	
 	public ByteBuffer getInitialMessage() {
@@ -53,8 +58,8 @@ public class SendCourier extends Delegate {
 			src.get(receivedMAC);
 			boolean isMACValid = crypto.verifyMACDigest(sentBuffer.array(), kC, receivedMAC);
 			if (debug) {
-				System.out.println("SendCourier--------------");
-				System.out.println("MAC: " + new String(receivedMAC));
+				ui.print("MAC=\t\t" + new String(receivedMAC), ID);
+				ui.print("Verify MAC=\t\t" + isMACValid, ID);
 			}
 			
 			if (!isMACValid) return -1;

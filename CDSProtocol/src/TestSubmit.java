@@ -8,35 +8,34 @@ import java.security.MessageDigest;
 import java.security.Signature;
 
 
-public class Test {
+public class TestSubmit {
 	public static void main(String args[]) throws Exception {  
-		///*
+		/*
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
-				Accepter r = new Alice();
-				r.setListeningPort(8888);
-				try {
-					r.start();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				Accepter alice = new Alice();
+				alice.setListeningPort(8888);
+				UserInterface ui = new ConsoleUserInterface();
+				ui.start(alice);
 			}
 		});
 		t1.start();
 		
-		Initializer i = new CourierA();
-		i.setDstPort(8888);
-		i.start();
-		//*/
+		Initializer courierA = new CourierA();
+		courierA.setDstPort(8888);
+		UserInterface ui2 = new ConsoleUserInterface();
+		ui.start(courierA);
+		*/
 		
 		///*
 		Thread t2 = new Thread(new Runnable() {
 			public void run() {
-				Accepter r = new Bob();
-				r.setListeningPort(9888);
+				Accepter bob = new Bob();
+				bob.setListeningPort(9888);
+				UserInterface ui = new ConsoleUserInterface();
+				ui.start(bob);
 				try {
-					r.start();
+					bob.start();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -45,9 +44,10 @@ public class Test {
 		});
 		t2.start();
 		
-		Initializer i2 = new CourierB();
-		i2.setDstPort(9888);
-		i2.start();
+		Initializer courierB = new CourierB();
+		courierB.setDstPort(9888);
+		UserInterface ui2 = new ConsoleUserInterface();
+		ui2.start(courierB);
 		//*/
 		
 		/*

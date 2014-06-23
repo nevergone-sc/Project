@@ -8,6 +8,7 @@ public class DataReceiver extends Delegate {
 	private int state = 0;
 	private Crypto crypto;
 	private DataManager dataManager;
+	private UserInterface ui;
 	
 	byte[] kC;
 	
@@ -15,6 +16,10 @@ public class DataReceiver extends Delegate {
 		crypto = c;
 		dataManager = dm;
 		mySK = dm.getPrivateKey();
+	}
+	
+	public void setUserInterface(UserInterface ui) {
+		this.ui = ui;
 	}
 	
 	public ByteBuffer getInitialMessage() {
@@ -81,11 +86,8 @@ public class DataReceiver extends Delegate {
 		src.get(msgMAC);
 		
 		if (debug) {
-			System.out.println("DataReceiver---------------------");
-			System.out.println("SenderID:\t" + senderID);
-			System.out.print("EncPKB:\t");
-			printByteArray(encryptedBlock);
-			System.out.println();
+			ui.print("SenderID=\t\t" + senderID, ID);
+			ui.print("EncPKB=\t\t" + new String(encryptedBlock), ID);
 		}
 		
 		// Validate received data ----------------------------------------------------------------
@@ -114,7 +116,7 @@ public class DataReceiver extends Delegate {
 		
 		// Operate on received data ----------------------------------------------------------------
 		byte[] plainMsg = crypto.decryptSymm(encryptedMsgBlock, msgKey);
-		System.out.println(new String(plainMsg));
+		ui.print("Result=\t\t" + new String(plainMsg), ID);
 		
 		// Prepare for send data -------------------------------------------------------------------
 		int totalReceivedLength = LENGTH_ID+Crypto.LENGTH_ASYM_CIPHER+Integer.SIZE/8+dataLength;

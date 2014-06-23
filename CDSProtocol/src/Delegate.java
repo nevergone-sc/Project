@@ -8,9 +8,14 @@ public abstract class Delegate {
 	
 	abstract public ByteBuffer getInitialMessage();
 	abstract public int process(ByteBuffer src, ByteBuffer dst);
+	abstract public void setUserInterface(UserInterface ui);
 	
 	public boolean isAlive() {
 		return isAlive;
+	}
+	
+	public void terminate() {
+		isAlive = false;
 	}
 	
 	public static String extractString(ByteBuffer src, int offset, int length) {
@@ -19,24 +24,20 @@ public abstract class Delegate {
 		return new String(bytes);
 	}
 	
-	protected byte[] wrapID(String ID) {
+	public byte[] wrapID(String ID) {
 		byte[] returnArray = new byte[LENGTH_ID];
 		System.arraycopy(ID.getBytes(), 0, returnArray, 0, ID.length());
 		return returnArray;
 	}
 	
-	protected String dewrapID(byte[] bytes) {
+	public String dewrapID(byte[] bytes) {
 		String returnString = new String(bytes);
 		return returnString.trim();
 	}
 	
-	static protected void printByteArray(byte[] src) {
+	static public void printByteArray(byte[] src) {
 		for (int i = 0; i < src.length; i++ ) {
 			System.out.print(src[i] + " ");
 		}
-	}
-	
-	protected void terminate() {
-		isAlive = false;
 	}
 }

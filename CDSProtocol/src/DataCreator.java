@@ -11,6 +11,7 @@ public class DataCreator extends Delegate {
 	private Crypto crypto;
 	private DataManager dataManager;
 	private ByteBuffer sentMessage;
+	private UserInterface ui;
 	
 	
 	public DataCreator(Crypto c, DataManager dm) {
@@ -18,6 +19,10 @@ public class DataCreator extends Delegate {
 		dataManager = dm;
 		mySK = dataManager.getPrivateKey();
 		dstPK = dataManager.getPublicKey(dstID);
+	}
+	
+	public void setUserInterface(UserInterface ui) {
+		this.ui = ui;
 	}
 	
 	public ByteBuffer getInitialMessage() {
@@ -50,12 +55,10 @@ public class DataCreator extends Delegate {
 		byte[] kc = crypto.decryptAsym(encryptedKc, mySK);
 		
 		if (debug) {
-			System.out.println("DataCreator-----------------------");
-			System.out.println("SenderID: " + senderID);
-			System.out.println("Max size: " + availableStorage);
-			System.out.print("kC: ");
-			printByteArray(kc);
-			System.out.println();
+			//System.out.println("DataCreator-----------------------");
+			ui.print("SenderID=\t" + senderID, ID);
+			ui.print("Max size=\t" + availableStorage, ID);
+			ui.print("kC=\t\t" + new String(kc), ID);
 		}
 					
 		// Validate received data-------------------------------------------------------------------------
@@ -117,9 +120,8 @@ public class DataCreator extends Delegate {
 		boolean isHashValid = crypto.verifyHashDigest(sentMessage.array(), hashDigest);
 		
 		if (debug) {
-			System.out.println("DataCreator-----------------------");
-			System.out.println("hash: " + new String(hashDigest));
-			System.out.println("Verify Hash Digest: " + isHashValid);
+			ui.print("hash=\t\t" + new String(hashDigest), ID);
+			ui.print("Verify Hash=\t" + isHashValid, ID);
 		}
 		
 		if (!isHashValid) return -1;
