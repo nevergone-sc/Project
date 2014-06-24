@@ -10,7 +10,7 @@ import java.security.Signature;
 
 public class TestSubmit {
 	public static void main(String args[]) throws Exception {  
-		/*
+		///*
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
 				Accepter alice = new Alice();
@@ -24,10 +24,10 @@ public class TestSubmit {
 		Initializer courierA = new CourierA();
 		courierA.setDstPort(8888);
 		UserInterface ui2 = new ConsoleUserInterface();
-		ui.start(courierA);
-		*/
+		ui2.start(courierA);
+		//*/
 		
-		///*
+		/*
 		Thread t2 = new Thread(new Runnable() {
 			public void run() {
 				Accepter bob = new Bob();
@@ -48,7 +48,7 @@ public class TestSubmit {
 		courierB.setDstPort(9888);
 		UserInterface ui2 = new ConsoleUserInterface();
 		ui2.start(courierB);
-		//*/
+		*/
 		
 		/*
 		DataManager dm = new DataManager();

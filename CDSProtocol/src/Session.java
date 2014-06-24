@@ -1,6 +1,5 @@
 import java.nio.ByteBuffer;
 
-
 public class Session extends Thread {
 	private static final int MAX_BUFFER_SIZE = 1024;
 	
@@ -26,14 +25,13 @@ public class Session extends Thread {
 			try {
 				lengthReceived = channel.read(receiveBuffer);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				sendErrorMsg("IO Error");
 			}
 			receiveBuffer.flip();
-			if (lengthReceived <= 0) break;
+			if (lengthReceived <= 0) { sendErrorMsg("IO Error"); break; }
 			
 			lengthSent = delegate.process(receiveBuffer, sendBuffer);
-			if (lengthSent < 0) { System.err.println("Session "+ sessionID + " process end unsuccessful"); break; }
+			if (lengthSent < 0) { sendErrorMsg("Protocol Error"); break; }
 			if (lengthSent == 0) {break;}
 			
 			int actSent = 0;
@@ -42,8 +40,7 @@ public class Session extends Thread {
 				actSent = channel.write(sendBuffer);
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				sendErrorMsg("IO Error");
 			}
 			if (actSent != lengthSent) {
 				System.err.println("Send fail: " + "length sent = " + lengthSent + " actual sent = " + actSent);
@@ -55,8 +52,15 @@ public class Session extends Thread {
 		try {
 			channel.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private void sendErrorMsg(String error) {
+
+	}
+	
+	private boolean isErrorMsg(ByteBuffer src) {
+		return false;
 	}
 }
