@@ -3,7 +3,7 @@ import java.nio.ByteBuffer;
 public class DataReceiver extends Delegate {
 	static final boolean debug = true;
 	
-	private String ID = "Bob";
+	private String ID;
 	private byte[] mySK;
 	private int state = 0;
 	private Crypto crypto;
@@ -12,7 +12,8 @@ public class DataReceiver extends Delegate {
 	
 	byte[] kC;
 	
-	public DataReceiver(Crypto c, DataManager dm) {
+	public DataReceiver(String id, Crypto c, DataManager dm) {
+		ID = id;
 		crypto = c;
 		dataManager = dm;
 		mySK = dm.getPrivateKey();
@@ -38,6 +39,7 @@ public class DataReceiver extends Delegate {
 	}
 
 	protected int getMessage1(ByteBuffer src, ByteBuffer dst) {
+		src.mark();
 		// Retrieve received data ----------------------------------------------------------------
 		// Sender ID
 		String senderID = extractString(src, 0, LENGTH_ID).trim();
@@ -86,41 +88,41 @@ public class DataReceiver extends Delegate {
 		src.get(msgMAC);
 		
 		if (debug) {
-			ui.print("SenderID=\t\t" + senderID, ID);
-			ui.print("EncPKB=\t\t" + new String(encryptedBlock), ID);
+			ui.print(senderID, "SenderID=\t\t", ID);
+			ui.print(encryptedBlock, "EncPKB=\t\t", ID);
 		}
 		
 		// Validate received data ----------------------------------------------------------------
 		if (!dstID.equals(ID)) {
-			System.out.println(dstID);
-			System.err.println("Destination ID in prefix not match");
+			ui.printErr("Destination ID in prefix not match", ID);
 			return -1;
 		} else if (!metaDstID.equals(ID)) {
-			System.err.println("Destination ID in Meta not match");
+			ui.printErr("Destination ID in Meta not match", ID);
 			return -1;
 		} else if (!srcID.equals(metaSrcID)) {
-			System.err.println("Source ID not match between prefix and Meta");
+			ui.printErr("Source ID not match between prefix and Meta", ID);
 			return -1;
 		} // TODO: For timestamp validation
 		
 		byte[] srcPK = dataManager.getPublicKey(srcID);
 		if (!crypto.verifySIGN(encryptedMetaBlock, srcPK, metaSIGN)) {
-			System.err.println("Meta signature not valid");
+			ui.printErr("Meta signature not valid", ID);
 			return -1;
 		}
 		
 		if (!crypto.verifyMACDigest(encryptedMsgBlock, msgKey, msgMAC)) {
-			System.err.println("Message MAC not valid");
+			ui.printErr("Message MAC not valid", ID);
 			return -1;
 		}
 		
 		// Operate on received data ----------------------------------------------------------------
 		byte[] plainMsg = crypto.decryptSymm(encryptedMsgBlock, msgKey);
-		ui.print("Result=\t\t" + new String(plainMsg), ID);
+		ui.print(String.valueOf(timestamp), "TimeStamp=\t\t", ID);
+		ui.print(new String(plainMsg), "Result=\t\t", ID);
 		
 		// Prepare for send data -------------------------------------------------------------------
 		int totalReceivedLength = LENGTH_ID+Crypto.LENGTH_ASYM_CIPHER+Integer.SIZE/8+dataLength;
-		src.rewind();
+		src.reset();
 		byte[] totalReceived = new byte[totalReceivedLength];
 		src.get(totalReceived);
 		byte[] totalReceivedMAC = crypto.getMACDigest(totalReceived, kC);
@@ -130,6 +132,7 @@ public class DataReceiver extends Delegate {
 		dst.flip();
 		
 		terminate();
+		ui.nextStep("", ID);
 		return totalReceivedMAC.length;
 	}
 }

@@ -1,15 +1,21 @@
 
 public class Alice extends Accepter {
-	protected Delegate makeDelegate(UserInterface ui) {
+	private String ID;
+	private String dstID;
+	private Crypto crypto;
+	private DataManager dataManager;
+	
+	public Alice(String addrs, int port, UserInterface ui, Crypto c, DataManager dm, String id, String dstID) {
+		super(addrs, port, ui);
+		ID = id;
+		this.dstID = dstID;
+		crypto = c;
+		dataManager = dm;
+	}
+	
+	protected Delegate makeDelegate() {
 		ui.setTag("Alice");
-		Crypto crypto = new Crypto();
-		
-		DataManager dataManager = new DataManager(1000);
-		dataManager.setPathPublicKey("Alice", "PublicKey_Alice");
-		dataManager.setPathPublicKey("Bob", "PublicKey_Bob");
-		dataManager.setPathData("Alice", "Bob", "Data_Alice_To_Bob(Alice)");
-		
-		Delegate dataCreator = new DataCreator(crypto, dataManager);
+		Delegate dataCreator = new DataCreator(ID, crypto, dataManager, dstID);
 		dataCreator.setUserInterface(ui);
 		return dataCreator;
 	}

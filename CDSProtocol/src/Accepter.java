@@ -1,18 +1,26 @@
 public abstract class Accepter implements ProtocolEntity{
-	private int listeningPort = 8888;
-	private UserInterface ui = new ConsoleUserInterface();
-	private boolean isAlive = true;
+	protected String address;
+	protected int listeningPort;
+	//private Delegate delegate;
+	protected UserInterface ui = new ConsoleUserInterface();
+	protected boolean isAlive = true;
+	
+	public Accepter(String a, int p, UserInterface ui) {
+		address = a;
+		listeningPort = p;
+		this.ui = ui;
+	}
 	
 	public void start() {
 		Channel mainChannel = null;
 		try {
 			mainChannel = new UDPChannel(listeningPort);
-			ui.print("Ready", "Accepter");
+			ui.print("Ready", "", "Accepter");
 			while (isAlive) {
 				Channel subChannel = mainChannel.accept();
-				ui.print("Accepts a Connection", "Accepter");
-				Delegate delegate = makeDelegate(ui);
-				Session session = new Session(subChannel, delegate, 0);
+				ui.print("Accepts a Connection", "", "Accepter");
+				Delegate delegate = makeDelegate();
+				Session session = new Session(subChannel, delegate, ui, 0);
 				session.start();
 			}
 		} catch (Exception e) {
@@ -38,5 +46,5 @@ public abstract class Accepter implements ProtocolEntity{
 		isAlive = false;
 	}
 	
-	protected abstract Delegate makeDelegate(UserInterface ui);
+	protected abstract Delegate makeDelegate();
 }

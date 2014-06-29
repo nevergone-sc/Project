@@ -1,18 +1,16 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.MessageDigest;
-import java.security.Signature;
-
 
 public class TestSubmit {
 	public static void main(String args[]) throws Exception {  
 		///*
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
+				Crypto crypto = new Crypto();
+				
+				DataManager dataManager = new DataManager(1000);
+				dataManager.setPathPrivateKey("PrivateKey_Alice");
+				dataManager.setPathPublicKey("Alice", "PublicKey_Alice");
+				dataManager.setPathPublicKey("Bob", "PublicKey_Bob");
+				dataManager.setPathData("Alice", "Bob", "Data_Alice_To_Bob(Alice)");
 				Accepter alice = new Alice();
 				alice.setListeningPort(8888);
 				UserInterface ui = new ConsoleUserInterface();
@@ -30,9 +28,21 @@ public class TestSubmit {
 		/*
 		Thread t2 = new Thread(new Runnable() {
 			public void run() {
-				Accepter bob = new Bob();
-				bob.setListeningPort(9888);
+				Crypto crypto = new Crypto();
+				
+				DataManager dataManager = new DataManager(1000);
+				dataManager.setPathPrivateKey("PrivateKey_Bob");
+				dataManager.setPathPublicKey("Alice", "PublicKey_Alice");
+				
 				UserInterface ui = new ConsoleUserInterface();
+				
+				Delegate dataReceiver = new DataReceiver(crypto, dataManager);
+				dataReceiver.setUserInterface(ui);
+				
+				Accepter bob = new Accepter("localhost", 9888, dataReceiver, ui);
+				bob.setUserInterface(ui);
+				bob.setListeningPort(9888);
+				
 				ui.start(bob);
 				try {
 					bob.start();
@@ -44,10 +54,19 @@ public class TestSubmit {
 		});
 		t2.start();
 		
-		Initializer courierB = new CourierB();
+		Crypto c = new Crypto();
+		DataManager dm = new DataManager(1000);
+		dm.setPathPublicKey("Bob", "PublicKey_Bob");
+		dm.setPathData("Alice", "Bob", "Data_Alice_To_Bob");
+		
+		UserInterface ui = new ConsoleUserInterface();
+		
+		Delegate sendCourier = new SendCourier(c, dm);
+		sendCourier.setUserInterface(ui);
+		
+		Initializer courierB = new Initializer("", 9888, sendCourier, ui);
 		courierB.setDstPort(9888);
-		UserInterface ui2 = new ConsoleUserInterface();
-		ui2.start(courierB);
+		ui.start(courierB);
 		*/
 		
 		/*

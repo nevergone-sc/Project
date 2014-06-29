@@ -1,13 +1,19 @@
 
 public class Bob extends Accepter {
-	protected Delegate makeDelegate(UserInterface ui) {
+	private String ID;
+	private Crypto crypto;
+	private DataManager dataManager;
+	
+	public Bob(String addrs, int port, UserInterface ui, Crypto c, DataManager dm, String id) {
+		super(addrs, port, ui);
+		ID = id;
+		crypto = c;
+		dataManager = dm;
+	}
+	
+	protected Delegate makeDelegate() {
 		ui.setTag("Bob");
-		Crypto c = new Crypto();
-		DataManager dm = new DataManager(1000);
-		dm.setPathPrivateKey("PrivateKey_Bob");
-		dm.setPathPublicKey("Alice", "PublicKey_Alice");
-		
-		Delegate dataReceiver = new DataReceiver(c, dm);
+		Delegate dataReceiver = new DataReceiver(ID, crypto, dataManager);
 		dataReceiver.setUserInterface(ui);
 		return dataReceiver;
 	}

@@ -3,8 +3,8 @@ import java.nio.ByteBuffer;
 public class DataCreator extends Delegate {
 	private static final boolean debug = true;
 	
-	private String ID = "Alice";
-	private String dstID = "Bob";
+	private String ID;
+	private String dstID;
 	private byte[] dstPK;
 	private byte[] mySK;
 	private int state = 0;
@@ -14,7 +14,9 @@ public class DataCreator extends Delegate {
 	private UserInterface ui;
 	
 	
-	public DataCreator(Crypto c, DataManager dm) {
+	public DataCreator(String id, Crypto c, DataManager dm, String dstID) {
+		ID = id;
+		this.dstID = dstID; 
 		crypto = c;
 		dataManager = dm;
 		mySK = dataManager.getPrivateKey();
@@ -56,9 +58,9 @@ public class DataCreator extends Delegate {
 		
 		if (debug) {
 			//System.out.println("DataCreator-----------------------");
-			ui.print("SenderID=\t" + senderID, ID);
-			ui.print("Max size=\t" + availableStorage, ID);
-			ui.print("kC=\t\t" + new String(kc), ID);
+			ui.print(senderID, "SenderID=\t", ID);
+			ui.print(String.valueOf(availableStorage), "Max size=\t", ID);
+			ui.print(kc, "kC=\t\t", ID);
 		}
 					
 		// Validate received data-------------------------------------------------------------------------
@@ -111,6 +113,7 @@ public class DataCreator extends Delegate {
 		dst.flip();
 		
 		state = 1;
+		ui.nextStep("", ID);
 		return totalMsgLength + Crypto.LENGTH_MAC;
 	}
 	
@@ -120,12 +123,13 @@ public class DataCreator extends Delegate {
 		boolean isHashValid = crypto.verifyHashDigest(sentMessage.array(), hashDigest);
 		
 		if (debug) {
-			ui.print("hash=\t\t" + new String(hashDigest), ID);
-			ui.print("Verify Hash=\t" + isHashValid, ID);
+			ui.print(hashDigest, "hash=\t\t", ID);
+			ui.print(String.valueOf(isHashValid), "Verify Hash=\t", ID);
 		}
 		
 		if (!isHashValid) return -1;
 		terminate();
+		ui.nextStep("", ID);
 		return 0;
 	}
 }

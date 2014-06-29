@@ -4,9 +4,9 @@ import java.nio.ByteBuffer;
 public class SendCourier extends Delegate {
 	static final boolean debug = true;
 	
-	private String ID = "Courier";
-	private String receiverID = "Bob";
-	private String senderID = "Alice";
+	private String ID;
+	private String receiverID;
+	private String senderID;
 	private byte[] receiverPK;
 	private int state = 0;
 	private Crypto crypto;
@@ -16,7 +16,10 @@ public class SendCourier extends Delegate {
 	
 	byte[] kC;
 	
-	public SendCourier(Crypto c, DataManager dm) {
+	public SendCourier(String id, Crypto c, DataManager dm, String sedID, String revID) {
+		ID = id;
+		receiverID = revID;
+		senderID = sedID;
 		crypto = c;
 		dataManager = dm;
 		receiverPK = dm.getPublicKey(receiverID);
@@ -58,12 +61,13 @@ public class SendCourier extends Delegate {
 			src.get(receivedMAC);
 			boolean isMACValid = crypto.verifyMACDigest(sentBuffer.array(), kC, receivedMAC);
 			if (debug) {
-				ui.print("MAC=\t\t" + new String(receivedMAC), ID);
-				ui.print("Verify MAC=\t\t" + isMACValid, ID);
+				ui.print(receivedMAC, "MAC=\t\t", ID);
+				ui.print(String.valueOf(isMACValid), "Verify MAC=\t\t", ID);
 			}
 			
 			if (!isMACValid) return -1;
 			terminate();
+			ui.nextStep("", ID);
 			return 0;
 			
 		default:

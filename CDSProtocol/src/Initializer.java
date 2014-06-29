@@ -1,18 +1,25 @@
 import java.net.*;
 
 public abstract class Initializer implements ProtocolEntity{
-	private int dstPort = 9999;
-	private UserInterface ui = new ConsoleUserInterface();
+	protected String address;
+	protected int dstPort;
+	//private Delegate delegate;
+	protected UserInterface ui = new ConsoleUserInterface();
+	
+	
+	public Initializer(String a, int p, UserInterface ui) {
+		address = a;
+		dstPort = p;
+		this.ui = ui;
+	}
 	
 	public void start() {
 		try {
-			InetAddress dstAddress = InetAddress.getByName("localhost"); 
+			InetAddress dstAddress = InetAddress.getByName(address); 
 			
-			Delegate delegate = makeDelegate(ui);
+			Delegate delegate = makeDelegate();
 			Channel channel = new UDPChannel(new InetSocketAddress(dstAddress, dstPort));
-			channel.write(delegate.getInitialMessage());
-			ui.print("Initial Message Sent", "Initializer");
-			Session session = new Session(channel, delegate, 1);
+			Session session = new Session(channel, delegate, ui, 1);
 			session.start();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -23,5 +30,9 @@ public abstract class Initializer implements ProtocolEntity{
 		dstPort = p;
 	}
 	
-	protected abstract Delegate makeDelegate(UserInterface ui);
+	public void setUserInterface(UserInterface ui) {
+		this.ui = ui;
+	}
+	
+	protected abstract Delegate makeDelegate();
 }

@@ -3,8 +3,8 @@ import java.nio.ByteBuffer;
 public class ReceiveCourier extends Delegate {
 	static final boolean debug = true;
 	
-	private String ID = "Courier";
-	private String senderID = "Alice";
+	private String ID;
+	private String senderID;
 	private int state = 0;
 	private Crypto crypto;
 	private DataManager dataManager;
@@ -15,7 +15,9 @@ public class ReceiveCourier extends Delegate {
 	private String receivedID, receiverID = "";
 	private byte[] meta, msg, totalMAC = null;
 	
-	public ReceiveCourier(Crypto c, DataManager dm) {
+	public ReceiveCourier(String id, Crypto c, DataManager dm, String sedID) {
+		ID = id;
+		senderID = sedID;
 		crypto = c;
 		dataManager = dm;
 		senderSK = dataManager.getPublicKey(senderID);
@@ -52,6 +54,7 @@ public class ReceiveCourier extends Delegate {
 	}
 	
 	protected int getMessage1(ByteBuffer src, ByteBuffer dst) {
+		src.mark();
 		// Retrieve received data----------------------------------------------------------------------
 		receivedID = extractString(src, 0, LENGTH_ID).trim();
 		senderID = extractString(src, 0, LENGTH_ID).trim();
@@ -71,20 +74,20 @@ public class ReceiveCourier extends Delegate {
 		int receivedLength = 3*LENGTH_ID + 2*Integer.SIZE/8 + metaLength + msgLength;
 		
 		if (debug) {
-			ui.print("Receiver=\t" + receivedID, ID);
-			ui.print("Sender=\t" + senderID, ID);
-			ui.print("Recipient=\t" + receiverID, ID);
-			ui.print("META length=\t" + metaLength, ID);
-			ui.print("MSG length=\t" + msgLength, ID);
+			ui.print(receivedID, "Receiver=\t", ID);
+			ui.print(senderID, "Sender=\t", ID);
+			ui.print(receiverID, "Recipient=\t", ID);
+			ui.print(String.valueOf(metaLength), "META length=\t", ID);
+			ui.print(String.valueOf(msgLength), "MSG length=\t", ID);
 		}
 					
 		// Validate received data------------------------------------------------------------------------
 		if (!receivedID.equals(ID)) return -1;
 		
 		byte[] messageReceived = new byte[receivedLength];
-		src.rewind();
+		src.reset();
 		src.get(messageReceived);
-		if (!crypto.verifyMACDigest(messageReceived, kc, totalMAC)) return -1;
+		if (!crypto.verifyMACDigest(messageReceived, kc, totalMAC)) {System.err.println("mac error"); return -1;}
 		
 		// Operate received data ------------------------------------------------------------------------
 		ByteBuffer dataToSave = ByteBuffer.allocate(metaLength+msgLength);
@@ -93,7 +96,7 @@ public class ReceiveCourier extends Delegate {
 		dataManager.putData(dataToSave.array(), senderID, receiverID);
 		
 		// Prepare send data ----------------------------------------------------------------------------
-		src.rewind();
+		src.reset();
 		byte[] totalReceived = new byte[receivedLength + Crypto.LENGTH_MAC];
 		src.get(totalReceived);
 		dst.clear();
@@ -101,6 +104,7 @@ public class ReceiveCourier extends Delegate {
 		dst.flip();
 					
 		terminate();
+		ui.nextStep("", ID);
 		return Crypto.LENGTH_HASH;
 	}
 }
