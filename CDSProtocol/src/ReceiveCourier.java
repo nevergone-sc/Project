@@ -31,11 +31,10 @@ public class ReceiveCourier extends Delegate {
 		kc = crypto.generateSymmKey(128);
 		byte[] encryptedKc = crypto.encryptAsym(kc, senderSK);
 		int encryptedLength = encryptedKc.length;
-		ByteBuffer returnBuffer = ByteBuffer.allocate(LENGTH_ID+2*Integer.SIZE/8+encryptedLength);
-		returnBuffer.put(wrapID(ID));
+		ByteBuffer returnBuffer = ByteBuffer.allocate(ID.length()+3*Integer.SIZE/8+encryptedLength);
+		putShortBlock(ID.getBytes(), returnBuffer);
 		returnBuffer.putInt(dataManager.maxStorage());
-		returnBuffer.putInt(encryptedLength);
-		returnBuffer.put(encryptedKc);
+		putLongBlock(encryptedKc, returnBuffer);
 		returnBuffer.flip();
 		
 		state = 1;
@@ -56,22 +55,20 @@ public class ReceiveCourier extends Delegate {
 	protected int getMessage1(ByteBuffer src, ByteBuffer dst) {
 		src.mark();
 		// Retrieve received data----------------------------------------------------------------------
-		receivedID = extractString(src, 0, LENGTH_ID).trim();
-		senderID = extractString(src, 0, LENGTH_ID).trim();
-		receiverID = extractString(src, 0, LENGTH_ID).trim();
+		receivedID = new String(getShortBlock(src));
+		senderID = new String(getShortBlock(src));
+		receiverID = new String(getShortBlock(src));
+
+		meta = getLongBlock(src);
+		int metaLength = meta.length;
 		
-		int metaLength = src.getInt();
-		meta = new byte[metaLength];
-		src.get(meta);
-		
-		int msgLength = src.getInt();
-		msg = new byte[msgLength];
-		src.get(msg);
+		msg = getLongBlock(src);
+		int msgLength = msg.length;
 		
 		totalMAC = new byte[Crypto.LENGTH_MAC];
 		src.get(totalMAC);
 
-		int receivedLength = 3*LENGTH_ID + 2*Integer.SIZE/8 + metaLength + msgLength;
+		int receivedLength = receivedID.length() + senderID.length() + receiverID.length() + 3*Byte.SIZE/8 + 2*Integer.SIZE/8 + metaLength + msgLength;
 		
 		if (debug) {
 			ui.print(receivedID, "Receiver=\t", ID);
@@ -90,8 +87,10 @@ public class ReceiveCourier extends Delegate {
 		if (!crypto.verifyMACDigest(messageReceived, kc, totalMAC)) {System.err.println("mac error"); return -1;}
 		
 		// Operate received data ------------------------------------------------------------------------
-		ByteBuffer dataToSave = ByteBuffer.allocate(metaLength+msgLength);
+		ByteBuffer dataToSave = ByteBuffer.allocate(metaLength+msgLength+2*Integer.SIZE/8);
+		dataToSave.putInt(metaLength);
 		dataToSave.put(meta);
+		dataToSave.putInt(msgLength);
 		dataToSave.put(msg);
 		dataManager.putData(dataToSave.array(), senderID, receiverID);
 		

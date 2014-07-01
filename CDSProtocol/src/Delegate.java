@@ -18,21 +18,32 @@ public abstract class Delegate {
 		isAlive = false;
 	}
 	
-	public static String extractString(ByteBuffer src, int offset, int length) {
-		byte[] bytes = new byte[length];
-		src.get(bytes, offset, length);
-		return new String(bytes);
+	public byte[] getShortBlock(ByteBuffer src) {
+		byte length = src.get();
+		byte[] returnBlock = new byte[length];
+		src.get(returnBlock);
+		return returnBlock;
 	}
 	
-	public byte[] wrapID(String ID) {
-		byte[] returnArray = new byte[LENGTH_ID];
-		System.arraycopy(ID.getBytes(), 0, returnArray, 0, ID.length());
-		return returnArray;
+	public int putShortBlock(byte[] src, ByteBuffer dst) {
+		byte length = (byte) src.length;
+		dst.put(length);
+		dst.put(src);
+		return length + Byte.SIZE/8;
 	}
 	
-	public String dewrapID(byte[] bytes) {
-		String returnString = new String(bytes);
-		return returnString.trim();
+	public byte[] getLongBlock(ByteBuffer src) {
+		int length = src.getInt();
+		byte[] returnBlock = new byte[length];
+		src.get(returnBlock);
+		return returnBlock;
+	}
+	
+	public int putLongBlock(byte[] src, ByteBuffer dst) {
+		int length = src.length;
+		dst.putInt(length);
+		dst.put(src);
+		return length + Integer.SIZE/8;
 	}
 	
 	static public void printByteArray(byte[] src) {

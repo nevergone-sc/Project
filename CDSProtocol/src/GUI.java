@@ -379,9 +379,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 					}
 					dataManager.setPathData(myID, textDataID.getText(), textDataPath.getText());
 
-					//Delegate dataCreater = new DataCreator(myID, crypto, dataManager, revID);
-					//dataCreater.setUserInterface(ui);
-					
 					Accepter alice = 
 							new Alice(textLocAddress.getText(), Integer.parseInt(textLisPort.getText()), ui, crypto, dataManager, myID, revID);
 					alice.start();
@@ -409,9 +406,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
 					}
 
-					Delegate receiveCourier = new ReceiveCourier(myID, crypto, dataManager, senderID);
-					receiveCourier.setUserInterface(ui);
-					
 					Initializer courier = 
 							new CourierA(textDstAddress.getText(), Integer.parseInt(textDstPort.getText()), ui, crypto, dataManager, myID, senderID);
 					courier.start();
@@ -437,9 +431,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
 					}
 					dataManager.setPathPrivateKey(textPrivateKey.getText());
-					//Delegate dataReceiver = new DataReceiver(myID, crypto, dataManager);
-					//dataReceiver.setUserInterface(ui);
-					
+
 					Accepter receiver = new Bob(textLocAddress.getText(), Integer.parseInt(textLisPort.getText()), ui, crypto, dataManager, myID);
 					receiver.start();
 				}
@@ -469,9 +461,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
 					}
 					dataManager.setPathData(textDataID.getText(), textDstID.getText(), textDataPath.getText());
-					Delegate sendCourier = new SendCourier(myID, crypto, dataManager, sedID, revID);
-					sendCourier.setUserInterface(ui);
-					
+
 					Initializer courier = 
 							new CourierB(textDstAddress.getText(), Integer.parseInt(textDstPort.getText()), ui, crypto, dataManager, myID, sedID, revID);
 					courier.start();

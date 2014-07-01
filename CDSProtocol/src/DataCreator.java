@@ -47,12 +47,10 @@ public class DataCreator extends Delegate {
 	
 	protected int getMessage1(ByteBuffer src, ByteBuffer dst) {
 		// Retrieve received data-----------------------------------------------------------
-		String senderID = extractString(src, 0, LENGTH_ID).trim();
+		String senderID = new String(getShortBlock(src));
 		int availableStorage = src.getInt();
 		
-		int encryptedLength = src.getInt();
-		byte[] encryptedKc = new byte[encryptedLength];
-		src.get(encryptedKc);
+		byte[] encryptedKc = getLongBlock(src);
 		mySK = dataManager.getPrivateKey();
 		byte[] kc = crypto.decryptAsym(encryptedKc, mySK);
 		
@@ -71,30 +69,32 @@ public class DataCreator extends Delegate {
 		byte[] kab = crypto.generateSymmKey(LENGTH_SYMM_KEY*8);
 					
 		long timestamp = System.currentTimeMillis();
-		ByteBuffer metaBValueBuffer = ByteBuffer.allocate(LENGTH_SYMM_KEY+2*LENGTH_ID+Long.SIZE/8);
+		ByteBuffer metaBValueBuffer = ByteBuffer.allocate(LENGTH_SYMM_KEY+ID.length()+dstID.length()+2*Byte.SIZE/8+Long.SIZE/8);
 		metaBValueBuffer.put(kab);
-		metaBValueBuffer.put(wrapID(ID));
-		metaBValueBuffer.put(wrapID(dstID));
+		putShortBlock(ID.getBytes(), metaBValueBuffer);
+		putShortBlock(dstID.getBytes(), metaBValueBuffer);
 		metaBValueBuffer.putLong(timestamp);
 		metaBValueBuffer.flip();
 
 		byte[] metaBValue = crypto.encryptAsym(metaBValueBuffer.array(), dstPK);
 		byte[] metaBSign = crypto.getSIGN(metaBValue, mySK);
+		byte[] metaEncryptedSign = crypto.encryptSymm(metaBSign, kab);
 					
 		byte[] sendData = dataManager.getData(ID, dstID);
 		byte[] msgBValue = crypto.encryptSymm(sendData, kab);
 		byte[] msgBMAC = crypto.getMACDigest(msgBValue, kab);
 				
-		int metaLength = metaBValue.length + Crypto.LENGTH_SIGN;
+		int nameBlockLength = senderID.length() + ID.length() + dstID.length() + 3*Byte.SIZE/8;
+		int metaLength = metaBValue.length + metaEncryptedSign.length;
 		int msgLength = msgBValue.length + Crypto.LENGTH_MAC;
-		int totalMsgLength = 3*LENGTH_ID + metaLength + msgLength + 2*Integer.SIZE/8;
+		int totalMsgLength = nameBlockLength + metaLength + msgLength + 2*Integer.SIZE/8;
 		ByteBuffer totalMsgBuffer = ByteBuffer.allocate(totalMsgLength);
-		totalMsgBuffer.put(wrapID(senderID));
-		totalMsgBuffer.put(wrapID(ID));
-		totalMsgBuffer.put(wrapID(dstID));
+		putShortBlock(senderID.getBytes(), totalMsgBuffer);
+		putShortBlock(ID.getBytes(), totalMsgBuffer);
+		putShortBlock(dstID.getBytes(), totalMsgBuffer);
 		totalMsgBuffer.putInt(metaLength);
 		totalMsgBuffer.put(metaBValue);
-		totalMsgBuffer.put(metaBSign);
+		totalMsgBuffer.put(metaEncryptedSign);
 		totalMsgBuffer.putInt(msgLength);
 		totalMsgBuffer.put(msgBValue);
 		totalMsgBuffer.put(msgBMAC);

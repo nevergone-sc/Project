@@ -42,50 +42,53 @@ public class DataReceiver extends Delegate {
 		src.mark();
 		// Retrieve received data ----------------------------------------------------------------
 		// Sender ID
-		String senderID = extractString(src, 0, LENGTH_ID).trim();
+		String senderID = new String(getShortBlock(src));
+		int lengthSenderID = senderID.length();
 		
 		byte[] encryptedBlock = new byte[Crypto.LENGTH_ASYM_CIPHER];
 		src.get(encryptedBlock);
 		byte[] plainBlock = crypto.decryptAsym(encryptedBlock, mySK);
 		
-		byte[] dstIDArray = new byte[LENGTH_ID];
-		System.arraycopy(plainBlock, 0, dstIDArray, 0, LENGTH_ID);
+		ByteBuffer plainBlockBuffer = ByteBuffer.wrap(plainBlock);
 		// Receiver ID from Courier
-		String dstID = new String(dstIDArray).trim();
-		
-		byte[] srcIDArray = new byte[LENGTH_ID];
-		System.arraycopy(plainBlock, LENGTH_ID, srcIDArray, 0, LENGTH_ID);
+		String dstID = new String(getShortBlock(plainBlockBuffer));
 		// Sender ID from Courier
-		String srcID = new String(srcIDArray).trim();
-		
+		String srcID = new String(getShortBlock(plainBlockBuffer));
 		// kC
 		kC = new byte[LENGTH_SYMM_KEY];
-		System.arraycopy(plainBlock, 2*LENGTH_ID, kC, 0, LENGTH_SYMM_KEY);
+		plainBlockBuffer.get(kC);
 		
-		int dataLength = src.getInt();
+		byte[] meta = getLongBlock(src);
+		int metaLength = meta.length;
 		
-		byte[] encryptedMetaBlock = new byte[Crypto.LENGTH_ASYM_CIPHER];
-		src.get(encryptedMetaBlock);
+		byte[] ecryptedMetaValue = new byte[Crypto.LENGTH_ASYM_CIPHER];
+		System.arraycopy(meta, 0, ecryptedMetaValue, 0, Crypto.LENGTH_ASYM_CIPHER);
 		
-		ByteBuffer metaBlock = ByteBuffer.wrap(crypto.decryptAsym(encryptedMetaBlock, mySK));
+		ByteBuffer metaBlock = ByteBuffer.wrap(crypto.decryptAsym(ecryptedMetaValue, mySK));
 		
 		// kAB
 		byte[] msgKey = new byte[LENGTH_SYMM_KEY];
 		metaBlock.get(msgKey);
 		
-		String metaSrcID = extractString(metaBlock, 0, LENGTH_ID).trim();
-		String metaDstID = extractString(metaBlock, 0, LENGTH_ID).trim();
+		String metaSrcID = new String(getShortBlock(metaBlock));
+		String metaDstID = new String(getShortBlock(metaBlock));
 		Long timestamp = metaBlock.getLong();
 		
 		// Signature for META
-		byte[] metaSIGN = new byte[Crypto.LENGTH_SIGN];
-		src.get(metaSIGN);
+		int metaSignLength = metaLength - Crypto.LENGTH_ASYM_CIPHER;
+		byte[] encryptedMetaSign = new byte[metaSignLength];
+		System.arraycopy(meta, Crypto.LENGTH_ASYM_CIPHER, encryptedMetaSign, 0, metaSignLength);
 		
-		byte[] encryptedMsgBlock = new byte[dataLength-Crypto.LENGTH_MAC-Crypto.LENGTH_ASYM_CIPHER-Crypto.LENGTH_SIGN];
-		src.get(encryptedMsgBlock);
+		byte[] metaSIGN = crypto.decryptSymm(encryptedMetaSign, msgKey);
 		
+		byte[] msg = getLongBlock(src);
+		int msgLength = msg.length;
+		int msgValueLength = msgLength - Crypto.LENGTH_MAC;
+
+		byte[] encryptedMsgBlock = new byte[msgValueLength];
+		System.arraycopy(msg, 0, encryptedMsgBlock, 0, msgValueLength);
 		byte[] msgMAC = new byte[Crypto.LENGTH_MAC];
-		src.get(msgMAC);
+		System.arraycopy(msg, msgValueLength, msgMAC, 0, Crypto.LENGTH_MAC);
 		
 		if (debug) {
 			ui.print(senderID, "SenderID=\t\t", ID);
@@ -105,7 +108,7 @@ public class DataReceiver extends Delegate {
 		} // TODO: For timestamp validation
 		
 		byte[] srcPK = dataManager.getPublicKey(srcID);
-		if (!crypto.verifySIGN(encryptedMetaBlock, srcPK, metaSIGN)) {
+		if (!crypto.verifySIGN(ecryptedMetaValue, srcPK, metaSIGN)) {
 			ui.printErr("Meta signature not valid", ID);
 			return -1;
 		}
@@ -121,7 +124,7 @@ public class DataReceiver extends Delegate {
 		ui.print(new String(plainMsg), "Result=\t\t", ID);
 		
 		// Prepare for send data -------------------------------------------------------------------
-		int totalReceivedLength = LENGTH_ID+Crypto.LENGTH_ASYM_CIPHER+Integer.SIZE/8+dataLength;
+		int totalReceivedLength = lengthSenderID+Byte.SIZE/8+Crypto.LENGTH_ASYM_CIPHER+2*Integer.SIZE/8+metaLength+msgLength;
 		src.reset();
 		byte[] totalReceived = new byte[totalReceivedLength];
 		src.get(totalReceived);
