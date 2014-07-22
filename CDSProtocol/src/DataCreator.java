@@ -13,6 +13,7 @@ public class DataCreator extends Delegate {
 	private ByteBuffer sentMessage;
 	private UserInterface ui;
 	
+	private byte[] kc;
 	
 	public DataCreator(String id, Crypto c, DataManager dm, String dstID) {
 		ID = id;
@@ -52,7 +53,7 @@ public class DataCreator extends Delegate {
 		
 		byte[] encryptedKc = getLongBlock(src);
 		mySK = dataManager.getPrivateKey();
-		byte[] kc = crypto.decryptAsym(encryptedKc, mySK);
+		kc = crypto.decryptAsym(encryptedKc, mySK);
 		
 		if (debug) {
 			//System.out.println("DataCreator-----------------------");
@@ -118,13 +119,13 @@ public class DataCreator extends Delegate {
 	}
 	
 	protected int getMessage2(ByteBuffer src, ByteBuffer dst) {
-		byte[] hashDigest = new byte[Crypto.LENGTH_HASH];
-		src.get(hashDigest);
-		boolean isHashValid = crypto.verifyHashDigest(sentMessage.array(), hashDigest);
+		byte[] macDigest = new byte[Crypto.LENGTH_MAC];
+		src.get(macDigest);
+		boolean isHashValid = crypto.verifyMACDigest(sentMessage.array(), kc, macDigest);
 		
 		if (debug) {
-			ui.print(hashDigest, "hash=\t\t", ID);
-			ui.print(String.valueOf(isHashValid), "Verify Hash=\t", ID);
+			ui.print(macDigest, "MAC=\t\t", ID);
+			ui.print(String.valueOf(isHashValid), "Verify MAC=\t", ID);
 		}
 		
 		if (!isHashValid) return -1;

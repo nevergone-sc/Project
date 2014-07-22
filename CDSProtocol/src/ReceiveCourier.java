@@ -99,7 +99,7 @@ public class ReceiveCourier extends Delegate {
 		byte[] totalReceived = new byte[receivedLength + Crypto.LENGTH_MAC];
 		src.get(totalReceived);
 		dst.clear();
-		dst.put(crypto.getHashDigest(totalReceived));
+		dst.put(crypto.getMACDigest(totalReceived, kc));
 		dst.flip();
 					
 		terminate();

@@ -1,6 +1,11 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Enumeration;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -13,6 +18,7 @@ import java.awt.Dimension;
 public class GUI extends JFrame implements UserInterface, ActionListener {
 	private Crypto crypto = new Crypto();
 	private DataManager dataManager;
+	private String PATH_PUBLICKEYFILE = "PublicKeys";
 	
 	private JButton buttonPrivateKey, buttonPublicKeyAdd, buttonPublicKeyDel, buttonPublicKeyChoose, buttonDataChoose;
 	private JButton buttonStart, buttonStop;
@@ -355,16 +361,14 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	}
 	
 	private void startEntity(String entityName) {
+		loadPublicKeyFromFile();
+		
 		if (entityName.equals("DataCreator")) {
 			textLisPort.setText("9888");
 			textLocID.setText("Alice");
 			textLocAddress.setText("localhost");
 			textMaxCapacity.setText("1000");
 			textPrivateKey.setText("PrivateKey_Alice");
-			String[] data = {"Alice", "PublicKey_Alice"};
-		    tableModel.addRow(data);
-		    String[] data2 = {"Bob", "PublicKey_Bob"};
-		    tableModel.addRow(data2);
 		    textDataID.setText("Bob");
 		    textDataPath.setText("Data_Alice_To_Bob(Alice)");
 			
@@ -392,10 +396,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textDstAddress.setText("localhost");
 			textDstPort.setText("9888");
 			textMaxCapacity.setText("1000");
-			String[] data = {"Alice", "PublicKey_Alice"};
-		    tableModel.addRow(data);
-		    String[] data2 = {"Bob", "PublicKey_Bob"};
-		    tableModel.addRow(data2);
 		    
 			Thread thread = new Thread(new Runnable() {
 				public void run() {
@@ -417,10 +417,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textLocAddress.setText("localhost");
 			textLisPort.setText("8888");
 			textMaxCapacity.setText("1000");
-			String[] data = {"Alice", "PublicKey_Alice"};
-		    tableModel.addRow(data);
-		    String[] data2 = {"Bob", "PublicKey_Bob"};
-		    tableModel.addRow(data2);
 		    textPrivateKey.setText("PrivateKey_Bob");
 			
 			Thread thread = new Thread(new Runnable() {
@@ -444,10 +440,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textDstAddress.setText("localhost");
 			textDstPort.setText("8888");
 			textMaxCapacity.setText("1000");
-			String[] data = {"Alice", "PublicKey_Alice"};
-		    tableModel.addRow(data);
-		    String[] data2 = {"Bob", "PublicKey_Bob"};
-		    tableModel.addRow(data2);
 		    textDataID.setText("Alice");
 		    textDataPath.setText("Data_Alice_To_Bob");
 		    
@@ -468,6 +460,32 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 				}
 			});
 			thread.start();
+		}
+	}
+	
+	private void loadPublicKeyFromFile() {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(new File(PATH_PUBLICKEYFILE)));
+			String readRow = reader.readLine();
+			String[] row = new String[2];
+			while (readRow != null) {
+				row = readRow.split(";");
+				tableModel.addRow(row);
+				readRow = reader.readLine();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

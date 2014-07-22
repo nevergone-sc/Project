@@ -1,0 +1,75 @@
+\documentclass[11pt,a4paper,landscape]{article}
+\usepackage{graphicx}
+\usepackage{pgfgantt}
+\usepackage[landscape]{geometry}
+
+\begin{document}
+
+\begin{figure}[!h]
+\hspace{-1.2in}
+\begin{ganttchart}[
+  hgrid,
+  vgrid,
+  x unit=0.4cm,
+  y unit title=1.2cm,
+]{1}{52}
+
+\gantttitle{July}{16} 
+\gantttitle{Augest}{31} 
+\gantttitle{Sep}{5} \\
+\gantttitle{Week1}{7}
+\gantttitle{Week2}{7}
+\gantttitle{Week3}{7}
+\gantttitle{Week4}{7}
+\gantttitle{Week5}{7}
+\gantttitle{Week6}{7}
+\gantttitle{Week7}{7}
+\gantttitle{Week8}{3}\\
+\gantttitlelist{16,...,31}{1}
+\gantttitlelist{1,...,31}{1}
+\gantttitlelist{1,...,5}{1} \\
+\ganttbar{Protocol Analysis}{1}{14} \\
+\ganttbar{Extension}{1}{7} \\
+\ganttbar{Developing}{8}{14}\\
+\ganttbar{Testing}{15}{21}\\
+\ganttbar{Documenting}{15}{28} \\
+\ganttbar{Dissetation}{22}{42}\\
+\ganttbar{Revision}{43}{52}
+\end{ganttchart}
+
+\caption{Project Schedule}
+\end{figure}
+
+\newpage
+\subsection*{Protocol Analysis}
+\begin{itemize}
+\item Build system model
+\item Build adversary model
+\item Define protocol properties
+\item Proof protocol properties
+\end{itemize}
+
+\subsection*{Extension}
+\begin{itemize}
+\item Add aggregation process to protocol
+\item Implement aggregation in program library
+\end{itemize}
+
+\subsection*{Documenting}
+\begin{itemize}
+\item Specify use cases for application
+\item Specify message structure
+\item Specify program architecture and class architecture(UML)
+\end{itemize}
+
+\subsection*{Developing}
+\begin{itemize}
+\item Error handling
+\end{itemize}
+
+\subsection*{Testing}
+\begin{itemize}
+\item Efficiency test
+\item Scalability test
+\end{itemize}
+\end{document}
