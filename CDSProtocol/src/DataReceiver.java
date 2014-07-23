@@ -52,15 +52,26 @@ public class DataReceiver extends Delegate {
 		ByteBuffer plainBlockBuffer = ByteBuffer.wrap(plainBlock);
 		// Receiver ID from Courier
 		String dstID = new String(getShortBlock(plainBlockBuffer));
-		// Sender ID from Courier
-		String srcID = new String(getShortBlock(plainBlockBuffer));
 		// kC
 		kC = new byte[LENGTH_SYMM_KEY];
 		plainBlockBuffer.get(kC);
 		
+		// Validate receiver ID --------------------------------------------------------------------
+		if (!dstID.equals(ID)) {
+			ui.printErr("Destination ID in prefix not match", ID);
+			return -1;
+		}
+		
+		int totalMetaLength = 0;
+		int totalMsgLength = 0;
+		
+		while (src.remaining() > 0) {
+			System.out.println(src.remaining());
 		byte[] meta = getLongBlock(src);
 		int metaLength = meta.length;
+		totalMetaLength += metaLength + Integer.SIZE/8;
 		
+		System.out.println(metaLength);
 		byte[] ecryptedMetaValue = new byte[Crypto.LENGTH_ASYM_CIPHER];
 		System.arraycopy(meta, 0, ecryptedMetaValue, 0, Crypto.LENGTH_ASYM_CIPHER);
 		
@@ -83,6 +94,7 @@ public class DataReceiver extends Delegate {
 		
 		byte[] msg = getLongBlock(src);
 		int msgLength = msg.length;
+		totalMsgLength += msgLength + Integer.SIZE/8;
 		int msgValueLength = msgLength - Crypto.LENGTH_MAC;
 
 		byte[] encryptedMsgBlock = new byte[msgValueLength];
@@ -91,23 +103,19 @@ public class DataReceiver extends Delegate {
 		System.arraycopy(msg, msgValueLength, msgMAC, 0, Crypto.LENGTH_MAC);
 		
 		if (debug) {
+			ui.print("-----------------------------------------------------------------", "", "");
 			ui.print(senderID, "SenderID=\t\t", ID);
+			ui.print(metaSrcID, "SourceID=\t\t", ID);
 			ui.print(encryptedBlock, "EncPKB=\t\t", ID);
 		}
 		
 		// Validate received data ----------------------------------------------------------------
-		if (!dstID.equals(ID)) {
-			ui.printErr("Destination ID in prefix not match", ID);
-			return -1;
-		} else if (!metaDstID.equals(ID)) {
+		if (!metaDstID.equals(ID)) {
 			ui.printErr("Destination ID in Meta not match", ID);
-			return -1;
-		} else if (!srcID.equals(metaSrcID)) {
-			ui.printErr("Source ID not match between prefix and Meta", ID);
 			return -1;
 		} // TODO: For timestamp validation
 		
-		byte[] srcPK = dataManager.getPublicKey(srcID);
+		byte[] srcPK = dataManager.getPublicKey(metaSrcID);
 		if (!crypto.verifySIGN(ecryptedMetaValue, srcPK, metaSIGN)) {
 			ui.printErr("Meta signature not valid", ID);
 			return -1;
@@ -122,9 +130,10 @@ public class DataReceiver extends Delegate {
 		byte[] plainMsg = crypto.decryptSymm(encryptedMsgBlock, msgKey);
 		ui.print(String.valueOf(timestamp), "TimeStamp=\t\t", ID);
 		ui.print(new String(plainMsg), "Result=\t\t", ID);
+		}
 		
 		// Prepare for send data -------------------------------------------------------------------
-		int totalReceivedLength = lengthSenderID+Byte.SIZE/8+Crypto.LENGTH_ASYM_CIPHER+2*Integer.SIZE/8+metaLength+msgLength;
+		int totalReceivedLength = lengthSenderID+Byte.SIZE/8+Crypto.LENGTH_ASYM_CIPHER+totalMetaLength+totalMsgLength;
 		src.reset();
 		byte[] totalReceived = new byte[totalReceivedLength];
 		src.get(totalReceived);

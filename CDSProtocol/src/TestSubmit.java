@@ -1,7 +1,12 @@
+import java.io.File;
+
 
 public class TestSubmit {
-	public static void main(String args[]) throws Exception {  
-		///*
+	public static void main(String args[]) throws Exception {
+		File f = new File("Alice\\Bob");
+		System.out.println(f.exists());
+		
+		/*
 		Thread t1 = new Thread(new Runnable() {
 			public void run() {
 				Crypto crypto = new Crypto();
@@ -23,7 +28,7 @@ public class TestSubmit {
 		courierA.setDstPort(8888);
 		UserInterface ui2 = new ConsoleUserInterface();
 		ui2.start(courierA);
-		//*/
+		*/
 		
 		/*
 		Thread t2 = new Thread(new Runnable() {

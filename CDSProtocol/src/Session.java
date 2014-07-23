@@ -39,9 +39,9 @@ public class Session extends Thread {
 			try {
 				lengthReceived = channel.read(receiveBuffer);
 			} catch (Exception e) {
-				sendErrorMsg("IO Error");
+				e.printStackTrace();
+				sendErrorMsg("Channel Read Error");
 			}
-			receiveBuffer.flip();
 			if (lengthReceived <= 0) { sendErrorMsg("IO Error"); break; }
 			
 			if (isErrorMsg(receiveBuffer)) {

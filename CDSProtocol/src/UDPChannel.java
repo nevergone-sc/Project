@@ -42,6 +42,7 @@ public class UDPChannel implements Channel{
 		if (state == OPEN) {
 			ByteBuffer bb = ByteBuffer.allocate(1024);
 			InetSocketAddress senderAddress = (InetSocketAddress) channel.receive(bb);
+			bb.flip();
 			UDPChannel returnChannel = new UDPChannel(senderAddress);
 			returnChannel.putPreMessage(bb);
 			return returnChannel;
@@ -78,13 +79,16 @@ public class UDPChannel implements Channel{
 		if (state == CONNECTED) {
 			if (preMessage == null) {
 				InetSocketAddress senderAddress = (InetSocketAddress) channel.receive(dst);
+				dst.flip();
 				dstAddress = senderAddress;
-				return dst.remaining();
+				return dst.limit();
 			} else {
-				dst.put(preMessage.array().clone());
-				int length = preMessage.position();
+				byte[] preMessageContent = new byte[preMessage.limit()];
+				preMessage.get(preMessageContent);
+				dst.put(preMessageContent);
+				dst.flip();
 				preMessage = null;
-				return length;
+				return dst.limit();
 			}
 		} else {
 			return -1;

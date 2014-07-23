@@ -31,27 +31,26 @@ public class SendCourier extends Delegate {
 	
 	public ByteBuffer getInitialMessage() {
 		kC = crypto.generateSymmKey(LENGTH_SYMM_KEY*8);
-		int encryptedLength = senderID.length()+receiverID.length()+LENGTH_SYMM_KEY+2*Byte.SIZE/8;
+		int encryptedLength = receiverID.length()+LENGTH_SYMM_KEY+Byte.SIZE/8;
 		ByteBuffer encryptedBuffer = ByteBuffer.allocate(encryptedLength);
 		putShortBlock(receiverID.getBytes(), encryptedBuffer);
-		putShortBlock(senderID.getBytes(), encryptedBuffer);
 		encryptedBuffer.put(kC);
 		byte[] encryptedBlock = crypto.encryptAsym(encryptedBuffer.array(), receiverPK);
 		
-		ByteBuffer dataToSendBuffer = ByteBuffer.wrap(dataManager.getData(senderID, receiverID));
+		ByteBuffer dataToSendBuffer = ByteBuffer.wrap(dataManager.getData(receiverID));
+		/*
 		// Get Meta
 		byte[] meta = getLongBlock(dataToSendBuffer);
 		int metaLength = meta.length;
 		// Get Message
 		byte[] msg = getLongBlock(dataToSendBuffer);
 		int msgLength = msg.length;
-		
-		int totalMsgLength = ID.length() + Crypto.LENGTH_ASYM_CIPHER + Byte.SIZE/8 + 2*Integer.SIZE/8 + metaLength + msgLength;
+		*/
+		int totalMsgLength = ID.length() + Crypto.LENGTH_ASYM_CIPHER + Byte.SIZE/8 + dataToSendBuffer.limit();
 		ByteBuffer totalMsgBuffer = ByteBuffer.allocate(totalMsgLength);
 		putShortBlock(ID.getBytes(), totalMsgBuffer);
 		totalMsgBuffer.put(encryptedBlock);
-		putLongBlock(meta, totalMsgBuffer);
-		putLongBlock(msg, totalMsgBuffer);
+		totalMsgBuffer.put(dataToSendBuffer);
 		totalMsgBuffer.flip();
 		
 		sentBuffer = totalMsgBuffer;

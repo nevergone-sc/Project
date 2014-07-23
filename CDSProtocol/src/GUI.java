@@ -244,7 +244,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	@Override
 	public void printErr(String str, String threadID) {
 		// TODO Auto-generated method stub
-		
+		infos.insert(str + "\n", 0);
 	}
 
 	@Override
@@ -376,12 +376,12 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 				public void run() {
 					String myID = textLocID.getText();
 					String revID = textDataID.getText();
-					DataManager dataManager = new DataManager(Integer.parseInt(textMaxCapacity.getText()));
+					DataManager dataManager = new DataManager(myID, Integer.parseInt(textMaxCapacity.getText()));
 					dataManager.setPathPrivateKey(textPrivateKey.getText());
 					for (int i = 0; i < tableModel.getRowCount(); i++) {
 						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
 					}
-					dataManager.setPathData(myID, textDataID.getText(), textDataPath.getText());
+					//dataManager.setPathData(myID, textDataID.getText(), textDataPath.getText());
 
 					Accepter alice = 
 							new Alice(textLocAddress.getText(), Integer.parseInt(textLisPort.getText()), ui, crypto, dataManager, myID, revID);
@@ -401,7 +401,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 				public void run() {
 					String myID = textLocID.getText();
 					String senderID = textDstID.getText();
-					DataManager dataManager = new DataManager(Integer.parseInt(textMaxCapacity.getText()));
+					DataManager dataManager = new DataManager(myID, Integer.parseInt(textMaxCapacity.getText()));
 					for (int i = 0; i < tableModel.getRowCount(); i++) {
 						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
 					}
@@ -422,7 +422,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			Thread thread = new Thread(new Runnable() {
 				public void run() {
 					String myID = textLocID.getText();
-					DataManager dataManager = new DataManager(Integer.parseInt(textMaxCapacity.getText()));
+					DataManager dataManager = new DataManager(myID, Integer.parseInt(textMaxCapacity.getText()));
 					for (int i = 0; i < tableModel.getRowCount(); i++) {
 						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
 					}
@@ -448,11 +448,11 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 					String myID = textLocID.getText();
 					String sedID = textDataID.getText();
 					String revID = textDstID.getText();
-					DataManager dataManager = new DataManager(Integer.parseInt(textMaxCapacity.getText()));
+					DataManager dataManager = new DataManager(myID, Integer.parseInt(textMaxCapacity.getText()));
 					for (int i = 0; i < tableModel.getRowCount(); i++) {
 						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
 					}
-					dataManager.setPathData(textDataID.getText(), textDstID.getText(), textDataPath.getText());
+					//dataManager.setPathData(textDataID.getText(), textDstID.getText(), textDataPath.getText());
 
 					Initializer courier = 
 							new CourierB(textDstAddress.getText(), Integer.parseInt(textDstPort.getText()), ui, crypto, dataManager, myID, sedID, revID);

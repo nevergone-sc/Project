@@ -78,7 +78,7 @@ public class ReceiveCourier extends Delegate {
 			ui.print(String.valueOf(msgLength), "MSG length=\t", ID);
 		}
 					
-		// Validate received data------------------------------------------------------------------------
+		// Validate received data -----------------------------------------------------------------------
 		if (!receivedID.equals(ID)) return -1;
 		
 		byte[] messageReceived = new byte[receivedLength];
@@ -92,7 +92,7 @@ public class ReceiveCourier extends Delegate {
 		dataToSave.put(meta);
 		dataToSave.putInt(msgLength);
 		dataToSave.put(msg);
-		dataManager.putData(dataToSave.array(), senderID, receiverID);
+		dataManager.putData(dataToSave.array(), receiverID);
 		
 		// Prepare send data ----------------------------------------------------------------------------
 		src.reset();

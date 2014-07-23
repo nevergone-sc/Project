@@ -81,7 +81,7 @@ public class DataCreator extends Delegate {
 		byte[] metaBSign = crypto.getSIGN(metaBValue, mySK);
 		byte[] metaEncryptedSign = crypto.encryptSymm(metaBSign, kab);
 					
-		byte[] sendData = dataManager.getData(ID, dstID);
+		byte[] sendData = dataManager.getData(dstID);
 		byte[] msgBValue = crypto.encryptSymm(sendData, kab);
 		byte[] msgBMAC = crypto.getMACDigest(msgBValue, kab);
 				

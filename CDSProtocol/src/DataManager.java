@@ -9,19 +9,38 @@ import java.util.HashMap;
 public class DataManager {
 	private final int MAX_STORAGE;
 	private HashMap<String, String> publicKeyPaths = new HashMap<String, String>();
-	private HashMap<Pair<String, String>, String> dataPaths = new HashMap<Pair<String, String>, String>();
+	private HashMap<String, String> dataPaths = new HashMap<String, String>();
 	private String pathPrivateKey = "PrivateKey_Alice";
+	private String workingDirectory = "";
 	
-	public DataManager(int max) {
+	public DataManager(String directory, int max) {
+		workingDirectory = directory + "\\";
 		MAX_STORAGE = max;
 	}
 	
-	public byte[] getData(String idFrom, String idTo) {
-		String path = dataPaths.get(new Pair<String, String>(idFrom, idTo));
-		if (path == null) return null;
+	public byte[] getData(String idTo) {
+		String path = workingDirectory+ idTo;
+		File file = new File(path);
+		if (!file.exists()) {
+			return null;
+		}
 		return read(path);
 	}
 	
+	public void putData(byte[] src, String idTo) {
+		String path = workingDirectory + idTo;
+		File file = new File(path);
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		write(src, path);
+	}
+	/* deprecated
 	public void putData(byte[] src, String idFrom, String idTo) {
 		Pair<String, String> idPair = new Pair<String, String>(idFrom, idTo);
 		String path = dataPaths.get(idPair);
@@ -41,7 +60,7 @@ public class DataManager {
 			write(src, path);
 		}
 	}
-	
+	*/
 	public byte[] getPublicKey(String id) {
 		String path = publicKeyPaths.get(id);
 		return read(path);
@@ -90,7 +109,7 @@ public class DataManager {
 	private void write(byte[] src, String path) {
 		FileOutputStream outStream = null;
 		try {
-			outStream = new FileOutputStream(new File(path));
+			outStream = new FileOutputStream(new File(path), true);
 			outStream.write(src);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -111,11 +130,11 @@ public class DataManager {
 	public void setPathPrivateKey(String path) {
 		pathPrivateKey = path;
 	}
-	
+	/*
 	public void setPathData(String idFrom, String idTo, String path) {
 		dataPaths.put(new Pair<String, String>(idFrom, idTo), path);
 	}
-	
+	*/
 	public void readPathsFromFile(String filepath) {
 		// TODO:
 	}
@@ -148,6 +167,5 @@ public class DataManager {
 		    return this.left.equals(pairo.getLeft()) &&
 		           this.right.equals(pairo.getRight());
 		  }
-
 	}
 }
