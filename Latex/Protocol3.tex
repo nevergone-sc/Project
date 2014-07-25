@@ -23,22 +23,23 @@
 
 \action*{pick a random key k$_C$}{courier}
 \nextlevel[2]
-\mess{Courier\textbar size\textbar E$_{pk_A}$(k$_C$)}{courier}{alice}
+\mess{1: Courier\textbar size\textbar E$_{pk_A}$(k$_C$)}{courier}{alice}
 \nextlevel
 \action*{pick symmetric key k$_{AB}$}{alice}
 \nextlevel
-\action*{meta$_B$ = E$_{pk_B}$(k$_{AB}$\textbar Alice\textbar Bob\textbar timestamp)\textbar SIGN$_A$}{alice}
+\action*{meta$_B$ = E$_{pk_B}$(k$_{AB}$\textbar Alice\textbar Bob\textbar ts)\textbar E$_{k_{AB}}$(SIGN$_A$)}{alice}
 \nextlevel
-\action*{msg$_B$ = E$_{k_{AB}}$(message)\textbar MAC$_{k_{AB}}$(message)}{alice}
+\action*{msg$_B$ = E$_{k_{AB}}$(message), MAC$_{k_{AB}}$}{alice}
 \nextlevel[2]
-\mess{Courier\textbar Alice\textbar Bob\textbar meta$_B$\textbar msg$_B$, MAC$_{k_C}$}{alice}{courier}
+\mess{2: Courier\textbar Alice\textbar Bob\textbar meta$_B$\textbar msg$_B$, MAC$_{k_C}$}{alice}{courier}
 \nextlevel
 \action*{check validity of names and size}{courier}
 \nextlevel[2]
-\mess{HASH(received message)}{courier}{alice}
+\mess{3: MAC$_{k_C}$(MESSAGE 2)}{courier}{alice}
 \nextlevel
 \end{msc}
-
+where:\\
+ts = Time Stamp
 
 \subsection*{Preconditions}
 \subsubsection*{Alice:}
@@ -77,15 +78,15 @@
 
 \action*{pick a random key k$_C$}{courier}
 \nextlevel
-\action*{data$_B$ = meta$_B$\textbar msg$_B$}{courier}
+\action*{data$_B$ = \{meta$_B$\textbar msg$_B$\}$^*$}{courier}
 \nextlevel[2]
-\mess{Courier\textbar E$_{pk_B}$(Bob\textbar Alice\textbar k$_C$)\textbar data$_B$}{courier}{bob}
+\mess{Courier\textbar E$_{pk_B}$(Bob\textbar k$_C$)\textbar data$_B$}{courier}{bob}
 \nextlevel
 \action*{check name of sender and receiver}{bob}
 \nextlevel
 \action*{check validity of meta$_B$ and msg$_B$}{bob}
 \nextlevel[2]
-\mess{HASH(previous message), MAC$_{k_C}$}{bob}{courier}
+\mess{2: MAC$_{k_C}$(MESSAGE 1)}{bob}{courier}
 \end{msc}
 \\
 where: \\

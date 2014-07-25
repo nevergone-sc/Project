@@ -66,12 +66,10 @@ public class DataReceiver extends Delegate {
 		int totalMsgLength = 0;
 		
 		while (src.remaining() > 0) {
-			System.out.println(src.remaining());
 		byte[] meta = getLongBlock(src);
 		int metaLength = meta.length;
 		totalMetaLength += metaLength + Integer.SIZE/8;
 		
-		System.out.println(metaLength);
 		byte[] ecryptedMetaValue = new byte[Crypto.LENGTH_ASYM_CIPHER];
 		System.arraycopy(meta, 0, ecryptedMetaValue, 0, Crypto.LENGTH_ASYM_CIPHER);
 		
@@ -145,6 +143,14 @@ public class DataReceiver extends Delegate {
 		
 		terminate();
 		ui.nextStep("", ID);
+		/*
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
 		return totalReceivedMAC.length;
 	}
 }

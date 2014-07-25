@@ -62,36 +62,36 @@ However, this task is divided into M + 1 individual communications. Every such i
 
 The adversary model in this protocol is mostly derived from Dolev-Yao model which implies ``adversary carries the message" \cite{dolev}. Specifically, adversary $\mathcal{Z}$ has following capabilities:
 \begin{itemize}
-\item It knows all information of the system, including communication structure and all information about other members.
+\item It recognizes the whole system, including communication structure and all information about other members.
 \item It can access/rewrite any message passing through the network.
 \item It is a legitimate user of the network and it could be any of 4 entities in this protocol.
 \item If it is a passive entity (Alice or Bob), it will always have the opportunity to be contacted by any other entities that are capable of (Courier).
 \item It can hijack any Courier at any stage of the protocol and get access to all the Courier's data.
 \end{itemize}
-It should be noted that although the adversary against this protocol has been given great power, its goal is restricted - only to reveal the message content sent from Alice to Bob. That means, $\mathcal{Z}$ will not purposelessly hijack a Courier forever or change the data it carries to form a Denial of Service attack.
+It should be noted that although the adversary against this protocol has been given great power, its goal is highly restricted - only to reveal the message content sent from Alice to Bob. That means, $\mathcal{Z}$ will not purposelessly hijack a Courier forever or change the data it carries to achieve any other goals (such as DoC attack).
 
 \subsection*{Protocol Properties}
 \subsubsection*{Submit protocol}
 \begin{itemize}
-\item Alice is authenticated to Courier
-\item Alice can deny the communication with Courier
-\item The confidentiality of message content from Alice to Bob is preserved
-\item The Integrity of message from Alice to Courier is preserved
+\item $\mathcal{A}$ is authenticated to $\mathcal{CR}$
+\item $\mathcal{A}$ can deny the communication with $\mathcal{CR}$
+\item The confidentiality of message content from $\mathcal{A}$ to $\mathcal{B}$ is preserved
+\item The Integrity of message from $\mathcal{A}$ to $\mathcal{CR}$ is preserved
 \end{itemize}
 
 \subsubsection*{Transmit protocol}
 \begin{itemize}
-\item Bob is authenticated to Courier
-\item Bob can deny the communication with Courier
-\item The confidentiality of message content from Alice to Bob is preserved
-\item The Integrity of message from Courier to Bob is preserved
+\item $\mathcal{B}$ is authenticated to $\mathcal{CS}$
+\item $\mathcal{B}$ can deny the communication with $\mathcal{CS}$
+\item The confidentiality of message content from $\mathcal{A}$ to $\mathcal{B}$ is preserved
+\item The Integrity of message from $\mathcal{CS}$ to $\mathcal{B}$ is preserved
 \end{itemize}
 
 \subsubsection*{On the whole}
 \begin{itemize}
-\item Alice is authenticated to Bob
-\item Non-repudiation for Alice
-\item Confidentiality, integrity of message from Alice to Bob is preserved
+\item $\mathcal{A}$ is authenticated to $\mathcal{B}$
+\item Non-repudiation for $\mathcal{A}$ to $\mathcal{B}$
+\item Confidentiality, integrity of message from $\mathcal{A}$ to $\mathcal{B}$ is preserved
 \item Protected from repeat attack
 \end{itemize}
 

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -16,21 +17,21 @@ public class UDPChannel implements Channel{
 		state = OPEN;
 	}
 	
-	public UDPChannel(int port) throws Exception {
+	public UDPChannel(int port) throws IOException {
 		channelPort = port;
 		channel = DatagramChannel.open();
 		channel.socket().bind(new InetSocketAddress(channelPort));
 		state = OPEN;
 	}
 	
-	public UDPChannel(InetSocketAddress address) throws Exception {
+	public UDPChannel(InetSocketAddress address) throws IOException {
 		channel = DatagramChannel.open();
 		channelPort = channel.socket().getPort();
 		dstAddress = address;
 		state = CONNECTED;
 	}
 	
-	public UDPChannel(int port, InetSocketAddress address) throws Exception {
+	public UDPChannel(int port, InetSocketAddress address) throws IOException {
 		channelPort = port;
 		channel = DatagramChannel.open();
 		channel.socket().bind(new InetSocketAddress(channelPort));
@@ -38,7 +39,7 @@ public class UDPChannel implements Channel{
 		state = CONNECTED;
 	}
 	
-	public UDPChannel accept() throws Exception {
+	public UDPChannel accept() throws IOException {
 		if (state == OPEN) {
 			ByteBuffer bb = ByteBuffer.allocate(1024);
 			InetSocketAddress senderAddress = (InetSocketAddress) channel.receive(bb);
@@ -51,7 +52,7 @@ public class UDPChannel implements Channel{
 		}
 	}
 	
-	public boolean connect(InetSocketAddress address) throws Exception {
+	public boolean connect(InetSocketAddress address) throws IOException {
 		if (state == OPEN) {
 			dstAddress = address;
 			state = CONNECTED;
@@ -61,7 +62,7 @@ public class UDPChannel implements Channel{
 		}
 	}
 	
-	public boolean close() throws Exception {
+	public boolean close() throws IOException {
 		if (state == OPEN || state == CONNECTED){
 			channel.close();
 			state = CLOSED;
@@ -75,7 +76,7 @@ public class UDPChannel implements Channel{
 		preMessage = src;
 	}
 	
-	public int read(ByteBuffer dst) throws Exception {
+	public int read(ByteBuffer dst) throws IOException {
 		if (state == CONNECTED) {
 			if (preMessage == null) {
 				InetSocketAddress senderAddress = (InetSocketAddress) channel.receive(dst);
@@ -95,7 +96,7 @@ public class UDPChannel implements Channel{
 		}
 	}
 	
-	public int write(ByteBuffer src) throws Exception {
+	public int write(ByteBuffer src) throws IOException {
 		if (state == CONNECTED) {
 			return channel.send(src, dstAddress);
 		} else {
