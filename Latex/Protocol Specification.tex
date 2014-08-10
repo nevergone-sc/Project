@@ -1,0 +1,9 @@
+\section*{Protocol Specification}
+The $\mathcal{S}$ denotes its set of internal states which defines how $\prod$ responds to a certain input $\mathcal{M}$. Taking $\mathcal{A}$ as example,the figure below shows a 3-internal-state oracle which abstracts the behaviour of $\mathcal{A}$: initially $\prod_S$ is in Wait state, waiting for incoming message
+. Once it receives and verifies $\mathcal{M}_0$, it sends the $\mathcal{M}_0'$ out and enters Send state, waiting for next message. After that it receives and verifies  $\mathcal{M}_1$ and enters the final state Check. If any error occurs when $\prod_S$ in Wait or Send state, it enters Error state and session is aborted.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.8\textwidth,natwidth=585,natheight=298]{statemachinefigure.png}
+\caption{State Machine Model}
+\end{figure}
