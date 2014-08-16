@@ -7,7 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Session extends Thread {
-	private static final int MAX_BUFFER_SIZE = 1024;
+	private static final int MAX_BUFFER_SIZE = 16384;
 	private static final int TIMEOUT = 1000;
 	
 	int sessionID;
@@ -121,6 +121,7 @@ public class Session extends Thread {
 		return (!(src.get() == 0));
 	}
 	
+	// Thread for cancelling timeout connections
 	class TaskCanceller implements Runnable {
 		private Future<Integer> handler;
 		
@@ -129,7 +130,7 @@ public class Session extends Thread {
 		}
 		
 		public void run(){
-		        handler.cancel(true);
+		    handler.cancel(true);
 		}
 	}
 
@@ -144,4 +145,3 @@ public class Session extends Thread {
 		}
 	}
 }
-

@@ -5,8 +5,7 @@ public class SendCourier extends Delegate {
 	static final boolean debug = true;
 	
 	private String ID;
-	private String receiverID;
-	private String senderID;
+	private String dstID;
 	private byte[] receiverPK;
 	private int state = 0;
 	private Crypto crypto;
@@ -16,13 +15,12 @@ public class SendCourier extends Delegate {
 	
 	byte[] kC;
 	
-	public SendCourier(String id, Crypto c, DataManager dm, String sedID, String revID) {
+	public SendCourier(String id, Crypto c, DataManager dm, String revID) {
 		ID = id;
-		receiverID = revID;
-		senderID = sedID;
+		dstID = revID;
 		crypto = c;
 		dataManager = dm;
-		receiverPK = dm.getPublicKey(receiverID);
+		receiverPK = dm.getPublicKey(dstID);
 	}
 	
 	public void setUserInterface(UserInterface ui) {
@@ -31,13 +29,11 @@ public class SendCourier extends Delegate {
 	
 	public ByteBuffer getInitialMessage() {
 		kC = crypto.generateSymmKey(LENGTH_SYMM_KEY*8);
-		int encryptedLength = receiverID.length()+LENGTH_SYMM_KEY+Byte.SIZE/8;
-		ByteBuffer encryptedBuffer = ByteBuffer.allocate(encryptedLength);
-		putShortBlock(receiverID.getBytes(), encryptedBuffer);
+		ByteBuffer encryptedBuffer = ByteBuffer.allocate(LENGTH_SYMM_KEY);
 		encryptedBuffer.put(kC);
 		byte[] encryptedBlock = crypto.encryptAsym(encryptedBuffer.array(), receiverPK);
 		
-		ByteBuffer dataToSendBuffer = ByteBuffer.wrap(dataManager.getData(receiverID));
+		ByteBuffer dataToSendBuffer = ByteBuffer.wrap(dataManager.getData(dstID));
 		/*
 		// Get Meta
 		byte[] meta = getLongBlock(dataToSendBuffer);
@@ -72,6 +68,9 @@ public class SendCourier extends Delegate {
 			}
 			
 			if (!isMACValid) return -1;
+			
+			dataManager.deleteData(dstID);
+			
 			terminate();
 			ui.nextStep("", ID);
 			return 0;

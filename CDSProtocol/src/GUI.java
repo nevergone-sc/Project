@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 
@@ -20,17 +21,17 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	private DataManager dataManager;
 	private String PATH_PUBLICKEYFILE = "PublicKeys";
 	
-	private JButton buttonPrivateKey, buttonPublicKeyAdd, buttonPublicKeyDel, buttonPublicKeyChoose, buttonDataChoose;
+	private JButton buttonPrivateKeyChoose, buttonPublicKeyAdd, buttonPublicKeyDel, buttonPublicKeyChoose, buttonDataChoose;
 	private JButton buttonStart, buttonStop;
 	private JRadioButton dcRButton, rcRButton, drRButton, scRButton;
 	private JTextField textPrivateKey, textLocID, textLocAddress, textDstID, textDstAddress;
 	private JTextField textLisPort, textDstPort, textMaxCapacity;
 	private JTextField textPublicKeyID, textPublicKeyPath, textDataID, textDataPath;
 	private JLabel labelLocID, labelLisPort, labelLocAddress, labelDstID, labelDstPort, labelDstAddress;
-	private JLabel labelMaxCapacity, labelPublicKey, labelPrivateKey, labelData, labelDataID;
+	private JLabel labelMaxCapacity, labelPrivateKey, labelDataID;
 	private JFileChooser fileChooser;
 	private JPanel panelIdentity, panelFiles, panelEntity, panelInfo;
-	private JPanel panelPrivateKey, panelData;
+	private JPanel panelFilesMaxCapacity, panelPrivateKey, panelData;
 	private DefaultTableModel tableModel;
 	private JTable tablePublicKey;
 	private JTextArea infos;
@@ -40,7 +41,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	
 	public GUI() // the frame constructor method
 	{
-	    super("My Simple Frame"); setBounds(400,200,820,800);
+	    super("Courier Dependent Secure Protocol"); setBounds(400,200,820,700);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    JPanel mainPanel = new JPanel();
 	    
@@ -49,12 +50,12 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	    // Panel for choosing entity
 	    dcRButton = new JRadioButton("DataCreator");
 	    dcRButton.addActionListener(this);
-	    rcRButton = new JRadioButton("ReceiveCourier");
+	    rcRButton = new JRadioButton("CourierReceiver");
 	    rcRButton.addActionListener(this);
 
 	    drRButton = new JRadioButton("DataReceiver");
 	    drRButton.addActionListener(this);
-	    scRButton = new JRadioButton("SendCourier");
+	    scRButton = new JRadioButton("CourierSender");
 	    scRButton.addActionListener(this);
 	    
 	    entityGroup = new ButtonGroup();
@@ -93,8 +94,8 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	    labelDstAddress = new JLabel("Desination Address:");
 	    textDstAddress = new JTextField(20);
 	    
-	    panelIdentity = new JPanel(new GridLayout(12, 1));
-	    panelIdentity.setBorder(new TitledBorder(new EtchedBorder(), "Entities' Identities"));
+	    panelIdentity = new JPanel(new GridLayout(12,1));
+	    panelIdentity.setBorder(new TitledBorder(new EtchedBorder(), "Entity Identity"));
 	    panelIdentity.add(labelLocID);
 	    panelIdentity.add(textLocID);
 	    panelIdentity.add(labelLocAddress);
@@ -110,29 +111,32 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	    
 	    // Panel for choosing files
 	    // Maximum data capacity
-	    labelMaxCapacity = new JLabel("Maximum data capacity: ");
+	    labelMaxCapacity = new JLabel("Maximum capacity: ");
 	    textMaxCapacity = new JFormattedTextField();
 	    textMaxCapacity.setColumns(10);
+	    panelFilesMaxCapacity = new JPanel();
+	    panelFilesMaxCapacity.add(labelMaxCapacity);
+	    panelFilesMaxCapacity.add(textMaxCapacity);
 	    
 	    // Choose Private Key file
 	    labelPrivateKey = new JLabel("Private Key File: ");
 	    textPrivateKey = new JTextField(20);
-	    buttonPrivateKey = new JButton("Choose");
-	    buttonPrivateKey.addActionListener(this);
+	    buttonPrivateKeyChoose = new JButton("Choose");
+	    buttonPrivateKeyChoose.addActionListener(this);
 	    
 	    panelPrivateKey = new JPanel();
+	    panelPrivateKey.add(labelPrivateKey);
 	    panelPrivateKey.add(textPrivateKey);
-	    panelPrivateKey.add(buttonPrivateKey);
+	    panelPrivateKey.add(buttonPrivateKeyChoose);
 	    
 	    // Choose Public Key file
-	    labelPublicKey = new JLabel("Public Key Files: ");
 	    tableModel = new DefaultTableModel();
 	    tableModel.addColumn("Owner ID");
 	    tableModel.addColumn("Public Key Path");
 	    tablePublicKey = new JTable(tableModel);
 	    JScrollPane tableScroller = new JScrollPane(tablePublicKey);
 	    tableScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-	    tableScroller.setPreferredSize(new Dimension(250, 80));
+	    tableScroller.setPreferredSize(new Dimension(250, 200));
 	    
 	    JLabel labelPublicKeyID = new JLabel("ID");
 	    textPublicKeyID = new JTextField(10);
@@ -151,39 +155,47 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	    buttonPublicKeyAdd.addActionListener(this);
 	    buttonPublicKeyDel = new JButton("Delete");
 	    buttonPublicKeyDel.addActionListener(this);
-	    	    
+	    
 	    JPanel panelPublicKeyButton = new JPanel();
 	    panelPublicKeyButton.add(buttonPublicKeyAdd);
 	    panelPublicKeyButton.add(buttonPublicKeyDel);
 	    
-	    labelData = new JLabel("Data to Send:");
+	    JPanel panelFilesPublicKeys = new JPanel();
+	    panelFilesPublicKeys.setBorder(new TitledBorder(new EtchedBorder(), "Public Keys"));
+	    panelFilesPublicKeys.setLayout(new BoxLayout(panelFilesPublicKeys, BoxLayout.PAGE_AXIS));
+	    panelFilesPublicKeys.add(tableScroller);
+	    panelFilesPublicKeys.add(panelPublicKeyText);
+	    panelFilesPublicKeys.add(panelPublicKeyButton);
+	    
+	    // Data section
 	    labelDataID = new JLabel("Recipient");
-	    textDataID = new JTextField(10);
+	    textDataID = new JTextField(30);
 	    JLabel labelData3 = new JLabel("Path");
 	    textDataPath = new JTextField(20);
 	    buttonDataChoose = new JButton("Choose");
+	    buttonDataChoose.addActionListener(this);
+	    
 	    panelData = new JPanel();
-	    panelData.add(labelDataID);
-	    panelData.add(textDataID);;
-	    panelData.add(labelData3);
-	    panelData.add(textDataPath);
-	    panelData.add(buttonDataChoose);
+	    panelData.setBorder(new TitledBorder(new EtchedBorder(), "Data to Send"));
+	    panelData.setLayout(new BoxLayout(panelData, BoxLayout.PAGE_AXIS));
+	    JPanel subPanelData0 = new JPanel();
+	    subPanelData0.add(labelDataID);
+	    subPanelData0.add(textDataID);
+	    panelData.add(subPanelData0);
+	    JPanel subPanelData1 = new JPanel();
+	    subPanelData1.add(labelData3);
+	    subPanelData1.add(textDataPath);
+	    subPanelData1.add(buttonDataChoose);
+	    panelData.add(subPanelData1);
 	    
-	    panelFiles = new JPanel(new GridLayout(10,1));
+	    
+	    panelFiles = new JPanel();
+	    //panelFiles = new JPanel(new GridLayout(4,1));
+	    panelFiles.setLayout(new BoxLayout(panelFiles, BoxLayout.PAGE_AXIS));
 	    panelFiles.setBorder(new TitledBorder(new EtchedBorder(), "File Paths"));
-	    panelFiles.add(labelMaxCapacity);
-	    panelFiles.add(textMaxCapacity);
-	    panelFiles.add(labelPublicKey);
-	    panelFiles.add(tableScroller);
-	    //panelFiles.add(tablePublicKey.getTableHeader());
-	    //panelFiles.add(tablePublicKey);
-	    panelFiles.add(panelPublicKeyText);
-	    panelFiles.add(panelPublicKeyButton);
-	    
-	    panelFiles.add(labelPrivateKey);
+	    panelFiles.add(panelFilesMaxCapacity);
+	    panelFiles.add(panelFilesPublicKeys);
 	    panelFiles.add(panelPrivateKey);
-	    
-	    panelFiles.add(labelData);
 	    panelFiles.add(panelData);
 	    
 	    // Panel for displaying infos
@@ -199,9 +211,11 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	    //infos.setRows(5);
 	    infos.setEditable(false);
 	    JScrollPane infosScroller = new JScrollPane(infos);
-	    infosScroller.setPreferredSize(new Dimension(250, 80));
+	    infosScroller.setPreferredSize(new Dimension(250, 150));
 	    
-	    panelInfo = new JPanel(new GridLayout(2,1));
+	    //panelInfo = new JPanel(new GridLayout(2,1));
+	    panelInfo = new JPanel();
+	    panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.PAGE_AXIS));
 	    panelInfo.setBorder(new TitledBorder(new EtchedBorder(), "Console"));
 	    panelInfo.add(panelInfoButtons);
 	    panelInfo.add(infosScroller);
@@ -213,55 +227,49 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	    mainPanel.add(panelInfo, BorderLayout.PAGE_END);
 	    
 	    this.setContentPane(mainPanel);
+	    loadPublicKeyFromFile();
 	    setVisible(true); // display this frame
 	}
-	  public static void main(String args[]) {new GUI();}
 	
-	@Override
+	public static void main(String args[]) {new GUI();}
+	
 	public void setTag(String tag) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void print(String str, String tag, String threadID) {
 		infos.insert(tag + str + "\n", 0);
-		
 	}
 
-	@Override
 	public void print(byte[] bytes, String tag, String threadID) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void nextStep(String tag, String threadID) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void printErr(String str, String threadID) {
 		// TODO Auto-generated method stub
 		infos.insert(str + "\n", 0);
 	}
 
-	@Override
 	public String getInput(String info, String threadID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public void start(ProtocolEntity entity) {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
+	
 	public void actionPerformed(ActionEvent e) {
 		int returnValue;
-		if (e.getSource() == buttonPrivateKey) {
+		if (e.getSource() == buttonPrivateKeyChoose) {
 			returnValue = fileChooser.showOpenDialog(this);
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 				File f = fileChooser.getSelectedFile();
@@ -297,7 +305,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textDstAddress.setVisible(false);
 			labelDstPort.setVisible(false);
 			textDstPort.setVisible(false);
-			labelDataID.setText("Recipient");
+			panelFilesMaxCapacity.setVisible(false);
 		} else if (e.getSource() == rcRButton) {
 			setAllVisible();
 			labelLocAddress.setVisible(false);
@@ -306,7 +314,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textLisPort.setVisible(false);
 			labelPrivateKey.setVisible(false);
 			panelPrivateKey.setVisible(false);
-			labelData.setVisible(false);
 			panelData.setVisible(false);
 		} else if (e.getSource() == drRButton) {
 			setAllVisible();
@@ -316,7 +323,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textDstAddress.setVisible(false);
 			labelDstPort.setVisible(false);
 			textDstPort.setVisible(false);
-			labelData.setVisible(false);
+			panelFilesMaxCapacity.setVisible(false);
 			panelData.setVisible(false);
 		} else if (e.getSource() == scRButton) {
 			setAllVisible();
@@ -324,16 +331,16 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textLocAddress.setVisible(false);
 			labelLisPort.setVisible(false);
 			textLisPort.setVisible(false);
-			labelPrivateKey.setVisible(false);
+			panelFilesMaxCapacity.setVisible(false);
 			panelPrivateKey.setVisible(false);
-			labelDataID.setText("Sender");
+			labelDataID.setVisible(false);
+			textDataID.setVisible(false);
 		} else if (e.getSource() == buttonStart) {
 			Enumeration<AbstractButton> rButtons = entityGroup.getElements();
 			while (rButtons.hasMoreElements()) {
 				AbstractButton rButton = rButtons.nextElement();
 				if (rButton.isSelected()) {
 					startEntity(rButton.getText());
-					
 				}
 			}
 		}
@@ -347,7 +354,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 		labelLisPort.setVisible(true);
 		labelLocAddress.setVisible(true);
 		labelMaxCapacity.setVisible(true);
-		labelPublicKey.setVisible(true);
 		labelPrivateKey.setVisible(true);
 		textLocID.setVisible(true);
 		textDstID.setVisible(true);
@@ -357,12 +363,12 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 		textDstPort.setVisible(true);
 		panelPrivateKey.setVisible(true);
 		panelData.setVisible(true);
+		labelDataID.setVisible(true);
+		textDataID.setVisible(true);
 		buttonStop.setVisible(true);
 	}
 	
-	private void startEntity(String entityName) {
-		loadPublicKeyFromFile();
-		
+	private void startEntity(String entityName) {		
 		if (entityName.equals("DataCreator")) {
 			textLisPort.setText("9888");
 			textLocID.setText("Alice");
@@ -390,7 +396,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			});
 			thread.start();
 			
-		} else if (entityName.equals("ReceiveCourier")) {
+		} else if (entityName.equals("CourierReceiver")) {
 			textLocID.setText("Courier");
 			textDstID.setText("Alice");
 			textDstAddress.setText("localhost");
@@ -434,7 +440,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			});
 			thread.start();
 			
-		} else if (entityName.equals("SendCourier")) {
+		} else if (entityName.equals("CourierSender")) {
 			textLocID.setText("Courier");
 			textDstID.setText("Bob");
 			textDstAddress.setText("localhost");
@@ -446,7 +452,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			Thread thread = new Thread(new Runnable() {
 				public void run() {
 					String myID = textLocID.getText();
-					String sedID = textDataID.getText();
 					String revID = textDstID.getText();
 					DataManager dataManager = new DataManager(myID, Integer.parseInt(textMaxCapacity.getText()));
 					for (int i = 0; i < tableModel.getRowCount(); i++) {
@@ -455,7 +460,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 					//dataManager.setPathData(textDataID.getText(), textDstID.getText(), textDataPath.getText());
 
 					Initializer courier = 
-							new CourierB(textDstAddress.getText(), Integer.parseInt(textDstPort.getText()), ui, crypto, dataManager, myID, sedID, revID);
+							new CourierB(textDstAddress.getText(), Integer.parseInt(textDstPort.getText()), ui, crypto, dataManager, myID, revID);
 					courier.start();
 				}
 			});

@@ -1,7 +1,9 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -11,6 +13,7 @@ public class DataManager {
 	private HashMap<String, String> publicKeyPaths = new HashMap<String, String>();
 	private HashMap<String, String> dataPaths = new HashMap<String, String>();
 	private String pathPrivateKey = "PrivateKey_Alice";
+	private String pathPublicKeys = "PublicKeys";
 	private String workingDirectory = "";
 	
 	public DataManager(String directory, int max) {
@@ -39,6 +42,14 @@ public class DataManager {
 			}
 		}
 		write(src, path);
+	}
+	
+	public void deleteData(String idTo) {
+		String path = workingDirectory + idTo;
+		File file = new File(path);
+		if (file.exists()) {
+			file.delete();
+		}
 	}
 	/* deprecated
 	public void putData(byte[] src, String idFrom, String idTo) {
@@ -112,7 +123,6 @@ public class DataManager {
 			outStream = new FileOutputStream(new File(path), true);
 			outStream.write(src);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -135,14 +145,36 @@ public class DataManager {
 		dataPaths.put(new Pair<String, String>(idFrom, idTo), path);
 	}
 	*/
-	public void readPathsFromFile(String filepath) {
-		// TODO:
+	public void loadPublicKeysFromFile() {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(new File(pathPublicKeys)));
+			String readRow = reader.readLine();
+			String[] row = new String[2];
+			while (readRow != null) {
+				row = readRow.split(";");
+				publicKeyPaths.put(row[0], row[1]);
+				readRow = reader.readLine();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public int maxStorage() {
 		return MAX_STORAGE;
 	}
-	
+	/* deprecated
 	class Pair<L,R> {
 		  private final L left;
 		  private final R right;
@@ -168,4 +200,5 @@ public class DataManager {
 		           this.right.equals(pairo.getRight());
 		  }
 	}
+	*/
 }

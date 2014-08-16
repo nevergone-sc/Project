@@ -12,7 +12,7 @@ public class ReceiveCourier extends Delegate {
 	
 	private byte[] kc;
 	private byte[] senderSK;
-	private String receivedID, receiverID = "";
+	private String dstID = "";
 	private byte[] meta, msg, totalMAC = null;
 	
 	public ReceiveCourier(String id, Crypto c, DataManager dm, String sedID) {
@@ -55,9 +55,8 @@ public class ReceiveCourier extends Delegate {
 	protected int getMessage1(ByteBuffer src, ByteBuffer dst) {
 		src.mark();
 		// Retrieve received data----------------------------------------------------------------------
-		receivedID = new String(getShortBlock(src));
 		senderID = new String(getShortBlock(src));
-		receiverID = new String(getShortBlock(src));
+		dstID = new String(getShortBlock(src));
 
 		meta = getLongBlock(src);
 		int metaLength = meta.length;
@@ -68,19 +67,16 @@ public class ReceiveCourier extends Delegate {
 		totalMAC = new byte[Crypto.LENGTH_MAC];
 		src.get(totalMAC);
 
-		int receivedLength = receivedID.length() + senderID.length() + receiverID.length() + 3*Byte.SIZE/8 + 2*Integer.SIZE/8 + metaLength + msgLength;
+		int receivedLength = senderID.length() + dstID.length() + 2*Byte.SIZE/8 + metaLength + msgLength + 2*Integer.SIZE/8;
 		
 		if (debug) {
-			ui.print(receivedID, "Receiver=\t", ID);
 			ui.print(senderID, "Sender=\t", ID);
-			ui.print(receiverID, "Recipient=\t", ID);
+			ui.print(dstID, "Recipient=\t", ID);
 			ui.print(String.valueOf(metaLength), "META length=\t", ID);
 			ui.print(String.valueOf(msgLength), "MSG length=\t", ID);
 		}
 					
-		// Validate received data -----------------------------------------------------------------------
-		if (!receivedID.equals(ID)) return -1;
-		
+		// Validate received data -----------------------------------------------------------------------		
 		byte[] messageReceived = new byte[receivedLength];
 		src.reset();
 		src.get(messageReceived);
@@ -92,7 +88,7 @@ public class ReceiveCourier extends Delegate {
 		dataToSave.put(meta);
 		dataToSave.putInt(msgLength);
 		dataToSave.put(msg);
-		dataManager.putData(dataToSave.array(), receiverID);
+		dataManager.putData(dataToSave.array(), dstID);
 		
 		// Prepare send data ----------------------------------------------------------------------------
 		src.reset();

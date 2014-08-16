@@ -85,12 +85,11 @@ public class DataCreator extends Delegate {
 		byte[] msgBValue = crypto.encryptSymm(sendData, kab);
 		byte[] msgBMAC = crypto.getMACDigest(msgBValue, kab);
 				
-		int nameBlockLength = senderID.length() + ID.length() + dstID.length() + 3*Byte.SIZE/8;
+		int nameBlockLength = ID.length() + dstID.length() + 2*Byte.SIZE/8;
 		int metaLength = metaBValue.length + metaEncryptedSign.length;
 		int msgLength = msgBValue.length + Crypto.LENGTH_MAC;
 		int totalMsgLength = nameBlockLength + metaLength + msgLength + 2*Integer.SIZE/8;
 		ByteBuffer totalMsgBuffer = ByteBuffer.allocate(totalMsgLength);
-		putShortBlock(senderID.getBytes(), totalMsgBuffer);
 		putShortBlock(ID.getBytes(), totalMsgBuffer);
 		putShortBlock(dstID.getBytes(), totalMsgBuffer);
 		totalMsgBuffer.putInt(metaLength);
