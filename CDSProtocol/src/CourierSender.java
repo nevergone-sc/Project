@@ -1,7 +1,8 @@
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 
-public class SendCourier extends Delegate {
+public class CourierSender extends Delegate {
 	static final boolean debug = true;
 	
 	private String ID;
@@ -15,12 +16,19 @@ public class SendCourier extends Delegate {
 	
 	byte[] kC;
 	
-	public SendCourier(String id, Crypto c, DataManager dm, String revID) {
+	public CourierSender(String id, UserInterface ui, Crypto c, DataManager dm, String revID) {
 		ID = id;
 		dstID = revID;
 		crypto = c;
 		dataManager = dm;
-		receiverPK = dm.getPublicKey(dstID);
+		this.ui = ui;
+		
+		try {
+			receiverPK = dm.getPublicKey(dstID);
+		} catch (IOException e) {
+			ui.printErr(e.getMessage(), ID);
+			terminate();
+		}
 	}
 	
 	public void setUserInterface(UserInterface ui) {
@@ -33,15 +41,15 @@ public class SendCourier extends Delegate {
 		encryptedBuffer.put(kC);
 		byte[] encryptedBlock = crypto.encryptAsym(encryptedBuffer.array(), receiverPK);
 		
-		ByteBuffer dataToSendBuffer = ByteBuffer.wrap(dataManager.getData(dstID));
-		/*
-		// Get Meta
-		byte[] meta = getLongBlock(dataToSendBuffer);
-		int metaLength = meta.length;
-		// Get Message
-		byte[] msg = getLongBlock(dataToSendBuffer);
-		int msgLength = msg.length;
-		*/
+		ByteBuffer dataToSendBuffer;
+		try {
+			dataToSendBuffer = ByteBuffer.wrap(dataManager.getData(dstID));
+		} catch (IOException e) {
+			ui.printErr(e.getMessage(), ID);
+			terminate();
+			return null;
+		}
+
 		int totalMsgLength = ID.length() + Crypto.LENGTH_ASYM_CIPHER + Byte.SIZE/8 + dataToSendBuffer.limit();
 		ByteBuffer totalMsgBuffer = ByteBuffer.allocate(totalMsgLength);
 		putShortBlock(ID.getBytes(), totalMsgBuffer);
@@ -50,7 +58,6 @@ public class SendCourier extends Delegate {
 		totalMsgBuffer.flip();
 		
 		sentBuffer = totalMsgBuffer;
-		
 		state = 1;
 		return totalMsgBuffer;
 	}

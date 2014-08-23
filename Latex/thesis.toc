@@ -1,0 +1,68 @@
+\contentsline {chapter}{\numberline {1}System Description}{1}
+\contentsline {section}{\numberline {1.1}System Model}{1}
+\contentsline {subsection}{\numberline {1.1.1}Overview}{1}
+\contentsline {subsection}{\numberline {1.1.2}Initial Set-ups}{1}
+\contentsline {paragraph}{Public Key Distribution}{2}
+\contentsline {paragraph}{Devices v.s. Entities}{2}
+\contentsline {subsection}{\numberline {1.1.3}Communication Model}{3}
+\contentsline {subsection}{\numberline {1.1.4}Honest Entity Behaviour}{4}
+\contentsline {paragraph}{Alice $\mathcal {A}$}{5}
+\contentsline {paragraph}{Bob $\mathcal {B}$}{5}
+\contentsline {paragraph}{Courier $\mathcal {C}$}{6}
+\contentsline {section}{\numberline {1.2}Adversary Model}{6}
+\contentsline {chapter}{\numberline {2}Protocol Specification}{8}
+\contentsline {section}{\numberline {2.1}Notations}{8}
+\contentsline {paragraph}{Encryption Functions $\mathcal {E}_k$ :}{8}
+\contentsline {paragraph}{Decryption Functions $\mathcal {D}_k$ :}{9}
+\contentsline {paragraph}{Message Authentication Code Function $\mathcal {MAC}_k$ :}{9}
+\contentsline {paragraph}{Digital Signature Function $\mathcal {SIGN}_E$ :}{9}
+\contentsline {paragraph}{Concatenation \textbar \textbar :}{9}
+\contentsline {paragraph}{Accumulation $^+$ :}{9}
+\contentsline {section}{\numberline {2.2}Submit Protocol}{9}
+\contentsline {subsection}{\numberline {2.2.1}Preconditions}{9}
+\contentsline {subsection}{\numberline {2.2.2}Postconditions}{9}
+\contentsline {subsection}{\numberline {2.2.3}Message Sequencing Chart}{10}
+\contentsline {subsection}{\numberline {2.2.4}Specification}{10}
+\contentsline {section}{\numberline {2.3}Transmit Protocol}{12}
+\contentsline {subsection}{\numberline {2.3.1}Preconditions}{12}
+\contentsline {subsection}{\numberline {2.3.2}Postconditions}{12}
+\contentsline {subsection}{\numberline {2.3.3}Message Sequencing Chart}{12}
+\contentsline {subsection}{\numberline {2.3.4}Specification}{13}
+\contentsline {chapter}{\numberline {3}Security Analysis}{15}
+\contentsline {section}{\numberline {3.1}Protocol Properties}{15}
+\contentsline {subsection}{\numberline {3.1.1}Submit protocol}{15}
+\contentsline {subsection}{\numberline {3.1.2}Transmit protocol}{16}
+\contentsline {subsection}{\numberline {3.1.3}On the whole}{16}
+\contentsline {section}{\numberline {3.2}Property Proof}{17}
+\contentsline {subsection}{\numberline {3.2.1}Primitives}{17}
+\contentsline {subsection}{\numberline {3.2.2}Submit protocol}{18}
+\contentsline {subsection}{\numberline {3.2.3}Transmit Protocol}{19}
+\contentsline {subsection}{\numberline {3.2.4}On The Whole}{20}
+\contentsline {chapter}{\numberline {4}Protocol Implementation}{22}
+\contentsline {section}{\numberline {4.1}Application Overview}{22}
+\contentsline {section}{\numberline {4.2}Software Design}{25}
+\contentsline {subsection}{\numberline {4.2.1}Program Architecture}{26}
+\contentsline {paragraph}{Accecpter}{26}
+\contentsline {paragraph}{Initiator}{27}
+\contentsline {subsection}{\numberline {4.2.2}Delegate Model}{28}
+\contentsline {subsection}{\numberline {4.2.3}Message Structure}{29}
+\contentsline {section}{\numberline {4.3}Implementation Details}{33}
+\contentsline {subsection}{\numberline {4.3.1}UML Class Diagram}{33}
+\contentsline {paragraph}{Extensibility and Reusability}{35}
+\contentsline {subsection}{\numberline {4.3.2}Connection Establishment}{35}
+\contentsline {paragraph}{UDPChannel}{35}
+\contentsline {subsection}{\numberline {4.3.3}Message Processing}{36}
+\contentsline {subsection}{\numberline {4.3.4}Cryptographic operations}{36}
+\contentsline {subsection}{\numberline {4.3.5}File Management}{37}
+\contentsline {paragraph}{Keys}{37}
+\contentsline {paragraph}{Alice's Message Content}{38}
+\contentsline {paragraph}{Courier's Payload}{38}
+\contentsline {subsection}{\numberline {4.3.6}Error Handling}{38}
+\contentsline {paragraph}{User Input Error}{38}
+\contentsline {paragraph}{I/O Error}{38}
+\contentsline {paragraph}{Protocol Error}{39}
+\contentsline {paragraph}{Timeout}{39}
+\contentsline {chapter}{\numberline {A}Application Instruction}{40}
+\contentsline {section}{\numberline {A.1}Run Submit Protocol}{41}
+\contentsline {section}{\numberline {A.2}Run Transmit Protocol}{43}
+\contentsline {chapter}{Bibliography}{46}

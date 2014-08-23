@@ -1,5 +1,5 @@
 
-public class CourierB extends Initializer{
+public class CourierB extends Initiator{
 	private String ID;
 	private String revID;
 	private Crypto crypto;
@@ -14,8 +14,7 @@ public class CourierB extends Initializer{
 	}
 	
 	protected Delegate makeDelegate() {
-		Delegate sendCourier = new SendCourier(ID, crypto, dataManager, revID);
-		sendCourier.setUserInterface(ui);
+		Delegate sendCourier = new CourierSender(ID, ui, crypto, dataManager, revID);
 		return sendCourier;
 	}
 }

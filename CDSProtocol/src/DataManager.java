@@ -9,9 +9,8 @@ import java.util.HashMap;
 
 
 public class DataManager {
-	private final int MAX_STORAGE;
+	private int MAX_STORAGE = 65535;
 	private HashMap<String, String> publicKeyPaths = new HashMap<String, String>();
-	private HashMap<String, String> dataPaths = new HashMap<String, String>();
 	private String pathPrivateKey = "PrivateKey_Alice";
 	private String pathPublicKeys = "PublicKeys";
 	private String workingDirectory = "";
@@ -21,7 +20,11 @@ public class DataManager {
 		MAX_STORAGE = max;
 	}
 	
-	public byte[] getData(String idTo) {
+	public DataManager(String directory) {
+		workingDirectory = directory + "\\";
+	}
+	
+	public byte[] getData(String idTo) throws IOException {
 		String path = workingDirectory+ idTo;
 		File file = new File(path);
 		if (!file.exists()) {
@@ -30,16 +33,11 @@ public class DataManager {
 		return read(path);
 	}
 	
-	public void putData(byte[] src, String idTo) {
+	public void putData(byte[] src, String idTo) throws IOException {
 		String path = workingDirectory + idTo;
 		File file = new File(path);
 		if (!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			file.createNewFile();
 		}
 		write(src, path);
 	}
@@ -72,65 +70,42 @@ public class DataManager {
 		}
 	}
 	*/
-	public byte[] getPublicKey(String id) {
+	public byte[] getPublicKey(String id) throws IOException {
 		String path = publicKeyPaths.get(id);
 		return read(path);
 	}
 	
-	public void putPublicKey(byte[] src, String id) {
+	public void putPublicKey(byte[] src, String id) throws IOException {
 		String path = publicKeyPaths.get(id);
 		write(src, path);
 	}
 	
-	public byte[] getPrivateKey() {
+	public byte[] getPrivateKey() throws IOException {
 		return read(pathPrivateKey);
 	}
 	
-	public void putPrivateKey(byte[] src) {
+	public void putPrivateKey(byte[] src) throws IOException {
 		write(src, pathPrivateKey);
 	}
 	
-	private byte[] read(String path) {
+	private byte[] read(String path) throws IOException {
 		FileInputStream inStream = null;
-		try {
-			inStream = new FileInputStream(new File(path));
-			byte[] returnBytes = new byte[inStream.available()];
-			int readBytes = inStream.read(returnBytes);
-			if (returnBytes.length == readBytes) {
-				return returnBytes;
-			} else {
-				return null;
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				inStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		inStream = new FileInputStream(new File(path));
+		byte[] returnBytes = new byte[inStream.available()];
+		int readBytes = inStream.read(returnBytes);
+		inStream.close();
+		if (returnBytes.length == readBytes) {
+			return returnBytes;
+		} else {
+			return null;
 		}
-		return null;
 	}
 	
-	private void write(byte[] src, String path) {
+	private void write(byte[] src, String path) throws IOException {
 		FileOutputStream outStream = null;
-		try {
-			outStream = new FileOutputStream(new File(path), true);
-			outStream.write(src);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				outStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		outStream = new FileOutputStream(new File(path), true);
+		outStream.write(src);
+		outStream.close();
 	}
 	
 	public void setPathPublicKey(String id, String path) {
@@ -174,31 +149,4 @@ public class DataManager {
 	public int maxStorage() {
 		return MAX_STORAGE;
 	}
-	/* deprecated
-	class Pair<L,R> {
-		  private final L left;
-		  private final R right;
-
-		  public Pair(L left, R right) {
-		    this.left = left;
-		    this.right = right;
-		  }
-
-		  public L getLeft() { return left; }
-		  public R getRight() { return right; }
-
-		  @Override
-		  public int hashCode() { return left.hashCode() ^ right.hashCode(); }
-
-		  @Override
-		  public boolean equals(Object o) {
-		    if (o == null) return false;
-		    if (!(o instanceof Pair)) return false;
-		    @SuppressWarnings("unchecked")
-			Pair<L, R> pairo = (Pair<L, R>) o;
-		    return this.left.equals(pairo.getLeft()) &&
-		           this.right.equals(pairo.getRight());
-		  }
-	}
-	*/
 }

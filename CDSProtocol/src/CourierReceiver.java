@@ -1,6 +1,7 @@
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class ReceiveCourier extends Delegate {
+public class CourierReceiver extends Delegate {
 	static final boolean debug = true;
 	
 	private String ID;
@@ -15,12 +16,19 @@ public class ReceiveCourier extends Delegate {
 	private String dstID = "";
 	private byte[] meta, msg, totalMAC = null;
 	
-	public ReceiveCourier(String id, Crypto c, DataManager dm, String sedID) {
+	public CourierReceiver(String id, UserInterface ui, Crypto c, DataManager dm, String sedID) {
 		ID = id;
 		senderID = sedID;
 		crypto = c;
 		dataManager = dm;
-		senderSK = dataManager.getPublicKey(senderID);
+		this.ui = ui;
+		
+		try {
+			senderSK = dataManager.getPublicKey(senderID);
+		} catch (IOException e) {
+			ui.printErr(e.getMessage(), ID);
+			terminate();
+		}
 	}
 	
 	public void setUserInterface(UserInterface ui) {
@@ -80,7 +88,11 @@ public class ReceiveCourier extends Delegate {
 		byte[] messageReceived = new byte[receivedLength];
 		src.reset();
 		src.get(messageReceived);
-		if (!crypto.verifyMACDigest(messageReceived, kc, totalMAC)) {System.err.println("mac error"); return -1;}
+		if (!crypto.verifyMACDigest(messageReceived, kc, totalMAC)) {
+			ui.printErr("MAC Verified False", ID);
+			terminate();
+			return -1;
+		}
 		
 		// Operate received data ------------------------------------------------------------------------
 		ByteBuffer dataToSave = ByteBuffer.allocate(metaLength+msgLength+2*Integer.SIZE/8);
@@ -88,7 +100,13 @@ public class ReceiveCourier extends Delegate {
 		dataToSave.put(meta);
 		dataToSave.putInt(msgLength);
 		dataToSave.put(msg);
-		dataManager.putData(dataToSave.array(), dstID);
+		try {
+			dataManager.putData(dataToSave.array(), dstID);
+		} catch (IOException e) {
+			ui.printErr(e.getMessage(), ID);
+			terminate();
+			return -1;
+		}
 		
 		// Prepare send data ----------------------------------------------------------------------------
 		src.reset();

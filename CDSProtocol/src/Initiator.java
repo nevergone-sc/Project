@@ -1,13 +1,13 @@
 import java.net.*;
 
-public abstract class Initializer implements ProtocolEntity{
+public abstract class Initiator implements ProtocolEntity{
 	protected String address;
 	protected int dstPort;
 	//private Delegate delegate;
 	protected UserInterface ui = new ConsoleUserInterface();
 	
 	
-	public Initializer(String a, int p, UserInterface ui) {
+	public Initiator(String a, int p, UserInterface ui) {
 		address = a;
 		dstPort = p;
 		this.ui = ui;

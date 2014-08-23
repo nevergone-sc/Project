@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class DataCreator extends Delegate {
@@ -15,13 +16,20 @@ public class DataCreator extends Delegate {
 	
 	private byte[] kc;
 	
-	public DataCreator(String id, Crypto c, DataManager dm, String dstID) {
+	public DataCreator(String id, UserInterface ui, Crypto c, DataManager dm, String dstID) {
 		ID = id;
 		this.dstID = dstID; 
 		crypto = c;
 		dataManager = dm;
-		mySK = dataManager.getPrivateKey();
-		dstPK = dataManager.getPublicKey(dstID);
+		this.ui = ui;
+		
+		try {
+			mySK = dataManager.getPrivateKey();
+			dstPK = dataManager.getPublicKey(dstID);
+		} catch (IOException e) {
+			ui.printErr(e.getMessage(), ID);
+			terminate();
+		}
 	}
 	
 	public void setUserInterface(UserInterface ui) {
@@ -52,7 +60,13 @@ public class DataCreator extends Delegate {
 		int availableStorage = src.getInt();
 		
 		byte[] encryptedKc = getLongBlock(src);
-		mySK = dataManager.getPrivateKey();
+		try {
+			mySK = dataManager.getPrivateKey();
+		} catch (IOException e) {
+			ui.printErr(e.getMessage(), ID);
+			terminate();
+			return -1;
+		}
 		kc = crypto.decryptAsym(encryptedKc, mySK);
 		
 		if (debug) {
@@ -63,8 +77,7 @@ public class DataCreator extends Delegate {
 		}
 					
 		// Validate received data-------------------------------------------------------------------------
-		if (dataManager.maxStorage() < availableStorage) return -1;  
-		//if (!senderID.equals("COURIER")) return -1;
+		if (dataManager.maxStorage() < availableStorage) return -1;
 					
 		// Prepare send data------------------------------------------------------------------------------
 		byte[] kab = crypto.generateSymmKey(LENGTH_SYMM_KEY*8);
@@ -81,7 +94,14 @@ public class DataCreator extends Delegate {
 		byte[] metaBSign = crypto.getSIGN(metaBValue, mySK);
 		byte[] metaEncryptedSign = crypto.encryptSymm(metaBSign, kab);
 					
-		byte[] sendData = dataManager.getData(dstID);
+		byte[] sendData;
+		try {
+			sendData = dataManager.getData(dstID);
+		} catch (IOException e) {
+			ui.printErr(e.getMessage(), ID);
+			terminate();
+			return -1;
+		}
 		byte[] msgBValue = crypto.encryptSymm(sendData, kab);
 		byte[] msgBMAC = crypto.getMACDigest(msgBValue, kab);
 				

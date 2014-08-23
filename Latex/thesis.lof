@@ -1,0 +1,18 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Communication Model\relax }}{3}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces GUI Overview\relax }}{23}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Use Case Diagram\relax }}{23}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Accepter Architecture\relax }}{28}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Initiator Architecture\relax }}{29}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces State Machine of $\mathcal {A}$\relax }}{30}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Structure of Meta Block\relax }}{31}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Structure of Message Block\relax }}{31}
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Normal Message and Error Message\relax }}{33}
+\contentsline {figure}{\numberline {4.9}{\ignorespaces UML Diagram\relax }}{33}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {A.1}{\ignorespaces GUI Overview\relax }}{41}
+\contentsline {figure}{\numberline {A.2}{\ignorespaces Running Submit Protocol\relax }}{43}
+\contentsline {figure}{\numberline {A.3}{\ignorespaces Running Transmit Protocol\relax }}{45}

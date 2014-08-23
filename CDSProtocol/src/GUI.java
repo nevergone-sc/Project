@@ -353,7 +353,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 		labelDstPort.setVisible(true);
 		labelLisPort.setVisible(true);
 		labelLocAddress.setVisible(true);
-		labelMaxCapacity.setVisible(true);
+		panelFilesMaxCapacity.setVisible(true);
 		labelPrivateKey.setVisible(true);
 		textLocID.setVisible(true);
 		textDstID.setVisible(true);
@@ -373,7 +373,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textLisPort.setText("9888");
 			textLocID.setText("Alice");
 			textLocAddress.setText("localhost");
-			textMaxCapacity.setText("1000");
 			textPrivateKey.setText("PrivateKey_Alice");
 		    textDataID.setText("Bob");
 		    textDataPath.setText("Data_Alice_To_Bob(Alice)");
@@ -382,16 +381,23 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 				public void run() {
 					String myID = textLocID.getText();
 					String revID = textDataID.getText();
-					DataManager dataManager = new DataManager(myID, Integer.parseInt(textMaxCapacity.getText()));
-					dataManager.setPathPrivateKey(textPrivateKey.getText());
-					for (int i = 0; i < tableModel.getRowCount(); i++) {
-						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
+					int lisPort;
+					
+					try {
+						lisPort = Integer.parseInt(textLisPort.getText());
+					
+						DataManager dataManager = new DataManager(myID);
+						dataManager.setPathPrivateKey(textPrivateKey.getText());
+						for (int i = 0; i < tableModel.getRowCount(); i++) {
+							dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
+						}
+	
+						Accepter alice = 
+								new Alice(textLocAddress.getText(), lisPort, ui, crypto, dataManager, myID, revID);
+						alice.start();
+					} catch (NumberFormatException e) {
+						ui.printErr("MalFormatted Input: " + e.getMessage(), myID);
 					}
-					//dataManager.setPathData(myID, textDataID.getText(), textDataPath.getText());
-
-					Accepter alice = 
-							new Alice(textLocAddress.getText(), Integer.parseInt(textLisPort.getText()), ui, crypto, dataManager, myID, revID);
-					alice.start();
 				}
 			});
 			thread.start();
@@ -407,14 +413,24 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 				public void run() {
 					String myID = textLocID.getText();
 					String senderID = textDstID.getText();
-					DataManager dataManager = new DataManager(myID, Integer.parseInt(textMaxCapacity.getText()));
-					for (int i = 0; i < tableModel.getRowCount(); i++) {
-						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
+					int dstPort;
+					int maxCapacity;
+					
+					try {
+						dstPort = Integer.parseInt(textDstPort.getText());
+						maxCapacity = Integer.parseInt(textMaxCapacity.getText());
+						
+						DataManager dataManager = new DataManager(myID, maxCapacity);
+						for (int i = 0; i < tableModel.getRowCount(); i++) {
+							dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
+						}
+	
+						Initiator courier = 
+								new CourierA(textDstAddress.getText(), dstPort, ui, crypto, dataManager, myID, senderID);
+						courier.start();
+					} catch (NumberFormatException e) {
+						ui.printErr("MalFormatted Input: " + e.getMessage(), myID);
 					}
-
-					Initializer courier = 
-							new CourierA(textDstAddress.getText(), Integer.parseInt(textDstPort.getText()), ui, crypto, dataManager, myID, senderID);
-					courier.start();
 				}
 			});
 			thread.start();
@@ -422,20 +438,27 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textLocID.setText("Bob");
 			textLocAddress.setText("localhost");
 			textLisPort.setText("8888");
-			textMaxCapacity.setText("1000");
 		    textPrivateKey.setText("PrivateKey_Bob");
 			
 			Thread thread = new Thread(new Runnable() {
 				public void run() {
 					String myID = textLocID.getText();
-					DataManager dataManager = new DataManager(myID, Integer.parseInt(textMaxCapacity.getText()));
-					for (int i = 0; i < tableModel.getRowCount(); i++) {
-						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
+					int lisPort;
+					
+					try {
+						lisPort = Integer.parseInt(textLisPort.getText());
+						
+						DataManager dataManager = new DataManager(myID);
+						for (int i = 0; i < tableModel.getRowCount(); i++) {
+							dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
+						}
+						dataManager.setPathPrivateKey(textPrivateKey.getText());
+	
+						Accepter receiver = new Bob(textLocAddress.getText(), lisPort, ui, crypto, dataManager, myID);
+						receiver.start();
+					} catch (NumberFormatException e) {
+						ui.printErr("MalFormatted Input: " + e.getMessage(), myID);
 					}
-					dataManager.setPathPrivateKey(textPrivateKey.getText());
-
-					Accepter receiver = new Bob(textLocAddress.getText(), Integer.parseInt(textLisPort.getText()), ui, crypto, dataManager, myID);
-					receiver.start();
 				}
 			});
 			thread.start();
@@ -445,7 +468,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textDstID.setText("Bob");
 			textDstAddress.setText("localhost");
 			textDstPort.setText("8888");
-			textMaxCapacity.setText("1000");
 		    textDataID.setText("Alice");
 		    textDataPath.setText("Data_Alice_To_Bob");
 		    
@@ -453,15 +475,22 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 				public void run() {
 					String myID = textLocID.getText();
 					String revID = textDstID.getText();
-					DataManager dataManager = new DataManager(myID, Integer.parseInt(textMaxCapacity.getText()));
-					for (int i = 0; i < tableModel.getRowCount(); i++) {
-						dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
-					}
-					//dataManager.setPathData(textDataID.getText(), textDstID.getText(), textDataPath.getText());
+					int dstPort = 0;
 
-					Initializer courier = 
-							new CourierB(textDstAddress.getText(), Integer.parseInt(textDstPort.getText()), ui, crypto, dataManager, myID, revID);
-					courier.start();
+					try {
+						dstPort = Integer.parseInt(textDstPort.getText());
+
+						DataManager dataManager = new DataManager(myID);
+						for (int i = 0; i < tableModel.getRowCount(); i++) {
+							dataManager.setPathPublicKey((String)tableModel.getValueAt(i, 0), (String)tableModel.getValueAt(i, 1));
+						}
+
+						Initiator courier = 
+								new CourierB(textDstAddress.getText(), dstPort, ui, crypto, dataManager, myID, revID);
+						courier.start();
+					} catch (NumberFormatException e) {
+						ui.printErr("MalFormatted Input: " + e.getMessage(), myID);
+					}
 				}
 			});
 			thread.start();
@@ -492,5 +521,9 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private boolean isNumeric(String str) {
+		return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
 	}
 }

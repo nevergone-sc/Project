@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
 public class UDPChannel implements Channel{
+	// Max payload of a UDP packet
+	private static final int MAX_BUFFER_SIZE = 65535;
 	private final int CLOSED = 0, OPEN = 1, CONNECTED = 2;
 	private int state;
 	private int channelPort;
@@ -41,7 +43,7 @@ public class UDPChannel implements Channel{
 	
 	public UDPChannel accept() throws IOException {
 		if (state == OPEN) {
-			ByteBuffer bb = ByteBuffer.allocate(1024);
+			ByteBuffer bb = ByteBuffer.allocate(MAX_BUFFER_SIZE);
 			InetSocketAddress senderAddress = (InetSocketAddress) channel.receive(bb);
 			bb.flip();
 			UDPChannel returnChannel = new UDPChannel(senderAddress);

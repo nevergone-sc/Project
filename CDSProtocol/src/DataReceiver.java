@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class DataReceiver extends Delegate {
@@ -12,11 +13,18 @@ public class DataReceiver extends Delegate {
 	
 	byte[] kC;
 	
-	public DataReceiver(String id, Crypto c, DataManager dm) {
+	public DataReceiver(String id, UserInterface ui, Crypto c, DataManager dm) {
 		ID = id;
 		crypto = c;
 		dataManager = dm;
-		mySK = dm.getPrivateKey();
+		this.ui = ui;
+		
+		try {
+			mySK = dm.getPrivateKey();
+		} catch (IOException e) {
+			ui.printErr(e.getMessage(), ID);
+			terminate();
+		}
 	}
 	
 	public void setUserInterface(UserInterface ui) {
@@ -98,17 +106,27 @@ public class DataReceiver extends Delegate {
 			// Validate received data ----------------------------------------------------------------
 			if (!metaDstID.equals(ID)) {
 				ui.printErr("Destination ID in Meta not match", ID);
+				terminate();
 				return -1;
 			} // TODO: For timestamp validation
 			
-			byte[] srcPK = dataManager.getPublicKey(metaSrcID);
+			byte[] srcPK;
+			try {
+				srcPK = dataManager.getPublicKey(metaSrcID);
+			} catch (IOException e) {
+				ui.printErr(e.getMessage(), ID);
+				terminate();
+				return -1;
+			}
 			if (!crypto.verifySIGN(ecryptedMetaValue, srcPK, metaSIGN)) {
-				ui.printErr("Meta signature not valid", ID);
+				ui.printErr("Meta Signature Verified False", ID);
+				terminate();
 				return -1;
 			}
 			
 			if (!crypto.verifyMACDigest(encryptedMsgBlock, msgKey, msgMAC)) {
-				ui.printErr("Message MAC not valid", ID);
+				ui.printErr("Message MAC Verified False", ID);
+				terminate();
 				return -1;
 			}
 			
@@ -131,14 +149,6 @@ public class DataReceiver extends Delegate {
 		
 		terminate();
 		ui.nextStep("", ID);
-		/*
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
 		return totalReceivedMAC.length;
 	}
 }

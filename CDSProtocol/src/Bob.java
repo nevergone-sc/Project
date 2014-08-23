@@ -13,8 +13,7 @@ public class Bob extends Accepter {
 	
 	protected Delegate makeDelegate() {
 		ui.setTag("Bob");
-		Delegate dataReceiver = new DataReceiver(ID, crypto, dataManager);
-		dataReceiver.setUserInterface(ui);
+		Delegate dataReceiver = new DataReceiver(ID, ui, crypto, dataManager);
 		return dataReceiver;
 	}
 }

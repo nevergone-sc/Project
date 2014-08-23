@@ -7,8 +7,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Session extends Thread {
-	private static final int MAX_BUFFER_SIZE = 16384;
-	private static final int TIMEOUT = 1000;
+	// Max payload of a UDP packet
+	private static final int MAX_BUFFER_SIZE = 65535;
+	private static final int TIMEOUT = 3000;
 	
 	int sessionID;
 	Channel channel;
@@ -54,6 +55,8 @@ public class Session extends Thread {
 			} catch (Exception e) {
 				ui.printErr("Timeout", "Session " + sessionID);
 			}
+			
+			
 			if (lengthReceived <= 0) { ui.printErr("Channel Closed", "Session " + sessionID); break; }
 			
 			if (isErrorMsg(receiveBuffer)) {
@@ -70,7 +73,7 @@ public class Session extends Thread {
 			int actSent = 0;
 			try {
 				actSent = channel.write(wrapMsg(preSendBuffer));
-				lengthSent++; // The error message mark
+				lengthSent++; // The error message flag
 			} catch (IOException e) {
 				ui.printErr("IOException while writing channel", "Session " + sessionID);
 			}

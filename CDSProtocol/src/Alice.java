@@ -15,8 +15,7 @@ public class Alice extends Accepter {
 	
 	protected Delegate makeDelegate() {
 		ui.setTag("Alice");
-		Delegate dataCreator = new DataCreator(ID, crypto, dataManager, dstID);
-		dataCreator.setUserInterface(ui);
+		Delegate dataCreator = new DataCreator(ID, ui, crypto, dataManager, dstID);
 		return dataCreator;
 	}
 }

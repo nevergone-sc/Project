@@ -5,7 +5,6 @@ import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-
 public class Crypto {
 	public static final int LENGTH_SIGN = 128;
 	public static final int LENGTH_ASYM_CIPHER = 128;
@@ -131,7 +130,7 @@ public class Crypto {
 			KeyFactory kf = KeyFactory.getInstance("RSA");
 			PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(encryptionKey));
 			
-			Cipher c = Cipher.getInstance("RSA");
+			Cipher c = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			c.init(Cipher.ENCRYPT_MODE, publicKey);
 			byte[] ciphertext = c.doFinal(plaintext);
 			
@@ -165,7 +164,7 @@ public class Crypto {
 			KeyFactory kf = KeyFactory.getInstance("RSA");
 			PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(decryptionKey));
 			
-			Cipher c = Cipher.getInstance("RSA");
+			Cipher c = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			c.init(Cipher.DECRYPT_MODE, privateKey);
 			return c.doFinal(ciphertext);
 			
