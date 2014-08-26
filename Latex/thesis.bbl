@@ -1,9 +1,118 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{Einstein}
-Albert Einstein.
-\newblock {Zur Elektrodynamik bewegter K{\"o}rper}. ({German}) [{On} the
-  electrodynamics of moving bodies].
-\newblock {\em Annalen der Physik}, 322(10):891--921, 1905.
+\bibitem{Kate}
+Anonymity and security in delay tolerant networks.
+
+\bibitem{Scottrfc}
+Bundle protocol specification.
+
+\bibitem{Symington}
+Bundle security protocol specification.
+
+\bibitem{Dwork}
+Concurrent zero-knowledge: Reducing the need for timing constraints.
+
+\bibitem{Zhao}
+Controlling the mobility of multiple data transport ferries in a delay-tolerant
+  network.
+
+\bibitem{Kevin}
+A delay-tolerant network architecture for challenged internets.
+
+\bibitem{Scott}
+Delay-tolerant networking: An approach to interplanetary internet.
+
+\bibitem{Cerf}
+Delay-tolerant networking architecture.
+
+\bibitem{Shao}
+An improved deniable authentication protocol.
+
+\bibitem{Seth}
+Lowcost communication for rural internet kiosks using mechanical backhaul.
+
+\bibitem{Borisov}
+Offtherecord communication, or, why not to use pgp.
+
+\bibitem{SethKeshav}
+Practical security for disconnected nodes.
+
+\bibitem{Abadi}
+Private authentication.
+
+\bibitem{Xin}
+A secure and efficient deniable authentication protocol.
+
+\bibitem{Wang}
+A simple protocol for deniable authentication based on elgamal cryptography.
+
+\bibitem{RFC6234}
+D.~Eastlake 3rd and T.~Hansen.
+\newblock {RFC 6234}: Us secure hash algorithms (sha and sha-based hmac and
+  hkdf), May 2011.
+\newblock Status: INFORMATIONAL.
+
+\bibitem{Dolev}
+D.~Dolev and A.~C. Yao.
+\newblock On the security of public key protocols.
+\newblock {\em 2013 IEEE 54th Annual Symposium on Foundations of Computer
+  Science}, 0:350--357, 1981.
+
+\bibitem{ehrsam1978message}
+W.F. Ehrsam, C.H.W. Meyer, J.L. Smith, and W.L. Tuchman.
+\newblock Message verification and transmission error detection by block
+  chaining, February~14 1978.
+\newblock US Patent 4,074,066.
+
+\bibitem{Goldwasser}
+Shafi Goldwasser, Silvio Micali, and Ronald~L. Rivest.
+\newblock A digital signature scheme secure against adaptive chosen-message
+  attacks.
+\newblock {\em SIAM J. Comput.}, 17(2):281--308, April 1988.
+
+\bibitem{Jain}
+Sushant Jain, Kevin Fall, and Rabin Patra.
+\newblock Routing in a delay tolerant network.
+\newblock {\em SIGCOMM Comput. Commun. Rev.}, 34(4):145--158, August 2004.
+
+\bibitem{RFC2313}
+B.~Kaliski.
+\newblock {RFC 2313}: {PKCS} \#1: {RSA} encryption version 1.5, March 1998.
+\newblock Obsoleted by RFC2437 \cite{RFC2437}. Status: INFORMATIONAL.
+
+\bibitem{RFC2898}
+B.~Kaliski and RSA Laboratories.
+\newblock {RFC 2989}: {PKCS5}: Password-based cryptography specification
+  version 2.0, September 2000.
+\newblock Status: INFORMATIONAL.
+
+\bibitem{RFC2104}
+H.~Krawczyk, M.~Bellare, and R.~Canetti.
+\newblock {RFC 2104}: {HMAC}: Keyed-hashing for message authentication,
+  February 1997.
+\newblock Status: INFORMATIONAL.
+
+\bibitem{Mao}
+Wenbo Mao.
+\newblock {\em Modern Cryptography: Theory and Practice}.
+\newblock Prentice Hall Professional Technical Reference, 2003.
+
+\bibitem{Miller}
+Frederic~P. Miller, Agnes~F. Vandome, and John McBrewster.
+\newblock {\em Advanced Encryption Standard}.
+\newblock Alpha Press, 2009.
+
+\bibitem{Sakai}
+K.~Ohgishi R.~Sakai and M.~Kasahara.
+\newblock Cryptosystems based on pairing.
+\newblock {\em SCIS 2000: Symposium on Cryptography and Information Security},
+  2000.
+
+\bibitem{Yao}
+Andrew~C. Yao.
+\newblock Theory and application of trapdoor functions.
+\newblock In {\em Proceedings of the 23rd Annual Symposium on Foundations of
+  Computer Science}, SFCS '82, pages 80--91, Washington, DC, USA, 1982. IEEE
+  Computer Society.
 
 \end{thebibliography}

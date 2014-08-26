@@ -310,16 +310,16 @@ The cryptographic functions provided by the Crypto class in this program are mai
 
 \begin{itemize}
 \item \textbf{Symmetric Encryption / Decryption / KeyGeneration} \\
-The symmetric encryption / decryption scheme used is AES. The mode of operation used is CBC. The padding scheme is PKCS\#5. The size of key used is 128 bits and it should not exceed 936 bits.
+The symmetric encryption / decryption scheme used is AES \cite{Miller}. The mode of operation used is CBC \cite{ehrsam1978message}. The padding scheme is PKCS\#5 \cite{RFC2898}. The size of key used is 128 bits and it should not exceed 936 bits.
 
 \item \textbf{Asymmetric Encryption / Decryption / KeyGeneration} \\
-The asymmetric encryption / decryption scheme used is RSA. The mode of operation used is ECB, however, for efficiency concern, the size cipher block of asymmetric encryption will be restricted to 1, so mode of operation will not actually be used in the program. Th padding scheme is PKCS\#1. The size of key used is only 1024 bits, as this is only a prototype application and key size can easily be increased in future.
+The asymmetric encryption / decryption scheme used is RSA. The mode of operation used is ECB, however, for efficiency concern, the size cipher block of asymmetric encryption will be restricted to 1, so mode of operation will not actually be used in the program. Th padding scheme is PKCS\#1 \cite{RFC2313}. The size of key used is only 1024 bits, as this is only a prototype application and key size can easily be increased in future.
 
 \item \textbf{MAC Creation / Verification} \\
-The MAC algorithm used is Hmac-SHA-256. The size of key used is same to symmetric encryption / decryption, which is 128 bits.
+The MAC algorithm used is Hmac-SHA-256 \cite{RFC6234}. The size of key used is same to symmetric encryption / decryption, which is 128 bits.
 
 \item \textbf{Digital Signature Creation / Verification} \\
-The signature algorithm used is RSA. The cryptographic hash function used in SHA256. They key size is same to asymmetric encryption / decryption, which is 1024 bits.
+The signature algorithm used is RSA. The cryptographic hash function used in SHA256 \cite{RFC6234}. They key size is same to asymmetric encryption / decryption, which is 1024 bits.
 \end{itemize}
 
 \subsection{File Management}

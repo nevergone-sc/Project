@@ -41,7 +41,7 @@ As the message content from $ \mathcal{A} $ to $ \mathcal{B} $ is highly confide
 It is expected that the message is not modified or forged during the transportation.
 
 \item \textbf{$\mathcal{A}$ can not deny sending a message to $\mathcal{B}$} \\
-This property is not deliberately designed in the protocol, it can be regarded as an auxiliary property as full deniability can not be achieve in an one-way authenticated communication. Despite of that, this property could still be meaningful for $ \mathcal{B} $, as it proves the number of messages sent from $ \mathcal{A} $.
+This property is not deliberately designed in the protocol. As CDSP is an one-way protocol, the authentication of $ \mathcal{A} $ must be non-interactive. Thus a compromise has to be made between computational complexity and the full deniability of a non-interactive deniable authentication. Finally we choose to put the efficiency as first priority. So in the protocol, $ \mathcal{A} $ is not able to fully deny sending a message to $ \mathcal{B} $. However, as the next property states, $ \mathcal{A} $ is able to deny the message content which almost achieves the same goal. Besides, the property of non-repudiation could still be useful for $ \mathcal{B} $ as it proves the number of messages sent from $ \mathcal{A} $.
 
 \item \textbf{$\mathcal{A}$ is able to deny the message content for $\mathcal{B}$} \\
 In some privacy-sensitive scenarios, it is reasonable for $ \mathcal{A} $ to be able to deny the message content it has sent. According to above property, $ \mathcal{A} $ is not allowed to fully deny sending a message to $ \mathcal{B} $, however, capability of denying the message content has approximately the same effect, because $ \mathcal{A} $ can always argue that the message content is empty.
@@ -49,24 +49,23 @@ In some privacy-sensitive scenarios, it is reasonable for $ \mathcal{A} $ to be 
 
 \section{Property Proof}
 \subsection{Primitives}
-Before defining the system model, all the cryptographic primitives used and their corresponding notations in this protocol should be described:
+As CDSP is built based on many primary cryptographic operations, its security also relies on them. Thus before proving the security properties of CDSP, some essential assumptions on the security of the primary cryptographic operations have to be made as the security primitives. Then it can be proved that all the properties listed above can be deduced to those primitives.
 \begin{itemize}
 \item Message Authentication Code $\mathcal{MAC}$\\
-The MAC function used in this protocol is assumed to be secure in the sense that it has all the properties that a cryptographic hash function possesses and additionally, it resists to existential forgery under chosen-plaintext attack. That is, even if attacker is able to access an oracle which possesses the secret key and generates MACs according to the attacker's input, it is computational infeasible for attacker to guess MACs of other messages (not used to query the oracle).
+The MAC \cite{RFC2104} function used in this protocol is assumed to be secure in the sense that it has all the properties that a cryptographic hash function possesses and additionally, it resists to existential forgery under chosen-plaintext attack. That is, even if attacker is able to access an oracle which possesses the secret key and generates MACs according to the attacker's input, it is computational infeasible for attacker to guess MACs of other messages (not used to query the oracle).
 
 \item Signature Function $\mathcal{SIGN}$\\
-The signature function used in this protocol is assumed to be secure in the sense that it resists existential forgery under an adaptive chosen message attack. \cite{goldwasser}
+The signature function used in this protocol is assumed to be secure in the sense that it resists existential forgery under an adaptive chosen message attack. \cite{Goldwasser}\cite{Mao}
 
 \item Encryption Function $\mathcal{E}$ and Decryption Function $\mathcal{D}$\\
 To assure the security primitives of this protocol, all encryption/decryption schemes used are required to be secure in the sense that without the decryption key, it is computational infeasible for attackers to reveal the plaintext of a cipher with non-negligible probability.
 
 \item Symmetric Key Generator $\mathcal{G}$\\
 The symmetric key generator used in this protocol is assumed to be no less secure than a Cryptographically Secure Pseudorandom Number Generator. That is: \\
-(a)It should satisfy the next-bit test. That is, given the first k bits of a random sequence, there is no polynomial-time algorithm that can predict the (k+1)th bit with probability of success better than 50\%. \\
+(a)It should satisfy the next-bit test. That is, given the first k bits of a random sequence, there is no polynomial-time algorithm that can predict the (k+1)th bit with probability of success better than 50\%. \cite{Yao}\\
 (b)It should withstand "state compromise extensions". In the event that part or all of its state has been revealed (or guessed correctly), it should be impossible to reconstruct the stream of random numbers prior to the revelation. Additionally, if there is an entropy input while running, it should be infeasible to use knowledge of the input's state to predict future conditions of the CSPRNG state.\\
 Furthermore, the keys generated are required to fit the Symmetric Encryption Scheme described above.
 \\
-(cite: from wikipedia)
 \end{itemize}
 
 \subsection{Submit protocol}
