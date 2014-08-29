@@ -127,16 +127,40 @@ MsgM = $\mathcal{MAC}_{k_{AB}}$(Msg)
 \subsection{Specification}
 Before start of the protocol, Courier first creates a random symmetric key $k_C$ which will be sent to Bob and used for deniable authentication. Once Courier has $ k_C $, it could prepare the data for Bob. By the time Courier starts the Transmit Protocol with Bob, it should have carried certain pieces of data for Bob which are collected earlier.  As introduced in Submit Protocol, each piece of data from Alice contains (1) Meta block, (2) MetaS block, (3) Msg block, (4) MsgM block. We call such a piece of data a Data block. Courier now fetches all those data, and accumulate them together, forming a Data$^+$ block. Then Courier actively connects to Bob and sends the first message to Bob. The message 1 contains (1) The $\mathcal{ID}$ of Courier, (2) Random key $ k_C $ encrypted by Bob's public key, (3) The accumulation of all Data blocks for Bob.
 
-Upon receipt of the first message, Bob checks the validity of all Data blocks received. Specifically, for checking every single Data block, it should do the following steps:
- \begin{enumerate}
- \item use $ sk_A $ to decrypt Meta, and reveal $ k_{AB} $, message creator's ID, message recipient ID and timestamp.
- \item check if message recipient ID is Bob itself and check timestamp to see if this message is expired.
- \item use $ k_{AB} $ to decrypt MetaS and reveal $\mathcal{SIGN}_A$(Meta).
- \item verify $\mathcal{SIGN}_A$(Meta) using $ pk_A $.
- \item verify MsgM using $ pk_A $.
- \item use $ pk_A $ to decrypt Msg and reveal the message content.
- \end{enumerate}
-If any violation occurs during the checking or verification in certain Data block, Bob just discards the Data block and continues checking other blocks if there is any.
+Upon receipt of the first message, Bob checks the validity of all Data blocks received. Basically, Bob will check each Data block one by one, and it will accept all Data blocks that pass all verifications while discard all Data blocks that fail one of the verifications. The detailed algorithm used for checking all Data blocks is displayed below in the algorithm ``check all Data blocks".
+
+\begin{algorithm}[H]
+ \KwData{The concatenation of all Data blocks}
+ \KwResult{Bob accepts valid Data blocks and discards invalid ones}
+ initialization\;
+ \While{there is still Data block unchecked}{
+  currentDataBlock = nextDataBlock\;
+  use $ sk_A $ to decrypt Meta block in currentDataBlock, reveal \{$ k_{AB} $, senderID, receiverID, timestamp\}\;
+  \eIf{receiverID != ``Bob"} {
+   discard currentDataBlock
+  }{
+   \eIf{timestamp expires}{
+    discard currentDataBlock
+   }{
+    use $ k_{AB} $ to decrypt MetaS in currentDataBlock, reveal $\mathcal{SIGN}_A$(Meta)\;
+    verify $\mathcal{SIGN}_A$(Meta) using $ pk_A $\;
+    \eIf{verifies false}{
+     discard currentDataBlock
+    }{
+     verify MsgM in currentDataBlock using $ pk_A $\;
+     \eIf{verifies false}{
+      discard currentDataBlock
+     }{
+      use $ pk_A $ to decrypt Msg and reveal the message content
+     }
+    }
+   }
+  }
+ }
+\caption{Check all Data blocks}
+\end{algorithm}
+\bigskip
+\bigskip
 
 After all Data blocks have been received and checked, Bob send back a MAC of whole message 1 received from Courier. The key used for creating the MAC is $ k_C $ which is revealed by decrypting $\mathcal{E}_{pk_B}$(k$_C$) in message 1. 
 
