@@ -1,3 +1,5 @@
+package cdspcore;
+
 import java.nio.ByteBuffer;
 
 public abstract class Delegate {

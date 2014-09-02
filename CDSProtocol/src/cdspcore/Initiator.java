@@ -1,4 +1,7 @@
+package cdspcore;
+
 import java.net.*;
+
 
 public abstract class Initiator implements ProtocolEntity{
 	protected String address;

@@ -1,4 +1,6 @@
+package cdspcore;
 import java.util.Scanner;
+
 
 public class ConsoleUserInterface implements UserInterface{
 	private String tag;

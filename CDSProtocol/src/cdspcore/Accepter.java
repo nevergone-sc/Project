@@ -1,3 +1,5 @@
+package cdspcore;
+
 public abstract class Accepter implements ProtocolEntity{
 	protected String address;
 	protected int listeningPort;

@@ -1,3 +1,4 @@
+package cdspcore;
 
 public interface UserInterface {
 	public void setTag(String tag);

@@ -1,7 +1,9 @@
+package cdspcore;
 import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+
 
 public class UDPChannel implements Channel{
 	// Max payload of a UDP packet

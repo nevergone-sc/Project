@@ -1,3 +1,5 @@
+package cdspcore;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -8,6 +10,7 @@ public class DataCreator extends Delegate {
 	private String dstID;
 	private byte[] dstPK;
 	private byte[] mySK;
+	private byte[] sendData;
 	private int state = 0;
 	private Crypto crypto;
 	private DataManager dataManager;
@@ -26,6 +29,7 @@ public class DataCreator extends Delegate {
 		try {
 			mySK = dataManager.getPrivateKey();
 			dstPK = dataManager.getPublicKey(dstID);
+			sendData = dataManager.getData(dstID);
 		} catch (IOException e) {
 			ui.printErr(e.getMessage(), ID);
 			terminate();
@@ -93,15 +97,7 @@ public class DataCreator extends Delegate {
 		byte[] metaBValue = crypto.encryptAsym(metaBValueBuffer.array(), dstPK);
 		byte[] metaBSign = crypto.getSIGN(metaBValue, mySK);
 		byte[] metaEncryptedSign = crypto.encryptSymm(metaBSign, kab);
-					
-		byte[] sendData;
-		try {
-			sendData = dataManager.getData(dstID);
-		} catch (IOException e) {
-			ui.printErr(e.getMessage(), ID);
-			terminate();
-			return -1;
-		}
+
 		byte[] msgBValue = crypto.encryptSymm(sendData, kab);
 		byte[] msgBMAC = crypto.getMACDigest(msgBValue, kab);
 				

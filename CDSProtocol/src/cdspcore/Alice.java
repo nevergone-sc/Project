@@ -1,3 +1,5 @@
+package cdspcore;
+
 
 public class Alice extends Accepter {
 	private String ID;

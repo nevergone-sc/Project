@@ -1,3 +1,5 @@
+package cdspcore;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -43,7 +45,8 @@ public class CourierSender extends Delegate {
 		
 		ByteBuffer dataToSendBuffer;
 		try {
-			dataToSendBuffer = ByteBuffer.wrap(dataManager.getData(dstID));
+			byte[] data = dataManager.getData(dstID);
+			dataToSendBuffer = ByteBuffer.wrap(data);
 		} catch (IOException e) {
 			ui.printErr(e.getMessage(), ID);
 			terminate();

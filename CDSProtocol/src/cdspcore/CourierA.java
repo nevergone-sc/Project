@@ -1,3 +1,5 @@
+package cdspcore;
+
 
 public class CourierA extends Initiator {
 	private String ID;

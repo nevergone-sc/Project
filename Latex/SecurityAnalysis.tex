@@ -1,55 +1,8 @@
 \chapter{Security Analysis}
-\section{Protocol Properties}
-Following are the properties that claimed to be held by CDSP, they are briefly introduced in this section and then will be proved afterwards.
-\subsection{Submit protocol}
-\begin{itemize}
-\item \textbf{$\mathcal{A}$ is authenticated to $\mathcal{CR}$} \\
-As it has been assumed that physical transportation for a Courier is extremely costly, Courier should not carry messages for any arbitrary entity. It is expected that Courier only carries messages for those entities that have been authorized, so $ \mathcal{A} $ should prove its identity when submitting the message.
+As stated above, CDSP is designed to ensure the secure communication in a courier-dependent scenario. In this chapter, all the security properties that CDSP claims to hold will be listed and proved. In the former part of this section, some primitives for the proving is defined beforehand, then in latter part, all security properties are described and presented as theorems which are provable.
 
-\item \textbf{The Integrity of message from $\mathcal{A}$ to $\mathcal{CR}$ is preserved} \\
-It is expected that the message is not modified or forged after being submitted to Courier.
-
-\item \textbf{$ \mathcal{CR}$ is not able to access the message content} \\
-As the message content from $ \mathcal{A} $ to $ \mathcal{B} $ is highly confidential, it should not be disclosed to any other entity other than $ \mathcal{B} $. Thus making message content inaccessible to $ \mathcal{CR} $ prevents the content from being released when adversary examining the Courier's data.
-
-\item \textbf{$\mathcal{A}$ is able to deny sending any message to $\mathcal{CR}$ } \\
-In certain scenarios which require high privacy protection - like exchanging military intelligence or voting, the action of sending out a message itself might become a sensitive information. It is expected that this protocol protects the privacy of entity $ \mathcal{A} $ in such a way that it can deny ever sending message to Courier at any time.
-\end{itemize}
-
-\subsection{Transmit protocol}
-\begin{itemize}
-\item \textbf{$\mathcal{B}$ is authenticated to $\mathcal{CS}$ } \\
-As physical transportation is costly for Courier, Courier should not transmit its data to some arbitrary entity. It is reasonable that Courier ensures the message is transmitted to the target entity $ \mathcal{B} $. Thus $ \mathcal{B} $
-should prove its identity when receiving data from Courier.
-
-\item \textbf{The Integrity of message from $\mathcal{CS}$ to $\mathcal{B}$ is preserved} \\
-It is expected that the message is not modified or forged after being transmitted to $ \mathcal{B} $.
-
-\item \textbf{$\mathcal{B}$ is able to deny receiving any message from $\mathcal{CS}$} \\
-Similar to the Submit Protocol, in some privacy-sensitive scenarios, it is plausible for $ \mathcal{B} $ to deny the fact of receiving data from Courier.
-\end{itemize}
-
-\subsection{On the whole}
-\begin{itemize}
-\item \textbf{$\mathcal{A}$ is authenticated to $\mathcal{B}$} \\
-As this CDSP is for sending message from $ \mathcal{A} $ to $ \mathcal{B} $, it is required that the message sender proves its identity to the recipient. Otherwise malicious Courier would be able to forge arbitrary messages to $ \mathcal{B} $ that never exists.
-
-\item \textbf{Confidentiality of message from $\mathcal{A}$ to $\mathcal{B}$ is preserved} \\
-As the message content from $ \mathcal{A} $ to $ \mathcal{B} $ is highly confidential, it should not be disclosed to any other entity other than $ \mathcal{B} $.
-
-\item \textbf{Integrity of message from $\mathcal{A}$ to $\mathcal{B}$ is preserved} \\
-It is expected that the message is not modified or forged during the transportation.
-
-\item \textbf{$\mathcal{A}$ can not deny sending a message to $\mathcal{B}$} \\
-This property is not deliberately designed in the protocol. As CDSP is an one-way protocol, the authentication of $ \mathcal{A} $ must be non-interactive. Thus a compromise has to be made between computational complexity and the full deniability of a non-interactive deniable authentication. Finally we choose to put the efficiency as first priority. So in the protocol, $ \mathcal{A} $ is not able to fully deny sending a message to $ \mathcal{B} $. However, as the next property states, $ \mathcal{A} $ is able to deny the message content which almost achieves the same goal. Besides, the property of non-repudiation could still be useful for $ \mathcal{B} $ as it proves the number of messages sent from $ \mathcal{A} $.
-
-\item \textbf{$\mathcal{A}$ is able to deny the message content for $\mathcal{B}$} \\
-In some privacy-sensitive scenarios, it is reasonable for $ \mathcal{A} $ to be able to deny the message content it has sent. According to above property, $ \mathcal{A} $ is not allowed to fully deny sending a message to $ \mathcal{B} $, however, capability of denying the message content has approximately the same effect, because $ \mathcal{A} $ can always argue that the message content is empty.
-\end{itemize}
-
-\section{Property Proof}
-\subsection{Primitives}
-As CDSP is built based on many primary cryptographic operations, its security also relies on them. Thus before proving the security properties of CDSP, some essential assumptions on the security of the primary cryptographic operations have to be made as the security primitives. Then it can be proved that all the properties listed above can be deduced to those primitives.
+\section{Primitives}
+As CDSP uses many primary cryptographic operations - such like encrypting/decrypting, MACing and signing, its security properties also rely on them. Therefore, before proving the security properties of CDSP, some essential assumptions on the security of the primary cryptographic operations have to be made as the security primitives. Then it can be proved that all the properties listed later can be deduced to those primitives.
 \begin{itemize}
 \item Message Authentication Code $\mathcal{MAC}$\\
 The MAC \cite{RFC2104} function used in this protocol is assumed to be secure in the sense that it has all the properties that a cryptographic hash function possesses and additionally, it resists to existential forgery under chosen-plaintext attack. That is, even if attacker is able to access an oracle which possesses the secret key and generates MACs according to the attacker's input, it is computational infeasible for attacker to guess MACs of other messages (not used to query the oracle).
@@ -68,31 +21,65 @@ Furthermore, the keys generated are required to fit the Symmetric Encryption Sch
 \\
 \end{itemize}
 
+\section{Security Proof}
+In this section all security properties of CDSP are presented as theorems to be proved. For each property, first a brief description will be given to show why this property is essential in the protocol, then authenticity of it will be proved. Before each proof, some primitives are assumed to be true (listed above), and after each proof, it will be clear that once the primitives are true, then the security property is held be CDSP.
+
 \subsection{Submit protocol}
-\textbf{THEOREM 1:} $\mathcal{A}$ is authenticated to $\mathcal{CR}$ \\
-\emph{$Proof:$} \par
+\textbf{THEOREM 1:} $\mathcal{A}$ is authenticated to $\mathcal{CR}$
+
+\bigskip
+\noindent
+\textit{Description: }As it has been assumed that physical transportation for a Courier is extremely costly, Courier should not carry messages for any arbitrary entity. Thus it is required that, when Courier chooses to carry a message for certain entity, the entity must prove its identity to the Courier before submitting the message.
+
+\bigskip
+\begin{proof}
 Assuming $\mathcal{G}$ is secure, then $\mathcal{CR}$ is the only entity who knows the randomly generated key $k_C$. Providing $\mathcal{E}_{pk_A}$ scheme is secure, because $k_C$ is encrypted by $pk_A$ before sent out $\mathcal{A}$ will be the only entity who can reveal the encrypted $k_C$. Similarly, providing $\mathcal{MAC}$ scheme is secure, $\mathcal{A}$ is also the only one who can create MESSAGE 2 and its $\mathcal{MAC}_{k_C}$. Thus when (MESSAGE 2, $\mathcal{MAC}_{k_C}$) pair is received by $\mathcal{CR}$ and is verified true, it can be sure this message is created by $\mathcal{A}$. So $\mathcal{A}$ is authenticated to $\mathcal{CR}$.
-\\
-\\
-\textbf{THEOREM 2:} The Integrity of message from $\mathcal{A}$ to $\mathcal{CR}$ is preserved \\
-\emph{$Proof:$} \par
+\end{proof}
+
+\vspace{1cm}
+\noindent
+\textbf{THEOREM 2:} The Integrity of message from $\mathcal{A}$ to $\mathcal{CR}$ is preserved
+
+\bigskip
+\noindent
+\textit{Description: }It is expected that the message is not modified and it is not forged after being submitted to Courier.
+
+\begin{proof}
 Assuming $\mathcal{MAC}$ scheme is secure, any modification of MESSAGE 2 will lead to unpredictable changes in the $\mathcal{MAC}_{k_C}$(MESSAGE 2) and cause its verification to be false. And according to THEOREM 1, no one else but $\mathcal{A}$ can create the message and its valid MAC, message forgery is prevented. As consequence, the message integrity is preserved.
-\\
-\\
-\textbf{LEMMA 1} The message content cannot be revealed by any entity but $\mathcal{B}$ \\
-\emph{$Proof:$} \par
+\end{proof}
+
+\vspace{1cm}
+\noindent
+\textbf{LEMMA 1} The message content cannot be revealed by any entity but $\mathcal{B}$ 
+
+\bigskip
+\noindent
+\textit{Description: }It is an auxiliary theorem that helps to prove the THEOREM 3.
+
+\begin{proof}
 Assuming $\mathcal{G}$ is secure, the randomly generated key $k_{AB}$ is only held by $\mathcal{A}$. $k_{AB}$ is encrypted by $\mathcal{E}_{pk_B}$ and sent to $\mathcal{CR}$, so assuming the $\mathcal{E}$ scheme is secure, only $\mathcal{B}$ can decrypt the cipher and reveal $k_{AB}$. As message content is encrypted by $\mathcal{E}_{k_{AB}}$, the only entity can decrypt it is $\mathcal{B}$ because only it knows $k_{AB}$ (other than the message creator). Consequently, only $\mathcal{B}$ can reveal the message content created by $\mathcal{A}$.
-\\
-\\
+\end{proof}
+
+\noindent
 \textbf{THEOREM 3:} $\mathcal{CR}$ is not able to access the message content
-\\
-\emph{$Proof:$} \par
+
+\bigskip
+\noindent
+\textit{Description: }As the message content from $ \mathcal{A} $ to $ \mathcal{B} $ is highly confidential, it should not be disclosed to any other entity other than $ \mathcal{B} $. Thus making message content inaccessible to $ \mathcal{CR} $ prevents the content from being released when adversary examining the Courier's data.
+
+\begin{proof}
 According to LEMMA 1, only $\mathcal{B}$ can reveal the message content, we can easily deduce that $\mathcal{CR}$ is not able to reveal the message content.
-\\
-\\
+\end{proof}
+
+\vspace{1cm}
+\noindent
 \textbf{THEOREM 4:} $\mathcal{A}$ is able to deny sending any message to $\mathcal{CR}$
-\\
-\emph{$Proof:$} \par
+
+\bigskip
+\noindent
+\textit{Description: }In certain scenarios which require high privacy protection - like exchanging military intelligence or voting system, the action of sending out a message itself might become a sensitive information. It is expected that this protocol protects the privacy of entity $ \mathcal{A} $ in such a way that it can deny the fact that it ever sends a message to Courier after the message is submitted.
+\bigskip
+\begin{proof}
 The whole message sent from $\mathcal{A}$ to $\mathcal{CR}$ contains three parts - (1) entity IDs, (2) encrypted message from $\mathcal{A}$ and (3) $\mathcal{MAC}_{k_C}$, if $\mathcal{CR}$ wants to prove the authenticity of the origin of the whole message, it must show that at least one of these three parts can be created only by $\mathcal{A}$. However, all these three parts are forgeable by $\mathcal{CR}$ itself:
 \begin{enumerate}
 \item entity IDs are plaintexts, thus can be created by $\mathcal{CR}$.
@@ -100,52 +87,110 @@ The whole message sent from $\mathcal{A}$ to $\mathcal{CR}$ contains three parts
 \item $\mathcal{MAC}_{k_C}$ can also be created by $\mathcal{CR}$ because $\mathcal{CR}$ has $k_C$ and is able to forge the whole former message.
 \end{enumerate}
 To sum up, $\mathcal{CR}$ is able to create the whole message itself, it can not convince others the authenticity of the origin of the the message, so $\mathcal{A}$ is able to deny sending the message to $\mathcal{CR}$.
+\end{proof}
 
+\vspace{1cm}
 \subsection{Transmit Protocol}
-\textbf{THEOREM 5:} $\mathcal{B}$ is authenticated to $\mathcal{CS}$ \\
-\emph{$Proof:$} \par
-Similar to proof of THEOREM 1, providing $\mathcal{G}$ and $\mathcal{E}$ scheme are secure, only $\mathcal{B}$ knows the symmetric key generated by $\mathcal{CS}$. So, assuming $\mathcal{MAC}$ scheme is secure, if $\mathcal{MAC}_{k_C}$(MESSAGE 1) can be successfully verified by $\mathcal{CS}$, it must be $\mathcal{B}$ who create the MAC. Thus, $\mathcal{B}$ is authenticated to $\mathcal{CS}$.
-\\
-\\
-\textbf{THEOREM 6:} The Integrity of message from $\mathcal{CS}$ to $\mathcal{B}$ is preserved \\
-\emph{$Proof:$} \par
-Similar to proof of THEOREM 2, any modification on MESSAGE 1 will leads to unpredictable changes in its MAC, and no one else but $\mathcal{B}$ can create the verifiable MAC of arbitrary message. So if $\mathcal{MAC}_{k_C}$(MESSAGE 1) is verified true by $\mathcal{CS}$, it means it is originally created by $\mathcal{B}$ and has not been modified. Thus the message integrity is preserved.
-\\
-\\
-\textbf{THEOREM 7:} $\mathcal{B}$ is able to deny receiving any message from $\mathcal{CS}$ \\
-\emph{$Proof:$} \par
-Similar to the proof of THEOREM 4, the message from $\mathcal{B}$ is totally forgeable by $\mathcal{CS}$ because it creates the whole MESSAGE 1 and holds $k_C$, it can create $\mathcal{MAC}_{k_C}$(MESSAGE 1) by it own. Therefore $\mathcal{CS}$ cannot prove to others that the MAC is sent from $\mathcal{B}$, $\mathcal{B}$ can deny receiving any message from $\mathcal{CS}$.
+\textbf{THEOREM 5:} $\mathcal{B}$ is authenticated to $\mathcal{CS}$
 
+\bigskip
+\noindent
+\textit{Description: }As physical transportation is costly for Courier, Courier should not transmit its data to some arbitrary entity. It is reasonable that Courier ensures the message is transmitted to the target entity $ \mathcal{B} $. Thus $ \mathcal{B} $
+should prove its identity before receiving data from Courier.
+\begin{proof}
+Similar to proof of THEOREM 1, providing $\mathcal{G}$ and $\mathcal{E}$ scheme are secure, only $\mathcal{B}$ knows the symmetric key generated by $\mathcal{CS}$. So, assuming $\mathcal{MAC}$ scheme is secure, if $\mathcal{MAC}_{k_C}$(MESSAGE 1) can be successfully verified by $\mathcal{CS}$, it must be $\mathcal{B}$ who create the MAC. Thus, $\mathcal{B}$ is authenticated to $\mathcal{CS}$.
+\end{proof}
+
+\vspace{1cm}
+\noindent
+\textbf{THEOREM 6:} The Integrity of message from $\mathcal{CS}$ to $\mathcal{B}$ is preserved
+
+\bigskip
+\noindent
+\textit{Description: }It is expected that the message is not modified and it is not forged after being transmitted to $ \mathcal{B} $.
+\begin{proof}
+Similar to proof of THEOREM 2, any modification on MESSAGE 1 will leads to unpredictable changes in its MAC, and no one else but $\mathcal{B}$ can create the verifiable MAC of arbitrary message. So if $\mathcal{MAC}_{k_C}$(MESSAGE 1) is verified true by $\mathcal{CS}$, it means it is originally created by $\mathcal{B}$ and has not been modified. Thus the message integrity is preserved.
+\end{proof}
+
+\vspace{1cm}
+\noindent
+\textbf{THEOREM 7:} $\mathcal{B}$ is able to deny receiving any message from $\mathcal{CS}$
+
+\bigskip
+\noindent
+\textit{Description: }Similar to the Submit Protocol, in some privacy-sensitive scenarios, it is plausible for $ \mathcal{B} $ to deny the fact of receiving data from Courier.
+\begin{proof}
+Similar to the proof of THEOREM 4 in Submit Protocol, the message from $\mathcal{B}$ is totally forgeable by $\mathcal{CS}$ because it creates the whole MESSAGE 1 and holds $k_C$, it can create $\mathcal{MAC}_{k_C}$(MESSAGE 1) by it own. Therefore $\mathcal{CS}$ cannot prove to others that the MAC is sent from $\mathcal{B}$, $\mathcal{B}$ can deny receiving any message from $\mathcal{CS}$.
+\end{proof}
+
+\vspace{1cm}
 \subsection{On The Whole}
-\textbf{THEOREM 8:} $\mathcal{A}$ is authenticated to $\mathcal{B}$ \\
-\emph{$Proof:$} \par
-As $\mathcal{B}$ receives two pieces of data - Meta and Msg, the authentication will be done for both of them separately.\par
-\underline{Meta}: Because $\mathcal{B}$ can decrypt the encrypted Meta from $\mathcal{A}$, it can reveal the sender $\mathcal{ID}$ and $k_{AB}$, then it can further decrypt $\mathcal{E}_{k_{AB}}$($\mathcal{SIGN}_A$(Meta)) to get $\mathcal{SIGN}_A$(Meta). Assuming $\mathcal{SIGN}$ scheme is secure, if $\mathcal{B}$ verifies the signature true under $\mathcal{A}$'s public key, $\mathcal{B}$ knows Meta can only be created by $\mathcal{A}$. \par
-\underline{Msg}: Assuming $\mathcal{G}$ and $\mathcal{E}$ scheme is secure, only $\mathcal{B}$ can decrypt $\mathcal{E}_{k_{AB}}$($k_{AB}$) and reveal $k_{AB}$ in Meta. Thus only $\mathcal{B}$ (other than $\mathcal{A}$) can create $\mathcal{MAC}_{k_{AB}}$(Msg). So, if (Msg, $\mathcal{MAC}_{k_{AB}}$) pair is verified true by $\mathcal{B}$, $\mathcal{B}$ knows Msg is created by $\mathcal{A}$. \par
+\textbf{THEOREM 8:} $\mathcal{A}$ is authenticated to $\mathcal{B}$
+
+\bigskip
+\noindent
+\textit{Description: }As CDSP is for sending message from $ \mathcal{A} $ to $ \mathcal{B} $, it is required that the message sender proves its identity to the recipient. Otherwise malicious Courier would be able to forge arbitrary messages to $ \mathcal{B} $ that never exists.
+
+\bigskip
+\begin{proof}
+As $\mathcal{B}$ receives two pieces of data - Meta and Msg, the authentication will be done for both of them separately.
+\paragraph{\underline{Meta}}: Because $\mathcal{B}$ can decrypt the encrypted Meta from $\mathcal{A}$, it can reveal the sender $\mathcal{ID}$ and $k_{AB}$, then it can further decrypt $\mathcal{E}_{k_{AB}}$($\mathcal{SIGN}_A$(Meta)) to get $\mathcal{SIGN}_A$(Meta). Assuming $\mathcal{SIGN}$ scheme is secure, if $\mathcal{B}$ verifies the signature true under $\mathcal{A}$'s public key, $\mathcal{B}$ knows Meta can only be created by $\mathcal{A}$.
+
+\paragraph{\underline{Msg}}: Assuming $\mathcal{G}$ and $\mathcal{E}$ scheme is secure, only $\mathcal{B}$ can decrypt $\mathcal{E}_{k_{AB}}$($k_{AB}$) and reveal $k_{AB}$ in Meta. Thus only $\mathcal{B}$ (other than $\mathcal{A}$) can create $\mathcal{MAC}_{k_{AB}}$(Msg). So, if (Msg, $\mathcal{MAC}_{k_{AB}}$) pair is verified true by $\mathcal{B}$, $\mathcal{B}$ knows Msg is created by $\mathcal{A}$.
+
 To sum up, $\mathcal{A}$ is authenticated to $\mathcal{B}$ as all message sent by $\mathcal{A}$ is authenticated.
-\\
-\\
-\textbf{THEOREM 9:} Confidentiality of the message from $\mathcal{A}$ to $\mathcal{B}$ is preserved\\
-\emph{$Proof:$} \par
+\end{proof}
+
+\vspace{1cm}
+\noindent
+\textbf{THEOREM 9:} Confidentiality of the message from $\mathcal{A}$ to $\mathcal{B}$ is preserved
+
+\bigskip
+\noindent
+\textit{Description: }As the message content from $ \mathcal{A} $ to $ \mathcal{B} $ is highly confidential, it should not be disclosed to any other entity other than $ \mathcal{B} $.
+
+\begin{proof}
 As proven in THEOREM 3, the message content from $\mathcal{A}$ to $\mathcal{B}$ can not be revealed by any other entities but $\mathcal{B}$, even the Courier itself. So after physical transportation and transmitting message to $\mathcal{B}$, this property still hold. This means only the creator and recipient of the message can reveal its content, so the confidentiality if preserved.
-\\
-\\
-\textbf{THEOREM 10:} Integrity of the message from $\mathcal{A}$ to $\mathcal{B}$ is preserved\\
-\emph{$Proof:$} \par
+\end{proof}
+
+\vspace{1cm}
+\noindent
+\textbf{THEOREM 10:} Integrity of the message from $\mathcal{A}$ to $\mathcal{B}$ is preserved
+
+\bigskip
+\noindent
+\textit{Description: }It is expected that the message is not modified and it is not forged during the transportation.
+\begin{proof}
 Similar to the proof of THEOREM 6, assuming $\mathcal{G}$ and $\mathcal{E}$ scheme is secure, $\mathcal{B}$ is the only entity who can decrypt $\mathcal{E}_{k_{AB}}$($k_{AB}$) and reveal $k_{AB}$. So when message is received by $\mathcal{B}$, only $\mathcal{A}$ and $\mathcal{B}$ hold $k_{AB}$ and are able to create $\mathcal{MAC}_{k_{AB}}$(Msg). So any forgery will lead to MAC verification fail. Further more, if the Msg is modified, it will lead to unpredictable changes in $\mathcal{MAC}_{k_{AB}}$(Msg) and fail the MAC verification as well. So if (Msg, $\mathcal{MAC}_{k_{AB}}$(Msg)) pair is verified true, the Msg must be created by $\mathcal{A}$, and remain unchanged. Thus the integrity of message from $\mathcal{A}$ to $\mathcal{B}$ is preserved.
-\\
-\\
-\textbf{THEOREM 11:} $\mathcal{A}$ can not deny sending the message to $\mathcal{B}$\\
-\emph{$Proof:$} \par
+\end{proof}
+
+\vspace{1cm}
+\noindent
+\textbf{THEOREM 11:} $\mathcal{A}$ can not deny sending the message to $\mathcal{B}$
+
+\bigskip
+\noindent
+\textit{Description: }This property is not deliberately designed in the protocol. As CDSP is an one-way protocol, the authentication of $ \mathcal{A} $ must be non-interactive. Thus a compromise has to be made between computational complexity and the full deniability of a non-interactive deniable authentication. Finally we choose to put the efficiency as first priority. So in the protocol, $ \mathcal{A} $ is not able to fully deny sending a message to $ \mathcal{B} $. However, as the next property states, $ \mathcal{A} $ is able to deny the message content which almost achieves the same goal. Besides, the property of non-repudiation could still be useful for $ \mathcal{B} $ as it proves the number of messages sent from $ \mathcal{A} $.
+
+\bigskip
+\begin{proof}
 Similar to the proof of THEOREM 8, if $\mathcal{SIGN_A}$ is verified true, it proves the authenticity of the origin of the Meta, so $\mathcal{A}$ can not deny sending the message.
-\\
-\\
-\textbf{THEOREM 12:} $\mathcal{A}$ is able to deny the message content sent to $\mathcal{B}$ \\
-\emph{$Proof:$} \par
+\end{proof}
+
+\vspace{1cm}
+\noindent
+\textbf{THEOREM 12:} $\mathcal{A}$ is able to deny the message content sent to $\mathcal{B}$
+
+\bigskip
+\noindent
+\textit{Description: }In some privacy-sensitive scenarios, it is reasonable for $ \mathcal{A} $ to be able to deny the message content it has sent. According to above property, $ \mathcal{A} $ is not allowed to fully deny sending a message to $ \mathcal{B} $, however, capability of denying the message content has approximately the same effect, because $ \mathcal{A} $ can always argue that the message content is empty.
+
+\bigskip
+\begin{proof}
 The message content contains two parts - (1) encrypted message Msg =  $\mathcal{E}_{k_{AB}}$(message) and (2) its MAC $\mathcal{MAC}_{k_{AB}}$(Msg). Because $k_{AB}$ is contained in the Meta and Meta is encrypted under $\mathcal{B}$'s public key, $\mathcal{B}$ is able to reveal $k_{AB}$. Then the whole message content part sent from $\mathcal{A}$ is forgeable by $\mathcal{B}$:
 \begin{enumerate}
-\item Msg is encrypted under $k_{AB}$, $\mathcal{B}$ can create any Msg it wants.
-\item $\mathcal{MAC}_{k_{AB}}$(Msg) also can be created $\mathcal{B}$ because $\mathcal{B}$ can create Msg and hold $k_{AB}$.
+\item Msg is encrypted under $k_{AB}$, so $\mathcal{B}$ can create any Msg it wants.
+\item $\mathcal{MAC}_{k_{AB}}$(Msg) also can be created by $\mathcal{B}$ because $\mathcal{B}$ can create Msg and hold $k_{AB}$.
 \end{enumerate}
 As $\mathcal{B}$ can create the whole content part by its own, $\mathcal{B}$ can not prove to others that the message is from $\mathcal{A}$. Thus $\mathcal{A}$ can deny the message content for $\mathcal{B}$.
-
+\end{proof}

@@ -1,12 +1,12 @@
 \chapter{Protocol Specification}
-A successful run of CDSProtocol consists of 3 stages - (1) message creators submit their messages to a single courier. (2) courier physically transports to the message receiver. (3) courier transmits the messages to the message receiver. As controlling couriers and  planning couriers' routes are out of the scope of this protocol, it is assumed that in this protocol, couriers eventually are able to approach the target. Therefore stage (2) will not be discussed here. \par
-The protocol specification will focus on the other two stages - (1) and (3), we call them Message Acquisition phase and Message Delivery phase. To ensure secure communication in both two phases, two sub-protocols - Submit Protocol and Transmit Protocol, are defined for those two phases respectively. The Submit Protocol runs between Alice and Courier, while the Transmit Protocol runs between Bob and Courier. As those two sub-protocols can be run independently, they will be explained separately.
+The protocol introduced for the system is called Courier-Dependent Security Protocol, it defines the interactions between Alice (message creator), Bob(message recipient) and Courier in the system described above when they engage communication. A successful run of CDSP consists of 3 stages - (1) message creators submit their messages to a single courier. (2) courier physically transports to the message receiver. (3) courier transmits the messages to the message receiver. As controlling couriers and  planning couriers' routes are out of the scope of this protocol, it is assumed that in this protocol, couriers eventually are able to approach the target. Therefore stage (2) will not be discussed here.
+
+The protocol specification will focus on the other two stages - (1) and (3), we call them Message Acquisition phase and Message Delivery phase. To ensure secure communication in both two phases, two sub-protocols - Submit Protocol and Transmit Protocol, are defined for those two phases respectively. The Submit Protocol runs between Alice and Courier, it defines how message is submitted from Alice to Courier, while the Transmit Protocol runs between Bob and Courier, it defines how message is transmitted from Courier to Bob. As those two sub-protocols can be run independently, they will be explained separately.
+
 \section{Notations}
 The detail entity operations and message sequences of two sub-protocols will be displayed in message sequencing charts separately. Before showing those charts the notations are introduced first.
 \paragraph{Encryption Functions $\mathcal{E}_k$ :}
 This notation denotes an abstraction of all encryption functions, including both symmetric and asymmetric encryptions. The subscript k denotes the key used for the encryption processes, and it is used for differentiating symmetric and asymmetric encryption, such like if the key is specified as an asymmetric key, it indicates the function is an asymmetric encryption, while symmetric key indicates symmetric encryption.
-\paragraph{Decryption Functions $\mathcal{D}_k$ :}
-Similar to encryption functions, this notation denotes symmetric and asymmetric decryption functions, and subscript k denotes the key used for decryption.
 \paragraph{Message Authentication Code Function $\mathcal{MAC}_k$ :}
 It denotes an abstract MAC function, and the subscript k indicates the key used for the function.
 \paragraph{Digital Signature Function $\mathcal{SIGN}_E$ :}
@@ -33,30 +33,30 @@ It represents many pieces of data which have same format accumulated together. F
 \subsection{Message Sequencing Chart}
 \begin{msc}{Submit Protocol}
 \setlength{\instdist}{3\instdist}
-\setlength{\envinstdist}{2.5\envinstdist}
+\setlength{\envinstdist}{2.4\envinstdist}
 \setlength{\levelheight}{1.5\levelheight}
 \declinst{alice}{Alice}{}
 \declinst{courier}{Courier}{}
 
-\action*{pick a random key k$_C$}{courier}
+\action*{pick a random key $k_C$}{courier}
 \nextlevel[2]
-\mess{1: Courier\textbar\textbar size\textbar\textbar $\mathcal{E}_{pk_A}$(k$_C$)}{courier}{alice}
+\mess{1: $ \mathcal{ID}_C $\textbar\textbar $ \mathcal{N}_s $\textbar\textbar $\mathcal{E}_{pk_A}$($k_C$)}{courier}{alice}
 \nextlevel
-\action*{\parbox{9cm}{
-1. pick symmetric key k$_{AB}$ \\
-2. Meta = $\mathcal{E}_{pk_B}$(k$_{AB}$\textbar\textbar Alice\textbar\textbar Bob\textbar\textbar timestamp)\\
+\action*{\parbox{8.7cm}{
+1. pick symmetric key $k_{AB}$ \\
+2. Meta = $\mathcal{E}_{pk_B}$($k_{AB}$\textbar\textbar $ \mathcal{ID}_A $\textbar\textbar $ \mathcal{ID}_B $\textbar\textbar timestamp)\\
 3. MetaS = $\mathcal{E}_{k_{AB}}$($\mathcal{SIGN}_A$(Meta))\\
 4. Msg = $\mathcal{E}_{k_{AB}}$(message content)\\
 5. MsgM = $\mathcal{MAC}_{k_{AB}}$(Msg)\\
-6. Infos = Alice\textbar\textbar Bob\textbar\textbar Meta\textbar\textbar MetaS\textbar\textbar Msg\textbar\textbar MsgM
+6. Info = $ \mathcal{ID}_A $\textbar\textbar $ \mathcal{ID}_B $\textbar\textbar Meta\textbar\textbar MetaS\textbar\textbar Msg\textbar\textbar MsgM
 }}{alice}
 \nextlevel[6]
-\mess{2: Infos\textbar\textbar $\mathcal{MAC}_{k_C}$(Infos)}{alice}{courier}
+\mess{2: Info\textbar\textbar $\mathcal{MAC}_{k_C}$(Info)}{alice}{courier}
 \nextlevel
 \action*{\parbox{6.1cm}{
-1. check validity of $\mathcal{MAC}_{k_C}$(Infos)\\
+1. check validity of $\mathcal{MAC}_{k_C}$(Info)\\
 2. check validity of sender ID\\
-3. check size of Infos
+3. check size of Info
 }}{courier}
 \nextlevel[4]
 \mess{3: $\mathcal{MAC}_{k_C}$(message 2)}{courier}{alice}
@@ -68,17 +68,17 @@ It represents many pieces of data which have same format accumulated together. F
 
 
 \subsection{Specification}
-Before the start of the protocol, Courier should randomly creates a symmetric key $k_C$ which will be sent to Alice and used for deniable authentication later. Then Courier actively connects to Alice and sends first message to Alice. The first message should contain (1) The $\mathcal{ID}$ of Courier, (2) The maximum storage size of Courier, (3) Random key $k_C$ encrypted by Alice's public key. \par
+Before the start of the protocol, Courier uses a symmetric key generator to create a random symmetric key $k_C$ which will be sent to Alice and used for deniable authentication later. The key $ k_C $ must fit the symmetric encryption / decryption scheme which will be used in  later of the protocol. Then Courier actively connects to Alice and sends first message to Alice. The first message should contain (1) The ID of Courier $\mathcal{ID}_C$, (2) The maximum storage size of Courier $ \mathcal{N}_s $, (3) Symmetric key $k_C$ encrypted by Alice's public key, which is $\mathcal{E}_{pk_A}$($k_C$).
 
-Once Alice receives the first message from Courier, it prepares for sending the second message as reply. Firstly, Alice creates a random symmetric key $ k_{AB} $ which is supposed to be used as the session key with the message recipient Bob. Then Alice prepares the Meta block and its digital signature block MetaS. The Meta block contains  meta information of the message content for Bob and it is encrypted under the public key of Bob. The plaintext of Meta block contains (1) Symmetric key $ k_{AB} $, (2) The $ \mathcal{ID} $ of Alice, (3) The $ \mathcal{ID} $ of Bob, (4) A timestamp indicates the time Alice creates this message. To prove the authenticity of Meta block, Alice creates a digital signature of Meta block and encrypts the signature with $ k_{AB} $ which forms MetaS block. \par
+Once Alice receives the first message from Courier, it prepares for sending the second message as reply. Firstly, Alice creates a random symmetric key $ k_{AB} $ which is supposed to be used as the session key with the message recipient Bob. Then Alice prepares the Meta block and its digital signature block MetaS. The Meta block contains  meta information of the message content for Bob and it is encrypted under the public key of Bob so that it is assumed only Bob can access the content of Meta block. The content of Meta block contains (1) Symmetric session key $ k_{AB} $, (2) The ID of message creator (Alice) $ \mathcal{ID}_A $, (3) The ID of message recipient (Bob) $ \mathcal{ID}_B $, (4) A timestamp indicates the exact time when Alice creates this message. To prove the authenticity of the Meta block, Alice creates a digital signature of Meta block using her secret key sk$_A$. However sending raw signature of Meta block release the authenticity of its origin to the Courier, in which case Courier will be able to prove the fact that the Meta block comes from Alice. Thus, to hide the authenticity of the origin of the Meta block, the signature is contained in MetaS block where it is encrypted with $ k_{AB} $ so that only Bob can reveal it. The reason of encrypting signature under symmetric session key rather than Bob's public key is for efficiency concern.
 
-After Alice has Meta and MetaS blocks, it creates a Msg block which is the encrypted message content for Bob under $ k_{AB} $. Similarly, to ensure the integrity of the Msg block, a MAC of Msg block is created under $ k_{AB} $, called MsgM block. \par
+After Alice has Meta and MetaS blocks, it creates a Msg block which is the encrypted message content for Bob under $ k_{AB} $. To ensure the integrity of the Msg block, a MAC of Msg block is created under $ k_{AB} $, the MAC forms MsgM block.
 
-After Alice gets above 4 blocks, it creates a Infos block which is the whole information for Courier. Infos block is the concatenation of (1) The $ \mathcal{ID} $ of Alice, (2) The $ \mathcal{ID} $ of Bob, (3) Meta block, (4) MetaS block, (5) Msg block, (6) MsgM block. Then Alice appends a MAC of the Infos block to ensure its integrity. The MAC key is $ k_C $, which can be revealed by decrypting $\mathcal{E}_{pk_A}$(k$_C$) in the first received message. Finally Alice examines the size of Infos block. If the total size of Meta, MetaS, Msg, MsgM blocks exceeds the storage limitation of Courier, it either reduces the size of those blocks and prepares them again, or reports an error and aborts the protocol. If it doesn't, Alice sends the whole message 2 which contains Infos block and its MAC, to Courier. \par
+After Alice gets above 4 blocks, it creates a Info block which reflects ``all information" for Courier. Info block is the concatenation of (1) The ID of message creator (Alice) $ \mathcal{ID}_A $, (2) The ID of message recipient (Bob) $ \mathcal{ID}_B $, (3) Meta block, (4) MetaS block, (5) Msg block, (6) MsgM block. Then Alice appends a MAC of the Info block to ensure its integrity. The MAC key is $ k_C $, which can be revealed by decrypting $\mathcal{E}_{pk_A}$($k_C$) in the first received message, and it proves the identity of Alice to the Courier. Finally Alice examines the size of Info block. If the total size of Meta, MetaS, Msg, MsgM blocks exceeds the storage limitation of Courier $ \mathcal{N}_s $, it either reduces the size of those blocks and prepares them again, or reports an error and aborts the protocol. If it doesn't, Alice sends the whole message 2 which contains Info block and its MAC, to Courier.
 
-Once Courier receives the message 2 from Alice, it should check the validity of message 2. It first verifies $ \mathcal{MAC}_{k_C} $(Infos), if true then checks the $ \mathcal{ID} $ of Alice to see if it is indeed the entity it is going to connect. After that, it checks the total size of the Meta, MetaS, Msg and MsgM blocks, making sure it does not exceeds the storage limitation. If any of above checks violate, Courier should report an error and abort the protocol. If all checks success, Courier uses $ k_C $ to create a MAC of the whole message 2 received from Alice and sends it to Alice as message 3. \par
+Upon receipt of the message 2 from Alice, Courier checks the validity of message 2. It first verifies $ \mathcal{MAC}_{k_C} $(Info), if it fails it means either the Info block has been modified or the message sender used a wrong key, both leads to Courier abort the protocol. If it verifies true then Courier checks the ID of message creator to see if it is indeed the entity it is going to communicate (here whether it is $ \mathcal{ID}_A $). After that, it checks the total size of the Meta, MetaS, Msg and MsgM blocks, making sure it does not exceeds the its storage limitation. If any of above checks violate, Courier should report an error and abort the protocol. If all checks success, Courier uses $ k_C $ to create a MAC of the whole message 2 received from Alice and sends it to Alice as a confirmation message.
 
-At the end of the protocol, Alice checks the validation of message 3. It verifies the received MAC using $ k_C $. If it verifies true, it means the protocol success and all postconditions are held. Otherwise, the protocol fails. However, the verification result does not prove the fact whether Courier has received the correct message 2 or not. Alice only knows its message may or may not be successfully sent. So further actions can be taken by Alice such as waiting for next Courier to send the same message or report an error.
+At the end of the protocol, Alice checks the validation of message 3. It verifies the received MAC using $ k_C $. If it verifies true, it means the protocol success and all postconditions are held. Otherwise, the protocol fails. However, the verification result does not prove the fact whether Courier has received the correct message 2 or not. Alice only knows its message may or may not be successfully sent. So further actions can be taken by Alice such as waiting for next Courier to send the same message or report an error, and they are not restricted by this protocol.
 
 
 \pagebreak
@@ -97,17 +97,17 @@ At the end of the protocol, Alice checks the validation of message 3. It verifie
 \subsection{Message Sequencing Chart}
 \begin{msc}{Transmit Protocol}
 \setlength{\instdist}{3\instdist}
-\setlength{\envinstdist}{1.8\envinstdist}
+\setlength{\envinstdist}{2\envinstdist}
 \setlength{\levelheight}{1.5\levelheight}
 \declinst{bob}{Bob}{}
 \declinst{courier}{Courier}{}
 
 \action*{\parbox{6.7cm}{
-1. pick a random key k$_C$\\
+1. pick a random key $k_C$\\
 2. accumulate all Data blocks for Bob
 }}{courier}
 \nextlevel[4]
-\mess{1: Courier\textbar\textbar $\mathcal{E}_{pk_B}$(k$_C$)\textbar\textbar Data$^+$}{courier}{bob}
+\mess{1: $ \mathcal{ID}_C $\textbar\textbar $\mathcal{E}_{pk_B}$($k_C$)\textbar\textbar Data$^+$}{courier}{bob}
 \nextlevel
 \action*{check validity of all Data blocks}{bob}
 \nextlevel[2]
@@ -119,24 +119,26 @@ At the end of the protocol, Alice checks the validation of message 3. It verifie
 \\
 where: \\
 Data = Meta\textbar\textbar MetaS\textbar\textbar Msg\textbar\textbar MsgM\\
-Meta = $\mathcal{E}_{pk_B}$(k$_{AB}$\textbar\textbar Alice\textbar\textbar Bob\textbar\textbar timestamp)\\
+Meta = $\mathcal{E}_{pk_B}$($k_{AB}$\textbar\textbar $ \mathcal{ID}_A $\textbar\textbar $ \mathcal{ID}_B $\textbar\textbar timestamp)\\
 MetaS = $\mathcal{E}_{k_{AB}}$($\mathcal{SIGN}_A$(Meta))\\
 Msg = $\mathcal{E}_{k_{AB}}$(message content)\\
 MsgM = $\mathcal{MAC}_{k_{AB}}$(Msg)
 
 \subsection{Specification}
-Before start of the protocol, Courier first creates a random symmetric key $k_C$ which will be sent to Bob and used for deniable authentication. Once Courier has $ k_C $, it could prepare the data for Bob. By the time Courier starts the Transmit Protocol with Bob, it should have carried certain pieces of data for Bob which are collected earlier.  As introduced in Submit Protocol, each piece of data from Alice contains (1) Meta block, (2) MetaS block, (3) Msg block, (4) MsgM block. We call such a piece of data a Data block. Courier now fetches all those data, and accumulate them together, forming a Data$^+$ block. Then Courier actively connects to Bob and sends the first message to Bob. The message 1 contains (1) The $\mathcal{ID}$ of Courier, (2) Random key $ k_C $ encrypted by Bob's public key, (3) The accumulation of all Data blocks for Bob.
+Before start of the protocol, Courier first creates a random symmetric key $k_C$ which will be sent to Bob and used for deniable authentication. Once Courier has $ k_C $, it prepares the data for Bob. Assuming by the time Courier starts the Transmit Protocol with Bob, it already has certain pieces of data for Bob which are collected earlier from various message creators. We define a Data block as essential data that is submitted by a message creator and need to be transmitted to a message recipient. Each Data block contains (1) Meta block, (2) MetaS block, (3) Msg block, (4) MsgM block. Courier now fetches all those data, and accumulate them together, forming a Data$^+$ block. Then Courier actively connects to Bob and sends the first message to Bob. Specifically, the message 1 contains (1) The ID of Courier $\mathcal{ID}_C$, (2) Symmetric key $k_C$ encrypted by Bob's public key, which is $\mathcal{E}_{pk_B}$($k_C$), (3) The accumulation of all Data blocks for Bob.
 
-Upon receipt of the first message, Bob checks the validity of all Data blocks received. Basically, Bob will check each Data block one by one, and it will accept all Data blocks that pass all verifications while discard all Data blocks that fail one of the verifications. The detailed algorithm used for checking all Data blocks is displayed below in the algorithm ``check all Data blocks".
+Upon receipt of the first message, Bob checks the validity of all Data blocks received. Basically, Bob will chop the Data$^+$ block up and check each Data block one by one. It will accept all Data blocks that pass all verifications while discard all Data blocks that fail any of the verifications. The detailed algorithm used for checking all Data blocks is displayed below in the algorithm ``check all Data blocks".
+
+According to the checking algorithm, there are 4 different checks for each Data block: First Bob checks the recipient ID contained in its Meta block, to see if this message is for Bob himself. Then Bob checks the timestamp contained in the message Meta block to ensure the message is not expired. The detail implementation of such timestamp checking is not defined in this protocol, it can be implemented in various ways by different applications. After checking the timestamp, Bob checks the digital signature of the whole Meta block of the Data block, by verifying it using the public key of the message creator - whose ID has been given in the Meta block. If the signature verifies true, Bob knows for sure that this message is originated from the message creator it indicates (here Alice). Finally, Bob checks the MAC of Msg block by verifying the MsgM block under the message creator's public key. If the result is true, Bob is convinced that the message content is created by the message creator (Alice).
 
 \begin{algorithm}[H]
  \KwData{The concatenation of all Data blocks}
  \KwResult{Bob accepts valid Data blocks and discards invalid ones}
  initialization\;
- \While{there is still Data block unchecked}{
+ \While{there is Data block unchecked}{
   currentDataBlock = nextDataBlock\;
-  use $ sk_A $ to decrypt Meta block in currentDataBlock, reveal \{$ k_{AB} $, senderID, receiverID, timestamp\}\;
-  \eIf{receiverID != ``Bob"} {
+  use $ sk_A $ to decrypt Meta block in currentDataBlock, reveal \{$ k_{AB} $, creatorID, recipientID, timestamp\}\;
+  \eIf{recipientID != ``Bob"} {
    discard currentDataBlock
   }{
    \eIf{timestamp expires}{
@@ -151,7 +153,8 @@ Upon receipt of the first message, Bob checks the validity of all Data blocks re
      \eIf{verifies false}{
       discard currentDataBlock
      }{
-      use $ pk_A $ to decrypt Msg and reveal the message content
+      use $ pk_A $ to decrypt Msg and reveal the message content\;
+      accepts the message content
      }
     }
    }
@@ -162,6 +165,6 @@ Upon receipt of the first message, Bob checks the validity of all Data blocks re
 \bigskip
 \bigskip
 
-After all Data blocks have been received and checked, Bob send back a MAC of whole message 1 received from Courier. The key used for creating the MAC is $ k_C $ which is revealed by decrypting $\mathcal{E}_{pk_B}$(k$_C$) in message 1. 
+After all Data blocks have been received and checked, Bob send back a MAC of whole message 1 received from Courier as message 2. The key used for creating the MAC is $ k_C $ which is revealed by decrypting $\mathcal{E}_{pk_B}$($k_C$) in message 1. The message 2 is the confirmation of Bob receiving the message 1.
 
-Finally Courier checks the validation of message 2. It verifies the received MAC using $ k_C $. Same to the Submit Protocol, if the last MAC is verified true, it means the protocol success and all postconditions are held. Otherwise, the protocol fails. However, the verification result does not prove the fact whether Bob has received the correct message 2 or not. Courier only knows its message may or may not be successfully sent. So further actions can be taken by Courier such as restart the protocol again or report an error.
+Finally Courier checks the validation of message 2. It verifies the received MAC using $ k_C $. Same to the Submit Protocol, if the last MAC is verified true, it means the protocol success and all postconditions are held. Otherwise, the protocol fails. However, the verification result does not prove the fact whether Bob has received the correct message 2 or not. Courier only knows its message may or may not be successfully sent. So further actions can be taken by Courier such as restart the protocol again or report an error, and they are not restricted by this protocol.

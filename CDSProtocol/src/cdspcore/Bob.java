@@ -1,3 +1,5 @@
+package cdspcore;
+
 
 public class Bob extends Accepter {
 	private String ID;

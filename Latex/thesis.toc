@@ -3,26 +3,29 @@
 \contentsline {section}{\numberline {1.2}Aims and Objectives}{2}
 \contentsline {section}{\numberline {1.3}Dissertation Structure}{3}
 \contentsline {chapter}{\numberline {2}Background and Related Work}{5}
-\contentsline {section}{\numberline {2.1}Delay-Tolerant Networks (DTN)}{5}
-\contentsline {section}{\numberline {2.2}Deniable Authentication}{7}
-\contentsline {section}{\numberline {2.3}Bundle Security Protocol \cite {Symington}}{7}
-\contentsline {section}{\numberline {2.4}DTN Anonymity and Secure Architecture \cite {Kate}}{9}
+\contentsline {section}{\numberline {2.1}Background}{5}
+\contentsline {subsection}{\numberline {2.1.1}Delay-Tolerant Networks (DTN)}{5}
+\contentsline {subsection}{\numberline {2.1.2}Deniable Authentication}{7}
+\contentsline {section}{\numberline {2.2}Related Work}{8}
+\contentsline {subsection}{\numberline {2.2.1}Bundle Security Protocol \cite {Symington}}{8}
+\contentsline {subsection}{\numberline {2.2.2}DTN Anonymity and Secure Architecture \cite {Kate}}{10}
 \contentsline {chapter}{\numberline {3}System Description}{12}
 \contentsline {section}{\numberline {3.1}System Model}{12}
 \contentsline {subsection}{\numberline {3.1.1}Overview}{12}
-\contentsline {subsection}{\numberline {3.1.2}Initial Set-ups}{12}
+\contentsline {subsection}{\numberline {3.1.2}Initial Setting}{13}
 \contentsline {paragraph}{Public Key Distribution}{13}
 \contentsline {paragraph}{Devices v.s. Entities}{13}
 \contentsline {subsection}{\numberline {3.1.3}Communication Model}{14}
 \contentsline {subsection}{\numberline {3.1.4}Honest Entity Behaviour}{15}
-\contentsline {paragraph}{Alice $\mathcal {A}$}{16}
+\contentsline {paragraph}{Alice $\mathcal {A}$}{15}
 \contentsline {paragraph}{Bob $\mathcal {B}$}{16}
-\contentsline {paragraph}{Courier $\mathcal {C}$}{17}
+\contentsline {paragraph}{Courier $\mathcal {C}$}{16}
 \contentsline {section}{\numberline {3.2}Adversary Model}{17}
+\contentsline {subsection}{\numberline {3.2.1}Adversary Capability}{17}
+\contentsline {subsection}{\numberline {3.2.2}Adversary Goal}{18}
 \contentsline {chapter}{\numberline {4}Protocol Specification}{19}
 \contentsline {section}{\numberline {4.1}Notations}{19}
 \contentsline {paragraph}{Encryption Functions $\mathcal {E}_k$ :}{19}
-\contentsline {paragraph}{Decryption Functions $\mathcal {D}_k$ :}{20}
 \contentsline {paragraph}{Message Authentication Code Function $\mathcal {MAC}_k$ :}{20}
 \contentsline {paragraph}{Digital Signature Function $\mathcal {SIGN}_E$ :}{20}
 \contentsline {paragraph}{Concatenation \textbar \textbar :}{20}
@@ -32,56 +35,54 @@
 \contentsline {subsection}{\numberline {4.2.2}Postconditions}{20}
 \contentsline {subsection}{\numberline {4.2.3}Message Sequencing Chart}{21}
 \contentsline {subsection}{\numberline {4.2.4}Specification}{21}
-\contentsline {section}{\numberline {4.3}Transmit Protocol}{23}
-\contentsline {subsection}{\numberline {4.3.1}Preconditions}{23}
-\contentsline {subsection}{\numberline {4.3.2}Postconditions}{23}
-\contentsline {subsection}{\numberline {4.3.3}Message Sequencing Chart}{23}
-\contentsline {subsection}{\numberline {4.3.4}Specification}{24}
-\contentsline {chapter}{\numberline {5}Security Analysis}{26}
-\contentsline {section}{\numberline {5.1}Protocol Properties}{26}
-\contentsline {subsection}{\numberline {5.1.1}Submit protocol}{26}
-\contentsline {subsection}{\numberline {5.1.2}Transmit protocol}{27}
-\contentsline {subsection}{\numberline {5.1.3}On the whole}{27}
-\contentsline {section}{\numberline {5.2}Property Proof}{28}
-\contentsline {subsection}{\numberline {5.2.1}Primitives}{28}
-\contentsline {subsection}{\numberline {5.2.2}Submit protocol}{29}
-\contentsline {subsection}{\numberline {5.2.3}Transmit Protocol}{31}
-\contentsline {subsection}{\numberline {5.2.4}On The Whole}{31}
-\contentsline {chapter}{\numberline {6}Protocol Implementation}{33}
-\contentsline {section}{\numberline {6.1}Application Overview}{33}
-\contentsline {section}{\numberline {6.2}Software Design}{36}
-\contentsline {subsection}{\numberline {6.2.1}Program Architecture}{37}
-\contentsline {paragraph}{Accecpter}{37}
-\contentsline {paragraph}{Initiator}{38}
-\contentsline {subsection}{\numberline {6.2.2}Delegate Model}{39}
-\contentsline {subsection}{\numberline {6.2.3}Message Structure}{40}
-\contentsline {section}{\numberline {6.3}Implementation Details}{44}
-\contentsline {subsection}{\numberline {6.3.1}UML Class Diagram}{44}
-\contentsline {paragraph}{Extensibility and Reusability}{46}
-\contentsline {subsection}{\numberline {6.3.2}Connection Establishment}{46}
-\contentsline {paragraph}{UDPChannel}{46}
-\contentsline {subsection}{\numberline {6.3.3}Message Processing}{47}
-\contentsline {subsection}{\numberline {6.3.4}Cryptographic operations}{47}
-\contentsline {subsection}{\numberline {6.3.5}File Management}{48}
-\contentsline {paragraph}{Keys}{48}
-\contentsline {paragraph}{Alice's Message Content}{49}
-\contentsline {paragraph}{Courier's Payload}{49}
-\contentsline {subsection}{\numberline {6.3.6}Error Handling}{49}
-\contentsline {paragraph}{User Input Error}{49}
-\contentsline {paragraph}{I/O Error}{49}
-\contentsline {paragraph}{Protocol Error}{50}
-\contentsline {paragraph}{Timeout}{50}
-\contentsline {chapter}{\numberline {7}Test and Evaluation}{51}
-\contentsline {section}{\numberline {7.1}Latency Test}{51}
-\contentsline {subsection}{\numberline {7.1.1}Submit Protocol}{51}
-\contentsline {subsection}{\numberline {7.1.2}Transmit Protocol}{51}
-\contentsline {section}{\numberline {7.2}Scalability Test}{51}
-\contentsline {subsection}{\numberline {7.2.1}Submit Protocol}{51}
-\contentsline {subsection}{\numberline {7.2.2}Transmit Protocol}{51}
-\contentsline {chapter}{\numberline {8}Conclusion and Future Work}{52}
-\contentsline {section}{\numberline {8.1}Conclusion}{52}
-\contentsline {section}{\numberline {8.2}Discussion and Future Work}{53}
-\contentsline {chapter}{\numberline {A}Application Instruction}{55}
-\contentsline {section}{\numberline {A.1}Run Submit Protocol}{56}
-\contentsline {section}{\numberline {A.2}Run Transmit Protocol}{58}
-\contentsline {chapter}{Bibliography}{61}
+\contentsline {section}{\numberline {4.3}Transmit Protocol}{24}
+\contentsline {subsection}{\numberline {4.3.1}Preconditions}{24}
+\contentsline {subsection}{\numberline {4.3.2}Postconditions}{24}
+\contentsline {subsection}{\numberline {4.3.3}Message Sequencing Chart}{24}
+\contentsline {subsection}{\numberline {4.3.4}Specification}{25}
+\contentsline {chapter}{\numberline {5}Security Analysis}{27}
+\contentsline {section}{\numberline {5.1}Primitives}{27}
+\contentsline {section}{\numberline {5.2}Security Proof}{28}
+\contentsline {subsection}{\numberline {5.2.1}Submit protocol}{28}
+\contentsline {subsection}{\numberline {5.2.2}Transmit Protocol}{30}
+\contentsline {subsection}{\numberline {5.2.3}On The Whole}{31}
+\contentsline {paragraph}{\relax $\@@underline {\hbox {Meta}}\mathsurround \z@ $\relax }{32}
+\contentsline {paragraph}{\relax $\@@underline {\hbox {Msg}}\mathsurround \z@ $\relax }{32}
+\contentsline {chapter}{\numberline {6}Protocol Implementation}{34}
+\contentsline {section}{\numberline {6.1}Application Overview}{34}
+\contentsline {section}{\numberline {6.2}Software Design}{37}
+\contentsline {subsection}{\numberline {6.2.1}Program Architecture}{38}
+\contentsline {paragraph}{Accecpter}{38}
+\contentsline {paragraph}{Initiator}{39}
+\contentsline {subsection}{\numberline {6.2.2}Delegate Model}{40}
+\contentsline {subsection}{\numberline {6.2.3}Message Structure}{41}
+\contentsline {section}{\numberline {6.3}Implementation Details}{45}
+\contentsline {subsection}{\numberline {6.3.1}UML Class Diagram}{45}
+\contentsline {paragraph}{Extensibility and Reusability}{47}
+\contentsline {subsection}{\numberline {6.3.2}Connection Establishment}{47}
+\contentsline {paragraph}{UDPChannel}{47}
+\contentsline {subsection}{\numberline {6.3.3}Message Processing}{48}
+\contentsline {subsection}{\numberline {6.3.4}Cryptographic operations}{48}
+\contentsline {subsection}{\numberline {6.3.5}File Management}{49}
+\contentsline {paragraph}{Keys}{49}
+\contentsline {paragraph}{Alice's Message Content}{50}
+\contentsline {paragraph}{Courier's Payload}{50}
+\contentsline {subsection}{\numberline {6.3.6}Error Handling}{50}
+\contentsline {paragraph}{User Input Error}{50}
+\contentsline {paragraph}{I/O Error}{50}
+\contentsline {paragraph}{Protocol Error}{51}
+\contentsline {paragraph}{Timeout}{51}
+\contentsline {chapter}{\numberline {7}Test and Evaluation}{52}
+\contentsline {section}{\numberline {7.1}Latency Test}{52}
+\contentsline {subsection}{\numberline {7.1.1}Submit Protocol}{52}
+\contentsline {subsection}{\numberline {7.1.2}Transmit Protocol}{52}
+\contentsline {section}{\numberline {7.2}Scalability Test}{52}
+\contentsline {subsection}{\numberline {7.2.1}Submit Protocol}{52}
+\contentsline {subsection}{\numberline {7.2.2}Transmit Protocol}{52}
+\contentsline {chapter}{\numberline {8}Conclusion and Future Work}{53}
+\contentsline {section}{\numberline {8.1}Conclusion}{53}
+\contentsline {section}{\numberline {8.2}Discussion and Future Work}{54}
+\contentsline {chapter}{\numberline {A}Application Instruction}{56}
+\contentsline {section}{\numberline {A.1}Run Submit Protocol}{57}
+\contentsline {section}{\numberline {A.2}Run Transmit Protocol}{59}
+\contentsline {chapter}{Bibliography}{62}

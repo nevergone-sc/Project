@@ -1,3 +1,5 @@
+package cdspcore;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -100,6 +102,16 @@ public class CourierReceiver extends Delegate {
 		dataToSave.put(meta);
 		dataToSave.putInt(msgLength);
 		dataToSave.put(msg);
+				
+		// Prepare send data ----------------------------------------------------------------------------
+		src.reset();
+		byte[] totalReceived = new byte[receivedLength + Crypto.LENGTH_MAC];
+		src.get(totalReceived);
+		dst.clear();
+		dst.put(crypto.getMACDigest(totalReceived, kc));
+		dst.flip();
+		
+		// Save received data to local file
 		try {
 			dataManager.putData(dataToSave.array(), dstID);
 		} catch (IOException e) {
@@ -108,14 +120,6 @@ public class CourierReceiver extends Delegate {
 			return -1;
 		}
 		
-		// Prepare send data ----------------------------------------------------------------------------
-		src.reset();
-		byte[] totalReceived = new byte[receivedLength + Crypto.LENGTH_MAC];
-		src.get(totalReceived);
-		dst.clear();
-		dst.put(crypto.getMACDigest(totalReceived, kc));
-		dst.flip();
-					
 		terminate();
 		ui.nextStep("", ID);
 		return Crypto.LENGTH_HASH;
