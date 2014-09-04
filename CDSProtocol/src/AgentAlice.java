@@ -13,7 +13,7 @@ public class AgentAlice {
 			dataManager.setPathPublicKey("Bob", "PublicKey_Bob");
 	
 			Accepter alice = 
-					new Alice(locAddress, lisPort, new NullUserInterface(), new Crypto(), dataManager, myID, revID);
+					new Alice(locAddress, lisPort, new NullUserInterfaceA(), new Crypto(), dataManager, myID, revID);
 			alice.start();
 		} catch (NumberFormatException e) {
 			

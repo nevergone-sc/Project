@@ -81,7 +81,6 @@ public class DataCreator extends Delegate {
 		}
 					
 		// Validate received data-------------------------------------------------------------------------
-		if (dataManager.maxStorage() < availableStorage) return -1;
 					
 		// Prepare send data------------------------------------------------------------------------------
 		byte[] kab = crypto.generateSymmKey(LENGTH_SYMM_KEY*8);
@@ -123,6 +122,8 @@ public class DataCreator extends Delegate {
 		totalSendBuffer.put(totalMsgMAC);
 		totalSendBuffer.flip();
 		sentMessage = totalSendBuffer; 
+		
+		if (sentMessage.capacity() > availableStorage) return -1;
 		
 		dst.clear();
 		dst.put(totalSendBuffer);

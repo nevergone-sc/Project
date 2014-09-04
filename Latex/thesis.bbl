@@ -3,24 +3,8 @@
 \bibitem{Kate}
 Anonymity and security in delay tolerant networks.
 
-\bibitem{Scottrfc}
-Bundle protocol specification.
-
-\bibitem{Symington}
-Bundle security protocol specification.
-
 \bibitem{Dwork}
 Concurrent zero-knowledge: Reducing the need for timing constraints.
-
-\bibitem{Zhao}
-Controlling the mobility of multiple data transport ferries in a delay-tolerant
-  network.
-
-\bibitem{Kevin}
-A delay-tolerant network architecture for challenged internets.
-
-\bibitem{Scott}
-Delay-tolerant networking: An approach to interplanetary internet.
 
 \bibitem{Cerf}
 Delay-tolerant networking architecture.
@@ -52,6 +36,12 @@ D.~Eastlake 3rd and T.~Hansen.
   hkdf), May 2011.
 \newblock Status: INFORMATIONAL.
 
+\bibitem{Burleigh}
+S.~Burleigh, A.~Hooke, L.~Torgerson, K.~Fall, V.~Cerf, B.~Durst, K.~Scott, and
+  H.~Weiss.
+\newblock Delay-tolerant networking: An approach to interplanetary internet.
+\newblock {\em Comm. Mag.}, 41(6):128--136, June 2003.
+
 \bibitem{Dolev}
 D.~Dolev and A.~C. Yao.
 \newblock On the security of public key protocols.
@@ -63,6 +53,13 @@ W.F. Ehrsam, C.H.W. Meyer, J.L. Smith, and W.L. Tuchman.
 \newblock Message verification and transmission error detection by block
   chaining, February~14 1978.
 \newblock US Patent 4,074,066.
+
+\bibitem{Fall}
+Kevin Fall.
+\newblock A delay-tolerant network architecture for challenged internets.
+\newblock In {\em Proceedings of the 2003 Conference on Applications,
+  Technologies, Architectures, and Protocols for Computer Communications},
+  SIGCOMM '03, pages 27--34, New York, NY, USA, 2003. ACM.
 
 \bibitem{Goldwasser}
 Shafi Goldwasser, Silvio Micali, and Ronald~L. Rivest.
@@ -108,11 +105,27 @@ K.~Ohgishi R.~Sakai and M.~Kasahara.
 \newblock {\em SCIS 2000: Symposium on Cryptography and Information Security},
   2000.
 
+\bibitem{RFC6257}
+H.~Weiss S.~Symington, S.~Farrell and P.~Lovell.
+\newblock {RFC6257}: Bundle security protocol specification, May 2011.
+\newblock Status: INFORMATIONAL.
+
+\bibitem{RFC5050}
+K.~Scott and S.~Burleigh.
+\newblock {RFC5050}: Bundle protocol specification, November 2007.
+\newblock Status: INFORMATIONAL.
+
 \bibitem{Yao}
 Andrew~C. Yao.
 \newblock Theory and application of trapdoor functions.
 \newblock In {\em Proceedings of the 23rd Annual Symposium on Foundations of
   Computer Science}, SFCS '82, pages 80--91, Washington, DC, USA, 1982. IEEE
   Computer Society.
+
+\bibitem{Zhao}
+Wenrui Zhao, Mostafa Ammar, and Ellen Zegura.
+\newblock Controlling the mobility of multiple data transport ferries in a
+  delay-tolerant network.
+\newblock In {\em in IEEE INFOCOM}, 2005.
 
 \end{thebibliography}

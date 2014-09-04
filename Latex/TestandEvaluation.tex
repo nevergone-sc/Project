@@ -1,7 +1,29 @@
 \chapter{Test and Evaluation}
-\section{Latency Test}
-\subsection{Submit Protocol}
-\subsection{Transmit Protocol}
-\section{Scalability Test}
-\subsection{Submit Protocol}
-\subsection{Transmit Protocol}
+In this chapter, several performance tests will be done to the program developed for running CDSP. As there is no any other existing program developed for CDSP, the test results will not be shown in a comparative way. The main purpose of these performance tests is to show the efficiency of the current implementation of CDSP so that it can be taken as a point of reference for future development.
+
+The rest of the chapter will first describe the system environment that is used for the testing. Then tests results will be given for both Submit Protocol and Transmit Protocol separately. For each sub-protocol, two main kinds of test are done - latency test and scalability test.
+
+\section{Test Environment}
+Following is a snapshot of the system environment used for the testing:\\
+
+\noindent
+\begin{tabular}{|l|p{0.6\textwidth}|}
+ \hline
+ Processor & Intel\textregistered \space Core\texttrademark \space i7-3610QM CPU @ 2.30GHz $\times$ 4 \\ \hline
+ Installed Memory & 8 GB \\ \hline
+ OS Platform & Ubuntu 12.04 LTS \\ \hline
+ OS Type & 64-bit \\ \hline
+ Network Interface & Loopback \\ \hline
+ JRE Version & 1.7.0\textunderscore07 - b11 \\ \hline
+\end{tabular}\\
+\bigskip
+
+\noindent
+To eliminate the influence of various UI implementations, a UI called ``NullUserInterface" is used in the testing. In ``NullUserInterface", all parameters required from user input are all hard-coded thus it can be run automatically by only using commands. On the other hand, ``NullUserInterface" does not produce any output for user, it only outputs the testing results to the terminal so no extra efforts will be used in dealing with outputs during the test.
+
+\section{Submit Protocol}
+\subsection{Latency Test}
+\subsection{Scalability Test}
+\section{Transmit Protocol}
+\subsection{Latency Test}
+\subsection{Scalability Test}

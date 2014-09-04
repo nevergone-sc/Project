@@ -136,7 +136,6 @@ public class DataReceiver extends Delegate {
 			byte[] plainMsg = crypto.decryptSymm(encryptedMsgBlock, msgKey);
 			ui.print(String.valueOf(timestamp), "TimeStamp=\t\t", ID);
 			ui.print(new String(plainMsg), "Result=\t\t", ID);
-			System.out.println(new String(plainMsg));
 		}
 		
 		// Prepare for send data -------------------------------------------------------------------

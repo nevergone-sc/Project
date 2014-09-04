@@ -408,7 +408,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			textDstID.setText("Alice");
 			textDstAddress.setText("localhost");
 			textDstPort.setText("9888");
-			textMaxCapacity.setText("1000");
+			textMaxCapacity.setText("1000000");
 		    
 			Thread thread = new Thread(new Runnable() {
 				public void run() {

@@ -1,6 +1,6 @@
 import cdspcore.*;
 
-public class AgentCourierCS {
+public class AgentCS {
 	public static void main(String[] args) {	 
 		String myID = "Courier";
 		String revID = "Bob";
@@ -13,7 +13,7 @@ public class AgentCourierCS {
 			dataManager.setPathPublicKey("Bob", "PublicKey_Bob");
 					
 			Initiator courier = 
-					new CourierB(dstAddress, dstPort, new NullUserInterface(), new Crypto(), dataManager, myID, revID);
+					new CourierB(dstAddress, dstPort, new NullUserInterfaceA(), new Crypto(), dataManager, myID, revID);
 			courier.start();
 		} catch (NumberFormatException e) {
 		}

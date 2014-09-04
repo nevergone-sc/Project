@@ -1,7 +1,7 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Overview of a Delay-Tolerant Network, cited from \cite {Kevin}\relax }}{6}
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Message Format of Bundle Protocol \cite {Scottrfc}\relax }}{9}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Overview of a Delay-Tolerant Network, cited from \cite {Fall}\relax }}{6}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Message Format of Bundle Protocol \cite {RFC5050}\relax }}{9}
 \contentsline {figure}{\numberline {2.3}{\ignorespaces Rural Area DTN \cite {Seth}\relax }}{11}
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {3.1}{\ignorespaces Communication Model\relax }}{15}
@@ -20,6 +20,6 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {A.1}{\ignorespaces GUI Overview\relax }}{57}
-\contentsline {figure}{\numberline {A.2}{\ignorespaces Running Submit Protocol\relax }}{59}
-\contentsline {figure}{\numberline {A.3}{\ignorespaces Running Transmit Protocol\relax }}{61}
+\contentsline {figure}{\numberline {A.1}{\ignorespaces GUI Overview\relax }}{58}
+\contentsline {figure}{\numberline {A.2}{\ignorespaces Running Submit Protocol\relax }}{60}
+\contentsline {figure}{\numberline {A.3}{\ignorespaces Running Transmit Protocol\relax }}{62}

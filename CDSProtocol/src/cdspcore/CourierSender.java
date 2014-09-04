@@ -79,7 +79,9 @@ public class CourierSender extends Delegate {
 			
 			if (!isMACValid) return -1;
 			
-			dataManager.deleteData(dstID);
+			//dataManager.deleteData(dstID);
+
+			ui.printErr(ID, "");
 			
 			terminate();
 			ui.nextStep("", ID);

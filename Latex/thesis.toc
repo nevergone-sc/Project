@@ -7,7 +7,7 @@
 \contentsline {subsection}{\numberline {2.1.1}Delay-Tolerant Networks (DTN)}{5}
 \contentsline {subsection}{\numberline {2.1.2}Deniable Authentication}{7}
 \contentsline {section}{\numberline {2.2}Related Work}{8}
-\contentsline {subsection}{\numberline {2.2.1}Bundle Security Protocol \cite {Symington}}{8}
+\contentsline {subsection}{\numberline {2.2.1}Bundle Security Protocol \cite {RFC6257}}{8}
 \contentsline {subsection}{\numberline {2.2.2}DTN Anonymity and Secure Architecture \cite {Kate}}{10}
 \contentsline {chapter}{\numberline {3}System Description}{12}
 \contentsline {section}{\numberline {3.1}System Model}{12}
@@ -73,16 +73,17 @@
 \contentsline {paragraph}{Protocol Error}{51}
 \contentsline {paragraph}{Timeout}{51}
 \contentsline {chapter}{\numberline {7}Test and Evaluation}{52}
-\contentsline {section}{\numberline {7.1}Latency Test}{52}
-\contentsline {subsection}{\numberline {7.1.1}Submit Protocol}{52}
-\contentsline {subsection}{\numberline {7.1.2}Transmit Protocol}{52}
-\contentsline {section}{\numberline {7.2}Scalability Test}{52}
-\contentsline {subsection}{\numberline {7.2.1}Submit Protocol}{52}
-\contentsline {subsection}{\numberline {7.2.2}Transmit Protocol}{52}
-\contentsline {chapter}{\numberline {8}Conclusion and Future Work}{53}
-\contentsline {section}{\numberline {8.1}Conclusion}{53}
-\contentsline {section}{\numberline {8.2}Discussion and Future Work}{54}
-\contentsline {chapter}{\numberline {A}Application Instruction}{56}
-\contentsline {section}{\numberline {A.1}Run Submit Protocol}{57}
-\contentsline {section}{\numberline {A.2}Run Transmit Protocol}{59}
-\contentsline {chapter}{Bibliography}{62}
+\contentsline {section}{\numberline {7.1}Test Environment}{52}
+\contentsline {section}{\numberline {7.2}Submit Protocol}{53}
+\contentsline {subsection}{\numberline {7.2.1}Latency Test}{53}
+\contentsline {subsection}{\numberline {7.2.2}Scalability Test}{53}
+\contentsline {section}{\numberline {7.3}Transmit Protocol}{53}
+\contentsline {subsection}{\numberline {7.3.1}Latency Test}{53}
+\contentsline {subsection}{\numberline {7.3.2}Scalability Test}{53}
+\contentsline {chapter}{\numberline {8}Conclusion and Future Work}{54}
+\contentsline {section}{\numberline {8.1}Conclusion}{54}
+\contentsline {section}{\numberline {8.2}Discussion and Future Work}{55}
+\contentsline {chapter}{\numberline {A}User Manual}{57}
+\contentsline {section}{\numberline {A.1}Run Submit Protocol}{58}
+\contentsline {section}{\numberline {A.2}Run Transmit Protocol}{60}
+\contentsline {chapter}{Bibliography}{63}

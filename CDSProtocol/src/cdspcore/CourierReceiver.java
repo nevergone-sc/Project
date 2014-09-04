@@ -18,6 +18,8 @@ public class CourierReceiver extends Delegate {
 	private String dstID = "";
 	private byte[] meta, msg, totalMAC = null;
 	
+	private long time;
+	
 	public CourierReceiver(String id, UserInterface ui, Crypto c, DataManager dm, String sedID) {
 		ID = id;
 		senderID = sedID;
@@ -38,6 +40,7 @@ public class CourierReceiver extends Delegate {
 	}
 	
 	public ByteBuffer getInitialMessage() {
+		time = System.currentTimeMillis();
 		kc = crypto.generateSymmKey(128);
 		byte[] encryptedKc = crypto.encryptAsym(kc, senderSK);
 		int encryptedLength = encryptedKc.length;
@@ -119,6 +122,7 @@ public class CourierReceiver extends Delegate {
 			terminate();
 			return -1;
 		}
+
 		
 		terminate();
 		ui.nextStep("", ID);
