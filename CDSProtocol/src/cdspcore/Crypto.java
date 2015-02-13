@@ -6,6 +6,8 @@ import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/* Cryptographic kit contains all related operations
+ */
 public class Crypto {
 	public static final int LENGTH_SIGN = 128;
 	public static final int LENGTH_ASYM_CIPHER = 128;

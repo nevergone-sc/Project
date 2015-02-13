@@ -1,6 +1,7 @@
 package cdspcore;
 
-
+/* Bob is an Accepter, who acts like a DataReceiver
+ */
 public class Bob extends Accepter {
 	private String ID;
 	private Crypto crypto;

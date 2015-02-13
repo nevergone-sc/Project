@@ -1,40 +1,21 @@
 \begin{thebibliography}{10}
 
-\bibitem{Kate}
-Anonymity and security in delay tolerant networks.
-
-\bibitem{Dwork}
-Concurrent zero-knowledge: Reducing the need for timing constraints.
-
-\bibitem{Cerf}
-Delay-tolerant networking architecture.
-
-\bibitem{Shao}
-An improved deniable authentication protocol.
-
-\bibitem{Seth}
-Lowcost communication for rural internet kiosks using mechanical backhaul.
-
-\bibitem{Borisov}
-Offtherecord communication, or, why not to use pgp.
-
-\bibitem{SethKeshav}
-Practical security for disconnected nodes.
-
-\bibitem{Abadi}
-Private authentication.
-
-\bibitem{Xin}
-A secure and efficient deniable authentication protocol.
-
-\bibitem{Wang}
-A simple protocol for deniable authentication based on elgamal cryptography.
-
 \bibitem{RFC6234}
 D.~Eastlake 3rd and T.~Hansen.
 \newblock {RFC 6234}: Us secure hash algorithms (sha and sha-based hmac and
   hkdf), May 2011.
 \newblock Status: INFORMATIONAL.
+
+\bibitem{Abadi}
+Mart\'{\i}n Abadi and C{\'e}dric Fournet.
+\newblock Private authentication.
+\newblock {\em Theor. Comput. Sci.}, 322(3):427--476, September 2004.
+
+\bibitem{Borisov}
+N.~Borisov, I.~Goldberg, and E.~Brewer.
+\newblock Off-the-record communication, or, why not to use pgp.
+\newblock In {\em Proceedings of the 2004 ACM Workshop on Privacy in the
+  Electronic Society}, WPES '04, pages 77--84, New York, NY, USA, 2004. ACM.
 
 \bibitem{Burleigh}
 S.~Burleigh, A.~Hooke, L.~Torgerson, K.~Fall, V.~Cerf, B.~Durst, K.~Scott, and
@@ -42,11 +23,23 @@ S.~Burleigh, A.~Hooke, L.~Torgerson, K.~Fall, V.~Cerf, B.~Durst, K.~Scott, and
 \newblock Delay-tolerant networking: An approach to interplanetary internet.
 \newblock {\em Comm. Mag.}, 41(6):128--136, June 2003.
 
+\bibitem{RFC4838}
+V.~Cerf, S.~Burleigh, A.~Hooke, L.~Torgerson, R.~Durst, K.~Scott, K.~Fall, and
+  H.~Weiss.
+\newblock {RFC4838}: Delay-tolerant networking architecture.
+\newblock April 2007.
+\newblock Status: INFORMATIONAL.
+
 \bibitem{Dolev}
 D.~Dolev and A.~C. Yao.
 \newblock On the security of public key protocols.
 \newblock {\em 2013 IEEE 54th Annual Symposium on Foundations of Computer
   Science}, 0:350--357, 1981.
+
+\bibitem{Dwork}
+C.~Dwork and A.~Sahai.
+\newblock Concurrent zero-knowledge: Reducing the need for timing constraints.
+\newblock In {\em In Crypto98, Springer LNCS 1462}, pages 442--457, 1998.
 
 \bibitem{ehrsam1978message}
 W.F. Ehrsam, C.H.W. Meyer, J.L. Smith, and W.L. Tuchman.
@@ -55,33 +48,37 @@ W.F. Ehrsam, C.H.W. Meyer, J.L. Smith, and W.L. Tuchman.
 \newblock US Patent 4,074,066.
 
 \bibitem{Fall}
-Kevin Fall.
+K.~Fall.
 \newblock A delay-tolerant network architecture for challenged internets.
 \newblock In {\em Proceedings of the 2003 Conference on Applications,
   Technologies, Architectures, and Protocols for Computer Communications},
   SIGCOMM '03, pages 27--34, New York, NY, USA, 2003. ACM.
 
 \bibitem{Goldwasser}
-Shafi Goldwasser, Silvio Micali, and Ronald~L. Rivest.
+S.~Goldwasser, S.~Micali, and R.~L. Rivest.
 \newblock A digital signature scheme secure against adaptive chosen-message
   attacks.
 \newblock {\em SIAM J. Comput.}, 17(2):281--308, April 1988.
 
 \bibitem{Jain}
-Sushant Jain, Kevin Fall, and Rabin Patra.
+S.~Jain, K.~Fall, and R.~Patra.
 \newblock Routing in a delay tolerant network.
 \newblock {\em SIGCOMM Comput. Commun. Rev.}, 34(4):145--158, August 2004.
 
 \bibitem{RFC2313}
 B.~Kaliski.
 \newblock {RFC 2313}: {PKCS} \#1: {RSA} encryption version 1.5, March 1998.
-\newblock Obsoleted by RFC2437 \cite{RFC2437}. Status: INFORMATIONAL.
 
 \bibitem{RFC2898}
 B.~Kaliski and RSA Laboratories.
 \newblock {RFC 2989}: {PKCS5}: Password-based cryptography specification
   version 2.0, September 2000.
 \newblock Status: INFORMATIONAL.
+
+\bibitem{Kate}
+A.~Kate, G.~Zaverucha, and U.~Hengartner.
+\newblock Anonymity and security in delay tolerant networks.
+\newblock Technical report, In SecureComm, 2007.
 
 \bibitem{RFC2104}
 H.~Krawczyk, M.~Bellare, and R.~Canetti.
@@ -90,40 +87,71 @@ H.~Krawczyk, M.~Bellare, and R.~Canetti.
 \newblock Status: INFORMATIONAL.
 
 \bibitem{Mao}
-Wenbo Mao.
+W.~Mao.
 \newblock {\em Modern Cryptography: Theory and Practice}.
 \newblock Prentice Hall Professional Technical Reference, 2003.
 
 \bibitem{Miller}
-Frederic~P. Miller, Agnes~F. Vandome, and John McBrewster.
+F.~P. Miller, A.~F. Vandome, and J.~McBrewster.
 \newblock {\em Advanced Encryption Standard}.
 \newblock Alpha Press, 2009.
 
 \bibitem{Sakai}
-K.~Ohgishi R.~Sakai and M.~Kasahara.
+R.~Sakai, K.~Ohgishi, and M.~Kasahara.
 \newblock Cryptosystems based on pairing.
 \newblock {\em SCIS 2000: Symposium on Cryptography and Information Security},
   2000.
-
-\bibitem{RFC6257}
-H.~Weiss S.~Symington, S.~Farrell and P.~Lovell.
-\newblock {RFC6257}: Bundle security protocol specification, May 2011.
-\newblock Status: INFORMATIONAL.
 
 \bibitem{RFC5050}
 K.~Scott and S.~Burleigh.
 \newblock {RFC5050}: Bundle protocol specification, November 2007.
 \newblock Status: INFORMATIONAL.
 
+\bibitem{SethKeshav}
+A.~Seth and S.~Keshav.
+\newblock Practical security for disconnected nodes.
+\newblock In {\em Proceedings of the First International Conference on Secure
+  Network Protocols}, NPSEC'05, pages 31--36, Washington, DC, USA, 2005. IEEE
+  Computer Society.
+
+\bibitem{Seth}
+A.~Seth, D.~Kroeker, M.~Zaharia, S.~Guo, and S.~Keshav.
+\newblock Low-cost communication for rural internet kiosks using mechanical
+  backhaul.
+\newblock In {\em In MobiCom ’06: Proceedings of the 12th annual
+  international conference on Mobile computing and networking}, pages 334--345.
+  ACM Press, 2006.
+
+\bibitem{Shao}
+J.~Shao, Z.~Cao, and R.~Lu.
+\newblock An improved deniable authentication protocol.
+\newblock {\em Netw.}, 48(4):179--181, December 2006.
+
+\bibitem{RFC6257}
+S.~Symington, S.~Farrell, H.~Weiss, and P.~Lovell.
+\newblock {RFC6257}: Bundle security protocol specification, May 2011.
+\newblock Status: INFORMATIONAL.
+
+\bibitem{Wang}
+Y.~Wang, J.~Li, and L.~Tie.
+\newblock A simple protocol for deniable authentication based on elgamal
+  cryptography.
+\newblock {\em Netw.}, 45(4):193--194, July 2005.
+
+\bibitem{Xin}
+X.~Xin and D.~Chen.
+\newblock A secure and efficient deniable authentication protocol.
+\newblock pages 172 -- 175, 2000.
+
 \bibitem{Yao}
-Andrew~C. Yao.
+A.~C. Yao.
 \newblock Theory and application of trapdoor functions.
 \newblock In {\em Proceedings of the 23rd Annual Symposium on Foundations of
   Computer Science}, SFCS '82, pages 80--91, Washington, DC, USA, 1982. IEEE
   Computer Society.
 
 \bibitem{Zhao}
-Wenrui Zhao, Mostafa Ammar, and Ellen Zegura.
+W.~Zhao, M.~Ammar, and E.~Zegura.
 \newblock Controlling the mobility of multiple data transport ferries in a
   delay-tolerant network.
 \newblock In {\em in IEEE INFOCOM}, 2005.

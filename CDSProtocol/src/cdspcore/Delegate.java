@@ -2,13 +2,16 @@ package cdspcore;
 
 import java.nio.ByteBuffer;
 
+/* A delegate controls the behaviour of its entity, to make it follow the protocol rule.
+ * There are various delegates.
+ */
 public abstract class Delegate {
 	protected final int LENGTH_ID = 16;
 	protected final int LENGTH_SYMM_KEY = 16;
 	protected final int LENGTH_ASYM_KEY = 128;
 	protected boolean isAlive = true;
 	
-	abstract public ByteBuffer getInitialMessage();
+	abstract public ByteBuffer getInitialMessage(); // get the initial message from an initiator
 	abstract public int process(ByteBuffer src, ByteBuffer dst);
 	abstract public void setUserInterface(UserInterface ui);
 	

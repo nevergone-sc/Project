@@ -3,6 +3,8 @@ package cdspcore;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/* Delegate of a courierReceiver, defines how data from a dataCreator is checked
+ */
 public class CourierReceiver extends Delegate {
 	static final boolean debug = true;
 	
@@ -18,8 +20,6 @@ public class CourierReceiver extends Delegate {
 	private String dstID = "";
 	private byte[] meta, msg, totalMAC = null;
 	
-	private long time;
-	
 	public CourierReceiver(String id, UserInterface ui, Crypto c, DataManager dm, String sedID) {
 		ID = id;
 		senderID = sedID;
@@ -31,6 +31,7 @@ public class CourierReceiver extends Delegate {
 			senderSK = dataManager.getPublicKey(senderID);
 		} catch (IOException e) {
 			ui.printErr(e.getMessage(), ID);
+			ui.printErr("Process finished", ID);
 			terminate();
 		}
 	}
@@ -40,7 +41,6 @@ public class CourierReceiver extends Delegate {
 	}
 	
 	public ByteBuffer getInitialMessage() {
-		time = System.currentTimeMillis();
 		kc = crypto.generateSymmKey(128);
 		byte[] encryptedKc = crypto.encryptAsym(kc, senderSK);
 		int encryptedLength = encryptedKc.length;
@@ -123,7 +123,6 @@ public class CourierReceiver extends Delegate {
 			return -1;
 		}
 
-		
 		terminate();
 		ui.nextStep("", ID);
 		return Crypto.LENGTH_HASH;

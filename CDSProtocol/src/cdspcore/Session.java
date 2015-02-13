@@ -7,7 +7,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-
+/* A session takes control of sending and receiving messages in a high level,
+ * regardless of the actual message content
+ */
 public class Session extends Thread {
 	// Max payload of a UDP packet
 	private static final int MAX_BUFFER_SIZE = 65535;
@@ -32,6 +34,7 @@ public class Session extends Thread {
 		int lengthSent = 0;
 		int lengthReceived = 0;
 		
+		// If the entity is an initiator, get the initial message and send, do nothing otherwise
 		ByteBuffer initialMsg = delegate.getInitialMessage();
 		if (initialMsg != null) {
 			try {
@@ -52,26 +55,29 @@ public class Session extends Thread {
 			ScheduledExecutorService readExecutor = Executors.newScheduledThreadPool(2); 
 			final Future<Integer> readHandler = readExecutor.submit(new CallableReadChannel());
 			readExecutor.schedule(new TaskCanceller(readHandler), TIMEOUT, TimeUnit.MILLISECONDS);
+			
+			// Receive from the channel
 			try {
 				lengthReceived = readHandler.get();
 			} catch (Exception e) {
 				ui.printErr("Timeout", "Session " + sessionID);
 			}
 			
-			
+			// Check the received message
 			if (lengthReceived <= 0) { ui.printErr("Channel Closed", "Session " + sessionID); break; }
-			
 			if (isErrorMsg(receiveBuffer)) {
 				ui.printErr(getErrorMsg(receiveBuffer), "Session " + sessionID);
 				break;
 			}
 			
+			// Hand over the message to delegate to process
 			lengthSent = delegate.process(receiveBuffer, preSendBuffer);
 			// Protocol error
 			if (lengthSent < 0) { sendErrorMsg("Protocol Error"); break; }
 			// Protocol finished normally
 			if (lengthSent == 0) {break;}
 			
+			// Send back response message to the channel
 			int actSent = 0;
 			try {
 				actSent = channel.write(wrapMsg(preSendBuffer));

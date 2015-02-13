@@ -1,5 +1,6 @@
 package cdspcore;
 
+// An Accepter defines a class of entities who is passive and only accepts connections
 public abstract class Accepter implements ProtocolEntity{
 	protected String address;
 	protected int listeningPort;
@@ -19,19 +20,20 @@ public abstract class Accepter implements ProtocolEntity{
 			mainChannel = new UDPChannel(listeningPort);
 			ui.print("Ready", "", "Accepter");
 			while (isAlive) {
+				Delegate delegate = makeDelegate();
 				Channel subChannel = mainChannel.accept();
 				ui.print("Accepts a Connection", "", "Accepter");
-				Delegate delegate = makeDelegate();
-				Session session = new Session(subChannel, delegate, ui, 0);
-				session.start();
+				if (delegate != null) {
+					Session session = new Session(subChannel, delegate, ui, 0);
+					session.start();
+				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ui.printErr(e.getMessage(), "");
 		} finally {
 			try {
 				mainChannel.close();
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}

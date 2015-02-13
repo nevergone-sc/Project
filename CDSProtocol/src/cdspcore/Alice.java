@@ -1,6 +1,7 @@
 package cdspcore;
 
-
+/* Alice is an accepter, who act like a DataCreator
+ */
 public class Alice extends Accepter {
 	private String ID;
 	private String dstID;

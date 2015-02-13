@@ -1,6 +1,7 @@
 package cdspcore;
 
-
+/* CourierA is an initiator, who acts like a CourierReceiver
+ */
 public class CourierA extends Initiator {
 	private String ID;
 	private String sedID;

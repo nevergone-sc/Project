@@ -3,6 +3,8 @@ package cdspcore;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/* Delegate of a dataCreator, defines how data is preprocessed and sent to the courierReceiver
+ */
 public class DataCreator extends Delegate {
 	private static final boolean debug = true;
 	
@@ -25,13 +27,14 @@ public class DataCreator extends Delegate {
 		crypto = c;
 		dataManager = dm;
 		this.ui = ui;
-		
+
 		try {
 			mySK = dataManager.getPrivateKey();
 			dstPK = dataManager.getPublicKey(dstID);
 			sendData = dataManager.getData(dstID);
 		} catch (IOException e) {
 			ui.printErr(e.getMessage(), ID);
+			ui.printErr("Process finished", ID);
 			terminate();
 		}
 	}
@@ -114,7 +117,7 @@ public class DataCreator extends Delegate {
 		totalMsgBuffer.put(msgBValue);
 		totalMsgBuffer.put(msgBMAC);
 		totalMsgBuffer.flip();
-					
+		
 		byte[] totalMsgMAC = crypto.getMACDigest(totalMsgBuffer.array(), kc);
 		
 		ByteBuffer totalSendBuffer = ByteBuffer.allocate(totalMsgLength + Crypto.LENGTH_MAC);

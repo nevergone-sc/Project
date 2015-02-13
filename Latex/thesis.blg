@@ -12,53 +12,6 @@ A level-1 auxiliary file: Conclusion.aux
 A level-1 auxiliary file: Appendix.aux
 The style file: plain.bst
 Database file #1: refs.bib
-Warning--I didn't find a database entry for "RFC2437"
-Warning--to sort, need author or key in Kate
-Name 1 in "K. Scott, and S. Burleigh" has a comma at the end for entry RFC5050
-while executing---line 1049 of file plain.bst
-Warning--to sort, need author or key in Seth
-Warning--to sort, need author or key in Cerf
-Warning--to sort, need author or key in Abadi
-Warning--to sort, need author or key in Dwork
-Warning--to sort, need author or key in Borisov
-Warning--to sort, need author or key in Xin
-Warning--to sort, need author or key in Wang
-Warning--to sort, need author or key in Shao
-Warning--to sort, need author or key in SethKeshav
-Name 1 in "R. Sakai, K. Ohgishi, and M. Kasahara" has a comma at the end for entry Sakai
-while executing---line 1049 of file plain.bst
-Warning--empty author in Kate
-Warning--empty journal in Kate
-Warning--empty year in Kate
-Warning--empty author in Dwork
-Warning--empty journal in Dwork
-Warning--empty year in Dwork
-Warning--empty author in Cerf
-Warning--empty journal in Cerf
-Warning--empty year in Cerf
-Warning--empty author in Shao
-Warning--empty journal in Shao
-Warning--empty year in Shao
-Warning--empty author in Seth
-Warning--empty journal in Seth
-Warning--empty year in Seth
-Warning--empty author in Borisov
-Warning--empty journal in Borisov
-Warning--empty year in Borisov
-Warning--empty author in SethKeshav
-Warning--empty journal in SethKeshav
-Warning--empty year in SethKeshav
-Warning--empty author in Abadi
-Warning--empty journal in Abadi
-Warning--empty year in Abadi
-Warning--empty author in Xin
+Warning--empty journal in RFC4838
 Warning--empty journal in Xin
-Warning--empty year in Xin
-Warning--empty author in Wang
-Warning--empty journal in Wang
-Warning--empty year in Wang
-Name 1 in "R. Sakai, K. Ohgishi, and M. Kasahara" has a comma at the end for entry Sakai
-while executing---line 1090 of file plain.bst
-Name 1 in "K. Scott, and S. Burleigh" has a comma at the end for entry RFC5050
-while executing---line 1090 of file plain.bst
-(There were 4 error messages)
+(There were 2 warnings)

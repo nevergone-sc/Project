@@ -16,11 +16,11 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 
-
 public class GUI extends JFrame implements UserInterface, ActionListener {
+	private static final boolean FASTTEST = true; // set to true to auto-fill the blanks for fast testing.
+	
 	private Crypto crypto = new Crypto();
-	private DataManager dataManager;
-	private String PATH_PUBLICKEYFILE = "PublicKeys";
+	private String PATH_PUBLICKEYFILE = "PublicKeys"; // file path of the public key list
 	
 	private JButton buttonPrivateKeyChoose, buttonPublicKeyAdd, buttonPublicKeyDel, buttonPublicKeyChoose, buttonDataChoose;
 	private JButton buttonStart, buttonStop;
@@ -171,10 +171,10 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	    // Data section
 	    labelDataID = new JLabel("Recipient");
 	    textDataID = new JTextField(30);
-	    JLabel labelData3 = new JLabel("Path");
-	    textDataPath = new JTextField(20);
-	    buttonDataChoose = new JButton("Choose");
-	    buttonDataChoose.addActionListener(this);
+	    //JLabel labelData3 = new JLabel("Path");
+	    //textDataPath = new JTextField(20);
+	    //buttonDataChoose = new JButton("Choose");
+	    //buttonDataChoose.addActionListener(this);
 	    
 	    panelData = new JPanel();
 	    panelData.setBorder(new TitledBorder(new EtchedBorder(), "Data to Send"));
@@ -183,11 +183,11 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	    subPanelData0.add(labelDataID);
 	    subPanelData0.add(textDataID);
 	    panelData.add(subPanelData0);
-	    JPanel subPanelData1 = new JPanel();
-	    subPanelData1.add(labelData3);
-	    subPanelData1.add(textDataPath);
-	    subPanelData1.add(buttonDataChoose);
-	    panelData.add(subPanelData1);
+	    //JPanel subPanelData1 = new JPanel();
+	    //subPanelData1.add(labelData3);
+	    //subPanelData1.add(textDataPath);
+	    //subPanelData1.add(buttonDataChoose);
+	    //panelData.add(subPanelData1);
 	    
 	    
 	    panelFiles = new JPanel();
@@ -214,7 +214,6 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	    JScrollPane infosScroller = new JScrollPane(infos);
 	    infosScroller.setPreferredSize(new Dimension(250, 150));
 	    
-	    //panelInfo = new JPanel(new GridLayout(2,1));
 	    panelInfo = new JPanel();
 	    panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.PAGE_AXIS));
 	    panelInfo.setBorder(new TitledBorder(new EtchedBorder(), "Console"));
@@ -228,15 +227,14 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	    mainPanel.add(panelInfo, BorderLayout.PAGE_END);
 	    
 	    this.setContentPane(mainPanel);
-	    loadPublicKeyFromFile();
+	    loadPublicKeyFromFile(); // import all public keys from a single public key list
 	    setVisible(true); // display this frame
 	}
 	
 	public static void main(String args[]) {new GUI();}
 	
 	public void setTag(String tag) {
-		// TODO Auto-generated method stub
-		
+		this.setTitle(tag);
 	}
 
 	public void print(String str, String tag, String threadID) {
@@ -244,28 +242,24 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	}
 
 	public void print(byte[] bytes, String tag, String threadID) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void nextStep(String tag, String threadID) {
-		// TODO Auto-generated method stub
-		
+		infos.insert(tag + new String(bytes) + "\n", 0);
 	}
 
 	public void printErr(String str, String threadID) {
-		// TODO Auto-generated method stub
 		infos.insert(str + "\n", 0);
+	}
+	
+	public void nextStep(String str, String threadID) {
+		// Not applicable in this GUI
 	}
 
 	public String getInput(String info, String threadID) {
-		// TODO Auto-generated method stub
+		// Not applicable in this GUI
 		return null;
 	}
 
 	public void start(ProtocolEntity entity) {
-		// TODO Auto-generated method stub
-		
+		// Not applicable in this GUI
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -336,6 +330,7 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			panelPrivateKey.setVisible(false);
 			labelDataID.setVisible(false);
 			textDataID.setVisible(false);
+			panelData.setVisible(false);
 		} else if (e.getSource() == buttonStart) {
 			Enumeration<AbstractButton> rButtons = entityGroup.getElements();
 			while (rButtons.hasMoreElements()) {
@@ -344,6 +339,8 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 					startEntity(rButton.getText());
 				}
 			}
+		} else if (e.getSource() == buttonStop) {
+			System.exit(0);
 		}
 	}
 	
@@ -371,12 +368,13 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 	
 	private void startEntity(String entityName) {		
 		if (entityName.equals("DataCreator")) {
-			textLisPort.setText("9888");
-			textLocID.setText("Alice");
-			textLocAddress.setText("localhost");
-			textPrivateKey.setText("PrivateKey_Alice");
-		    textDataID.setText("Bob");
-		    textDataPath.setText("Data_Alice_To_Bob(Alice)");
+			if (FASTTEST) {
+				textLisPort.setText("9888");
+				textLocID.setText("Alice");
+				textLocAddress.setText("localhost");
+				textPrivateKey.setText("PrivateKey_Alice");
+			    textDataID.setText("Bob");
+			}
 			
 			Thread thread = new Thread(new Runnable() {
 				public void run() {
@@ -404,11 +402,13 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			thread.start();
 			
 		} else if (entityName.equals("CourierReceiver")) {
-			textLocID.setText("Courier");
-			textDstID.setText("Alice");
-			textDstAddress.setText("localhost");
-			textDstPort.setText("9888");
-			textMaxCapacity.setText("1000000");
+			if (FASTTEST) {
+				textLocID.setText("Courier");
+				textDstID.setText("Alice");
+				textDstAddress.setText("localhost");
+				textDstPort.setText("9888");
+				textMaxCapacity.setText("1000000");
+			}
 		    
 			Thread thread = new Thread(new Runnable() {
 				public void run() {
@@ -436,10 +436,12 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			});
 			thread.start();
 		} else if (entityName.equals("DataReceiver")) {
-			textLocID.setText("Bob");
-			textLocAddress.setText("localhost");
-			textLisPort.setText("8888");
-		    textPrivateKey.setText("PrivateKey_Bob");
+			if (FASTTEST) {
+				textLocID.setText("Bob");
+				textLocAddress.setText("localhost");
+				textLisPort.setText("8888");
+			    textPrivateKey.setText("PrivateKey_Bob");
+			}
 			
 			Thread thread = new Thread(new Runnable() {
 				public void run() {
@@ -465,13 +467,14 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 			thread.start();
 			
 		} else if (entityName.equals("CourierSender")) {
-			textLocID.setText("Courier");
-			textDstID.setText("Bob");
-			textDstAddress.setText("localhost");
-			textDstPort.setText("8888");
-		    textDataID.setText("Alice");
-		    textDataPath.setText("Data_Alice_To_Bob");
-		    
+			if (FASTTEST) {
+				textLocID.setText("Courier");
+				textDstID.setText("Bob");
+				textDstAddress.setText("localhost");
+				textDstPort.setText("8888");
+			    textDataID.setText("Alice");
+			}
+			
 			Thread thread = new Thread(new Runnable() {
 				public void run() {
 					String myID = textLocID.getText();
@@ -510,21 +513,15 @@ public class GUI extends JFrame implements UserInterface, ActionListener {
 				readRow = reader.readLine();
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ui.printErr("File Not Found", "");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ui.printErr(e.getMessage(), "");
 		} finally {
 			try {
 				reader.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				ui.printErr(e.getMessage(), "");
 			}
 		}
-	}
-	
-	private boolean isNumeric(String str) {
-		return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
 	}
 }

@@ -1,10 +1,11 @@
 package cdspcore;
 import java.io.IOException;
-import java.net.*;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
-
+/* One of the implementations of Channel interface, using UDP protocol
+ */
 public class UDPChannel implements Channel{
 	// Max payload of a UDP packet
 	private static final int MAX_BUFFER_SIZE = 65535;
@@ -13,7 +14,7 @@ public class UDPChannel implements Channel{
 	private int channelPort;
 	private InetSocketAddress dstAddress;
 	private DatagramChannel channel;
-	private ByteBuffer preMessage = null;
+	private ByteBuffer preMessage = null; // message received before this channel created
 	
 	public UDPChannel() throws Exception {
 		channel = DatagramChannel.open();
@@ -43,6 +44,8 @@ public class UDPChannel implements Channel{
 		state = CONNECTED;
 	}
 	
+	// Accept the incoming connection, create a new channel for future communication, 
+	// put previous message in to the newly created channel, return the channel. 
 	public UDPChannel accept() throws IOException {
 		if (state == OPEN) {
 			ByteBuffer bb = ByteBuffer.allocate(MAX_BUFFER_SIZE);
@@ -56,6 +59,7 @@ public class UDPChannel implements Channel{
 		}
 	}
 	
+	// Connect this channel to a specific address
 	public boolean connect(InetSocketAddress address) throws IOException {
 		if (state == OPEN) {
 			dstAddress = address;
@@ -80,6 +84,7 @@ public class UDPChannel implements Channel{
 		preMessage = src;
 	}
 	
+	// Read from this channel and return read length if it is connected, otherwise return -1
 	public int read(ByteBuffer dst) throws IOException {
 		if (state == CONNECTED) {
 			if (preMessage == null) {
@@ -100,6 +105,7 @@ public class UDPChannel implements Channel{
 		}
 	}
 	
+	// Write to this channel and return write length if it is connected, otherwise return -1
 	public int write(ByteBuffer src) throws IOException {
 		if (state == CONNECTED) {
 			return channel.send(src, dstAddress);

@@ -106,7 +106,7 @@
 {\large \vspace*{1ex}
     {{\@college} \par}
 \vspace*{1ex}
-    {\large Supervisor:  Kasper Rasmussen\par}
+    {\large Supervised by Dr. Kasper B. Rasmussen\par}
 \vspace*{1ex}
     {University of Oxford \par}
 \vspace*{25mm}

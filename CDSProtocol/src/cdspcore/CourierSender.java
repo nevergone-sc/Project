@@ -3,7 +3,8 @@ package cdspcore;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-
+/* Delegate of a courierSender, defines how data is transferred to dataReceiver
+ */
 public class CourierSender extends Delegate {
 	static final boolean debug = true;
 	
@@ -29,6 +30,7 @@ public class CourierSender extends Delegate {
 			receiverPK = dm.getPublicKey(dstID);
 		} catch (IOException e) {
 			ui.printErr(e.getMessage(), ID);
+			ui.printErr("Process finished", ID);
 			terminate();
 		}
 	}
@@ -79,10 +81,9 @@ public class CourierSender extends Delegate {
 			
 			if (!isMACValid) return -1;
 			
-			//dataManager.deleteData(dstID);
+			// Erase all data that has been transmitted
+			dataManager.deleteData(dstID);
 
-			ui.printErr(ID, "");
-			
 			terminate();
 			ui.nextStep("", ID);
 			return 0;

@@ -1,7 +1,7 @@
 package cdspcore;
 import java.util.Scanner;
 
-
+// A simple console user interface displaying the outcomes of the running of protocol
 public class ConsoleUserInterface implements UserInterface{
 	private String tag;
 	

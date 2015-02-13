@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
 
-
 public interface Channel {
 	public Channel accept() throws IOException;
 	public boolean connect(InetSocketAddress address) throws IOException;

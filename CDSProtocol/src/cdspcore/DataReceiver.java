@@ -3,6 +3,8 @@ package cdspcore;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/* Delegate of the dataReceiver, defines how message is received from a courierSender
+ */
 public class DataReceiver extends Delegate {
 	static final boolean debug = true;
 	
@@ -25,6 +27,7 @@ public class DataReceiver extends Delegate {
 			mySK = dm.getPrivateKey();
 		} catch (IOException e) {
 			ui.printErr(e.getMessage(), ID);
+			ui.printErr("Process finished", ID);
 			terminate();
 		}
 	}

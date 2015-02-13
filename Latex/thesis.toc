@@ -1,7 +1,7 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}
 \contentsline {section}{\numberline {1.1}Motivation}{1}
 \contentsline {section}{\numberline {1.2}Aims and Objectives}{2}
-\contentsline {section}{\numberline {1.3}Dissertation Structure}{3}
+\contentsline {section}{\numberline {1.3}Dissertation Structure}{4}
 \contentsline {chapter}{\numberline {2}Background and Related Work}{5}
 \contentsline {section}{\numberline {2.1}Background}{5}
 \contentsline {subsection}{\numberline {2.1.1}Delay-Tolerant Networks (DTN)}{5}
@@ -50,40 +50,46 @@
 \contentsline {paragraph}{\relax $\@@underline {\hbox {Msg}}\mathsurround \z@ $\relax }{32}
 \contentsline {chapter}{\numberline {6}Protocol Implementation}{34}
 \contentsline {section}{\numberline {6.1}Application Overview}{34}
-\contentsline {section}{\numberline {6.2}Software Design}{37}
+\contentsline {section}{\numberline {6.2}Software Design}{38}
 \contentsline {subsection}{\numberline {6.2.1}Program Architecture}{38}
-\contentsline {paragraph}{Accecpter}{38}
-\contentsline {paragraph}{Initiator}{39}
+\contentsline {paragraph}{Accepter}{39}
+\contentsline {paragraph}{Initiator}{40}
 \contentsline {subsection}{\numberline {6.2.2}Delegate Model}{40}
-\contentsline {subsection}{\numberline {6.2.3}Message Structure}{41}
-\contentsline {section}{\numberline {6.3}Implementation Details}{45}
-\contentsline {subsection}{\numberline {6.3.1}UML Class Diagram}{45}
+\contentsline {subsection}{\numberline {6.2.3}Message Structure}{42}
+\contentsline {section}{\numberline {6.3}Implementation Details}{46}
+\contentsline {subsection}{\numberline {6.3.1}UML Class Diagram}{46}
 \contentsline {paragraph}{Extensibility and Reusability}{47}
-\contentsline {subsection}{\numberline {6.3.2}Connection Establishment}{47}
-\contentsline {paragraph}{UDPChannel}{47}
-\contentsline {subsection}{\numberline {6.3.3}Message Processing}{48}
-\contentsline {subsection}{\numberline {6.3.4}Cryptographic operations}{48}
-\contentsline {subsection}{\numberline {6.3.5}File Management}{49}
-\contentsline {paragraph}{Keys}{49}
+\contentsline {subsection}{\numberline {6.3.2}Connection Establishment}{48}
+\contentsline {paragraph}{UDPChannel}{48}
+\contentsline {subsection}{\numberline {6.3.3}Message Processing}{49}
+\contentsline {subsection}{\numberline {6.3.4}Cryptographic operations}{49}
+\contentsline {subsection}{\numberline {6.3.5}File Management}{50}
+\contentsline {paragraph}{Keys}{50}
 \contentsline {paragraph}{Alice's Message Content}{50}
 \contentsline {paragraph}{Courier's Payload}{50}
-\contentsline {subsection}{\numberline {6.3.6}Error Handling}{50}
-\contentsline {paragraph}{User Input Error}{50}
-\contentsline {paragraph}{I/O Error}{50}
+\contentsline {subsection}{\numberline {6.3.6}Error Handling}{51}
+\contentsline {paragraph}{User Input Error}{51}
+\contentsline {paragraph}{I/O Error}{51}
 \contentsline {paragraph}{Protocol Error}{51}
-\contentsline {paragraph}{Timeout}{51}
-\contentsline {chapter}{\numberline {7}Test and Evaluation}{52}
-\contentsline {section}{\numberline {7.1}Test Environment}{52}
-\contentsline {section}{\numberline {7.2}Submit Protocol}{53}
-\contentsline {subsection}{\numberline {7.2.1}Latency Test}{53}
-\contentsline {subsection}{\numberline {7.2.2}Scalability Test}{53}
-\contentsline {section}{\numberline {7.3}Transmit Protocol}{53}
-\contentsline {subsection}{\numberline {7.3.1}Latency Test}{53}
-\contentsline {subsection}{\numberline {7.3.2}Scalability Test}{53}
-\contentsline {chapter}{\numberline {8}Conclusion and Future Work}{54}
-\contentsline {section}{\numberline {8.1}Conclusion}{54}
-\contentsline {section}{\numberline {8.2}Discussion and Future Work}{55}
-\contentsline {chapter}{\numberline {A}User Manual}{57}
-\contentsline {section}{\numberline {A.1}Run Submit Protocol}{58}
-\contentsline {section}{\numberline {A.2}Run Transmit Protocol}{60}
-\contentsline {chapter}{Bibliography}{63}
+\contentsline {paragraph}{Timeout}{52}
+\contentsline {chapter}{\numberline {7}Test and Evaluation}{53}
+\contentsline {section}{\numberline {7.1}Test Environment}{53}
+\contentsline {section}{\numberline {7.2}Submit Protocol}{54}
+\contentsline {subsection}{\numberline {7.2.1}Latency Test}{54}
+\contentsline {subsection}{\numberline {7.2.2}Scalability Test}{55}
+\contentsline {subsubsection}{\numberline {7.2.2.1}Scale of Message Size}{55}
+\contentsline {subsubsection}{\numberline {7.2.2.2}Scale of Concurrent Communication}{57}
+\contentsline {section}{\numberline {7.3}Transmit Protocol}{59}
+\contentsline {subsection}{\numberline {7.3.1}Latency Test}{59}
+\contentsline {subsection}{\numberline {7.3.2}Scalability Test}{59}
+\contentsline {subsubsection}{\numberline {7.3.2.1}Scale of Message Size}{60}
+\contentsline {subsubsection}{\numberline {7.3.2.2}Scale of Concurrent Communication}{61}
+\contentsline {subsubsection}{\numberline {7.3.2.3}Scale of Message Number}{62}
+\contentsline {section}{\numberline {7.4}Summary}{64}
+\contentsline {chapter}{\numberline {8}Conclusion and Future Work}{65}
+\contentsline {section}{\numberline {8.1}Conclusion}{65}
+\contentsline {section}{\numberline {8.2}Discussion and Future Work}{66}
+\contentsline {chapter}{\numberline {A}User Manual}{68}
+\contentsline {section}{\numberline {A.1}Run Submit Protocol}{69}
+\contentsline {section}{\numberline {A.2}Run Transmit Protocol}{71}
+\contentsline {chapter}{Bibliography}{74}

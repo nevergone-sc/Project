@@ -9,17 +9,29 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {6.1}{\ignorespaces GUI Overview\relax }}{35}
-\contentsline {figure}{\numberline {6.2}{\ignorespaces Use Case Diagram\relax }}{35}
-\contentsline {figure}{\numberline {6.3}{\ignorespaces Accepter Architecture\relax }}{40}
-\contentsline {figure}{\numberline {6.4}{\ignorespaces Initiator Architecture\relax }}{41}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Use Case Diagram\relax }}{36}
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Accepter Architecture\relax }}{41}
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Initiator Architecture\relax }}{42}
 \contentsline {figure}{\numberline {6.5}{\ignorespaces State Machine of $\mathcal {A}$\relax }}{42}
-\contentsline {figure}{\numberline {6.6}{\ignorespaces Structure of Meta Block\relax }}{43}
-\contentsline {figure}{\numberline {6.7}{\ignorespaces Structure of Message Block\relax }}{43}
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Structure of Meta Block\relax }}{44}
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Structure of Message Block\relax }}{44}
 \contentsline {figure}{\numberline {6.8}{\ignorespaces Normal Message and Error Message\relax }}{45}
-\contentsline {figure}{\numberline {6.9}{\ignorespaces UML Diagram\relax }}{45}
+\contentsline {figure}{\numberline {6.9}{\ignorespaces UML Diagram\relax }}{46}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces General Latency Test of Submit Protocol\relax }}{55}
+\contentsline {figure}{\numberline {7.2}{\ignorespaces Average Latency of Submit Protocol\relax }}{55}
+\contentsline {figure}{\numberline {7.3}{\ignorespaces Latency with Message Size for Submit Protocol\relax }}{56}
+\contentsline {figure}{\numberline {7.4}{\ignorespaces Effective Throughput with Message Size for Submit Protocol\relax }}{57}
+\contentsline {figure}{\numberline {7.5}{\ignorespaces Latency with Number of Concurrent Communications for Submit Protocol\relax }}{58}
+\contentsline {figure}{\numberline {7.6}{\ignorespaces General Latency Test of Transmit Protocol\relax }}{59}
+\contentsline {figure}{\numberline {7.7}{\ignorespaces Average Latency of Transmit Protocol\relax }}{60}
+\contentsline {figure}{\numberline {7.8}{\ignorespaces Latency with Message Size for Transmit Protocol\relax }}{61}
+\contentsline {figure}{\numberline {7.9}{\ignorespaces Effective Throughput with Message Size for Transmit Protocol\relax }}{61}
+\contentsline {figure}{\numberline {7.10}{\ignorespaces Latency with Number of Concurrent Communications for Transmit Protocol\relax }}{62}
+\contentsline {figure}{\numberline {7.11}{\ignorespaces Latency with Number of Messages for Transmit Protocol\relax }}{63}
+\contentsline {figure}{\numberline {7.12}{\ignorespaces A Large Message or Several Small Messages?\relax }}{63}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {A.1}{\ignorespaces GUI Overview\relax }}{58}
-\contentsline {figure}{\numberline {A.2}{\ignorespaces Running Submit Protocol\relax }}{60}
-\contentsline {figure}{\numberline {A.3}{\ignorespaces Running Transmit Protocol\relax }}{62}
+\contentsline {figure}{\numberline {A.1}{\ignorespaces GUI Overview\relax }}{69}
+\contentsline {figure}{\numberline {A.2}{\ignorespaces Running Submit Protocol\relax }}{71}
+\contentsline {figure}{\numberline {A.3}{\ignorespaces Running Transmit Protocol\relax }}{73}

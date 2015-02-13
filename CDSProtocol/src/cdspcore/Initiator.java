@@ -1,8 +1,9 @@
 package cdspcore;
 
-import java.net.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
-
+// An Initiator defines a class of entities who is active and always initiates connections
 public abstract class Initiator implements ProtocolEntity{
 	protected String address;
 	protected int dstPort;
@@ -22,10 +23,12 @@ public abstract class Initiator implements ProtocolEntity{
 			
 			Delegate delegate = makeDelegate();
 			Channel channel = new UDPChannel(new InetSocketAddress(dstAddress, dstPort));
-			Session session = new Session(channel, delegate, ui, 1);
-			session.start();
+			if (delegate != null && channel != null) {
+				Session session = new Session(channel, delegate, ui, 1);
+				session.start();
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ui.printErr(e.getMessage(), "");
 		}
 	}
 	
